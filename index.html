@@ -145,9 +145,19 @@
                 <a href="#contato" class="text-white opacity-80 hover:opacity-100 transition duration-300 font-subtitle">Localização</a>
             </nav>
             
-            <!-- CTA no Header - AGORA APONTA PARA O WHATSAPP COM MENSAGEM PRE-ESCRITA --><a id="header-whatsapp-btn" href="#" target="_blank" class="hidden sm:block px-4 py-2 rounded-full font-bold text-white btn-cta shadow-xl hover:shadow-2xl font-subtitle">
-                <i class="fab fa-whatsapp mr-1"></i> Fale Conosco
-            </a>
+            <!-- Ícones e CTAs (Alinhamento à Direita) --><div class="flex items-center space-x-4">
+                
+                <!-- NOVO Ícone de Telefone para Contato Rápido (Desktop) --><a id="header-phone-btn" href="tel:+5511930888270" 
+                   class="hidden sm:block text-white hover:logo-text-gold transition duration-300 text-xl" 
+                   aria-label="Ligar para AlphaTech">
+                    <i class="fas fa-phone"></i>
+                </a>
+            
+                <!-- CTA no Header - AGORA APONTA PARA O WHATSAPP COM MENSAGEM PRE-ESCRITA --><a id="header-whatsapp-btn" href="#" target="_blank" 
+                   class="hidden sm:block px-4 py-2 rounded-full font-bold text-white btn-cta shadow-xl hover:shadow-2xl font-subtitle">
+                    <i class="fab fa-whatsapp mr-1"></i> Fale Conosco
+                </a>
+            </div>
 
             <!-- Menu Mobile (Ícone) --><button id="menu-btn" class="md:hidden text-white hover:opacity-80 focus:outline-none">
                 <i class="fas fa-bars text-xl"></i>
@@ -411,7 +421,7 @@
                     <ul class="space-y-2 text-sm font-opensans" style="color: var(--color-neutral-light);">
                         <li><i class="fas fa-map-marker-alt mr-2" style="color: var(--color-segment-seg);"></i> R. Vicente Paulo da Costa - Jordanésia</li>
                         <li><i class="fab fa-whatsapp mr-2" style="color: #25D366;"></i> (11) 93088-8270</li>
-                        <li><i class="fas fa-phone mr-2" style="color: var(--color-accent-blue);"></i> (11) 93088-8270</li>
+                        <li><i class="fas fa-phone mr-2" style="color: var(--color-accent-blue);"></i> (11) 98765-4321</li>
                         <!-- EMAIL ATUALIZADO AQUI --><li id="footer-email-link"><i class="fas fa-envelope mr-2" style="color: var(--color-accent-blue);"></i> Alphatech.escri@gmail.com</li>
                     </ul>
                 </div>
@@ -489,8 +499,6 @@
                 mobileMenu.classList.add('hidden');
             });
         });
-
-        // O código de simulação de envio de formulário foi removido, pois a seção foi substituída pelo mapa.
     </script>
 </body>
 </html>
