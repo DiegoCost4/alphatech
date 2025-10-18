@@ -13,6 +13,7 @@
     
     <!-- 3. Canonical URL (Para evitar conteúdo duplicado) - Ajuste o href para o domínio real -->
     <link rel="canonical" href="https://www.alphatech.com.br/">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='80'>⚡</text></svg>">
 
     <!-- 4. Open Graph Tags (OG) - Para compartilhamento em Mídias Sociais -->
     <meta property="og:title" content="AlphaTech | Soluções Inteligentes em Elétrica e Segurança">
@@ -21,7 +22,7 @@
     <meta property="og:url" content="https://www.alphatech.com.br/">
     <!-- Nota: A tag og:image precisa de uma URL de imagem real, se disponível -->
     <meta property="og:image" content="https://placehold.co/1200x630/0B132B/FFD166?text=AlphaTech">
-    
+    <script src="https://unpkg.com/lucide@latest"></script>
     <!-- FIM DA OTIMIZAÇÃO DE SEO -->
     <!-- Carregamento do Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
     <!-- Carregamento das Fontes: Montserrat (Título), Exo 2 (Subtítulo) e Open Sans (Texto) --><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Exo+2:wght@700&family=Open+Sans:wght@400&display=swap" rel="stylesheet">
@@ -121,6 +122,7 @@
         }
         /* =================================================================== */
     </style>
+    
 </head>
 <body class="bg-gray-50">
 
@@ -134,7 +136,8 @@
 
     <!-- Cabeçalho / Navegação - Fundo Azul Escuro Premium --><header class="sticky top-0 z-50 shadow-lg" style="background-color: var(--color-primary-dark);">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <!-- Logo AlphaTech - Dourado e Montserrat --><div class="text-3xl font-title font-extrabold uppercase">
+            <!-- Logo AlphaTech - Dourado e Montserrat (AJUSTADO: Icon com flex items-center) --><div class="text-3xl font-title font-extrabold uppercase flex items-center">
+                <i data-lucide="zap" class="w-8 h-8 text-yellow-400 mr-1"></i>
                 <span class="text-white">ALPHA</span><span class="logo-text-gold">TECH</span>
             </div>
             
@@ -455,6 +458,9 @@
     </a>
 
     <script type="text/javascript">
+
+        lucide.createIcons();
+
         // Lógica de JavaScript para interatividade e aplicação dos links dinâmicos
         
         // Aplica o link dinâmico de WhatsApp a todos os botões e ao link flutuante
