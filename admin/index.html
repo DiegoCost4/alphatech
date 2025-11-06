@@ -533,21 +533,27 @@
             logoUrl: new URL('/assets/logo.png', location.origin).href // opcional: URL absoluta do logo (PNG)
         };
 
+        // paleta da marca (ajuste se quiser)
+        const BRAND = {
+            dark: [23, 37, 84],     // azul escuro do cabeçalho da tabela
+            mid: [100, 116, 139],  // cinza-azulado para labels
+            light: [241, 245, 249]   // fundo de listras
+        };
         const brl = n => (Number(n || 0)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
         async function generateQuotePDF(q, items, total) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ unit: 'pt', format: 'a4' });
 
-            // === Layout base ===
-            const M = 40;                                    // margem
+            // === layout base ===
+            const M = 40;                                  // margem
             const pageW = doc.internal.pageSize.getWidth();
             const pageH = doc.internal.pageSize.getHeight();
-            const headerH = 90;                                  // altura reservada para o cabeçalho
-            const footerH = 40;                                  // altura reservada para o rodapé
+            const headerH = 110;                           // reserva p/ cabeçalho
+            const footerH = 40;                            // reserva p/ rodapé
             const innerW = pageW - 2 * M;
 
-            // Pré-carrega logo (se houver) para reutilizar em cada página
+            // carrega logo (uma vez) para reutilizar
             let logoDataUrl = null;
             if (COMPANY.logoUrl) {
                 try {
@@ -555,74 +561,69 @@
                     const reader = new FileReader();
                     await new Promise(res => { reader.onload = res; reader.readAsDataURL(blob); });
                     logoDataUrl = reader.result;
-                } catch (_) { /* sem logo */ }
+                } catch (_) { }
             }
 
-            // Cabeçalho (desenhado em TODAS as páginas)
+            // helpers visuais
+            const label = (t) => { doc.setFont('helvetica', 'bold'); doc.setTextColor(...BRAND.mid); doc.setFontSize(9); doc.text(t, 0, 0); };
+            const textN = () => { doc.setFont('helvetica', 'normal'); doc.setTextColor(0); };
+            const title = (t, x, y) => { doc.setFont('helvetica', 'bold'); doc.setTextColor(0); doc.setFontSize(18); doc.text(t, x, y); };
+            const chip = (t, x, y) => {
+                const padX = 8, padY = 5;
+                const w = doc.getTextWidth(t) + padX * 2, h = 20;
+                doc.setFillColor(...BRAND.dark); doc.roundedRect(x, y, w, h, 6, 6, 'F');
+                doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(255);
+                doc.text(t, x + padX, y + h - 7);
+                doc.setTextColor(0);
+            };
+
+            // cabeçalho e rodapé (toda página)
             function drawHeader() {
-                let y = M;
-                // Logo
-                if (logoDataUrl) {
-                    doc.addImage(logoDataUrl, 'PNG', M, y, 120, 40, undefined, 'FAST');
-                }
-                // Bloco da empresa
-                doc.setFont('helvetica', 'bold'); doc.setFontSize(16);
-                doc.text(COMPANY.name, M + 140, y + 18, { maxWidth: innerW - 140 });
-                doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
-                doc.text(
-                    `${COMPANY.doc}\n${COMPANY.address}\n${COMPANY.phone} • ${COMPANY.email}\n${COMPANY.site}`,
-                    M + 140, y + 36, { maxWidth: innerW - 140 }
-                );
+                // bloco com fundo sutil
+                doc.setFillColor(252, 252, 253);
+                doc.roundedRect(M, M, innerW, 70, 10, 10, 'F');
 
-                // Linha separadora
-                y += 90; // Esta é a altura real do conteúdo do cabeçalho
-                doc.setDrawColor(220); doc.line(M, y, pageW - M, y);
+                // logo
+                if (logoDataUrl) doc.addImage(logoDataUrl, 'PNG', M + 14, M + 12, 120, 40, undefined, 'FAST');
+
+                // dados empresa
+                doc.setFont('helvetica', 'bold'); doc.setFontSize(14); doc.setTextColor(0);
+                doc.text(COMPANY.name, M + 150, M + 24, { maxWidth: innerW - 160 });
+                doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(60);
+                doc.text(`${COMPANY.doc}  •  ${COMPANY.phone}  •  ${COMPANY.email}`, M + 150, M + 40, { maxWidth: innerW - 160 });
+                doc.text(`${COMPANY.address}  •  ${COMPANY.site}`, M + 150, M + 56, { maxWidth: innerW - 160 });
+
+                // linha
+                doc.setDrawColor(224); doc.line(M, M + 80, pageW - M, M + 80);
+            }
+            function drawFooter(pageNumber, pageCount) {
+                doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(90);
+                const disclaimer = 'Este documento é uma estimativa. Valores finais podem variar após visita técnica/ajustes de escopo.';
+                doc.text(disclaimer, M, pageH - M, { maxWidth: innerW });
+                doc.text(`Página ${pageNumber} de ${pageCount}`, pageW - M, pageH - M, { align: 'right' });
             }
 
-            // Rodapé (desenhado em TODAS as páginas)
-            function drawFooter() {
-                // numeração de página + disclaimer
-                const pageNo = doc.internal.getNumberOfPages();
-                doc.setFont('helvetica', 'normal'); doc.setFontSize(9);
-                doc.text(
-                    'Este documento é uma estimativa. Valores finais podem variar após visita técnica/ajustes de escopo.',
-                    M, pageH - M, { maxWidth: innerW }
-                );
-                doc.text(`Página ${pageNo}`, pageW - M, pageH - M, { align: 'right' });
-            }
-
-            // [FIX 2: REMOVIDO]
-            // As chamadas manuais foram removidas. O hook 'didDrawPage' do autoTable
-            // agora cuidará de desenhar o header/footer em TODAS as páginas, incluindo a primeira.
-            // drawHeader(); drawFooter(); 
-
-            // ===== Título + Metadados (na 1ª página, abaixo do cabeçalho) =====
-            // Esta área é desenhada ANTES do autoTable, por isso o header/footer
-            // (desenhado pelo didDrawPage) não irá sobrepor este conteúdo.
-            let y0 = M + headerH; // início de conteúdo seguro
-            doc.setFont('helvetica', 'bold'); doc.setFontSize(18);
-            doc.text('Orçamento', M, y0 + 16);
-
-            const created = new Date(q.created_at);
-            doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
-            doc.text(`#${q.id.slice(0, 8)}`, M, y0 + 32);
+            // título + meta da página 1
+            const yTop = M + headerH;
+            title('Orçamento', M, yTop);
+            doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(0);
+            doc.text(`#${q.id.slice(0, 8)}`, M, yTop + 16);
             doc.text(
-                `Data: ${created.toLocaleDateString('pt-BR')} ${created.toLocaleTimeString('pt-BR')}`,
-                M, y0 + 46
+                `Data: ${new Date(q.created_at).toLocaleDateString('pt-BR')} ${new Date(q.created_at).toLocaleTimeString('pt-BR')}`,
+                M, yTop + 30
             );
 
-            // Cliente (coluna direita)
-            const clienteX = pageW / 2 + 20;
-            doc.setFont('helvetica', 'bold'); doc.text('Cliente', clienteX, y0 + 16);
-            doc.setFont('helvetica', 'normal');
+            // box “Cliente”
+            chip('Cliente', pageW / 2 + 20, yTop - 14);
+            doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(0);
             doc.text([
                 `Nome: ${q.name || '-'}`,
                 `WhatsApp: ${q.phone || '-'}`,
                 `E-mail: ${q.email || '-'}`
-            ], clienteX, y0 + 32);
+            ], pageW / 2 + 20, yTop + 10);
 
-            // ===== Tabela de itens =====
-            const tableData = (items || []).map(it => {
+            // tabela
+            const rows = (items || []).map(it => {
                 const name = it.service?.name || '(?)';
                 const unit = it.service?.unit_label || 'un';
                 const qty = Number(it.quantity || 0);
@@ -631,70 +632,73 @@
                 return [name, it.detail || '', `${qty} ${unit}`, brl(unitPrice), brl(sub)];
             });
 
-            // A chave para NÃO bagunçar: reservar espaço fixo de header/rodapé via margin.top/bottom
             doc.autoTable({
                 head: [['Serviço', 'Detalhe', 'Qtd', 'Unitário', 'Subtotal']],
-                body: tableData.length ? tableData : [['(sem itens)', '', '', '', '']],
-                startY: y0 + 60,                   // começa bem abaixo do bloco do título/cliente (só na Pág 1)
+                body: rows.length ? rows : [['(sem itens)', '', '', '', '']],
+                startY: yTop + 46, // abaixo do chip/cliente
                 margin: { top: M + headerH, bottom: M + footerH, left: M, right: M },
-                tableWidth: 'auto',                // [FIX 1] Deixe 'auto' e controle pelas colunas
-                styles: { font: 'helvetica', fontSize: 10, cellPadding: 6, overflow: 'linebreak' },
-                headStyles: { fillColor: [30, 41, 59], textColor: 255 },
-                theme: 'grid',
-                columnStyles: {
-                    // [FIX 1] Larguras ajustadas para somar <= 515.28 (innerW)
-                    0: { cellWidth: 160 },                 // Serviço
-                    1: { cellWidth: 120.28 },            // Detalhe
-                    2: { halign: 'center', cellWidth: 60 }, // Qtd
-                    3: { halign: 'right', cellWidth: 85 },  // Unitário (aumentei)
-                    4: { halign: 'right', cellWidth: 90 }   // Subtotal
+                styles: {
+                    font: 'helvetica', fontSize: 10, cellPadding: 6, overflow: 'linebreak',
+                    lineColor: [235, 238, 242], lineWidth: 0.6
                 },
-                // [FIX 2] didDrawPage desenha em TODAS as páginas.
-                // Como as margens (top/bottom) estão corretas, ele desenha
-                // na área "vazia" reservada para o cabeçalho/rodapé.
-                didDrawPage: () => { drawHeader(); drawFooter(); }
+                headStyles: { fillColor: BRAND.dark, textColor: 255, halign: 'left' },
+                bodyStyles: { textColor: 20 },
+                alternateRowStyles: { fillColor: BRAND.light },   // listras
+                theme: 'grid',
+                // larguras somando exatamente ao innerW (515pt em A4 com M=40)
+                columnStyles: {
+                    0: { cellWidth: 190 },            // Serviço
+                    1: { cellWidth: 150 },            // Detalhe
+                    2: { cellWidth: 60, halign: 'center' }, // Qtd
+                    3: { cellWidth: 60, halign: 'right' }, // Unitário
+                    4: { cellWidth: 55, halign: 'right' }  // Subtotal
+                },
+                didDrawPage: (data) => {
+                    // header/rodapé em todas as páginas
+                    drawHeader();
+                    const pageNumber = data.pageNumber;
+                    const pageCount = doc.internal.getNumberOfPages();
+                    drawFooter(pageNumber, pageCount);
+                }
             });
 
-            // ===== Observações e Total (após a tabela, respeitando margens) =====
-            let yAfter = doc.lastAutoTable.finalY + 16;
-
-            // Se não couber o bloco seguinte nesta página, cria nova
-            function ensureSpace(h) {
-                // área útil: de (M + headerH) até (pageH - M - footerH)
-                const usableBottom = pageH - M - footerH;
-                if (yAfter + h > usableBottom) {
+            // pós-tabela
+            let y = doc.lastAutoTable.finalY + 16;
+            const usableBottom = pageH - M - footerH;
+            const ensure = (h) => {
+                if (y + h > usableBottom) {
                     doc.addPage();
-                    drawHeader(); drawFooter();
-                    yAfter = M + headerH; // Reseta para o topo seguro
+                    // cabeçalho/rodapé serão redesenhados via didDrawPage na nova página
+                    y = M + headerH;
                 }
-            }
+            };
 
-            // [FIX 3] Lógica de altura dinâmica para as Observações
+            // Observações
             if (q.notes) {
-                doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
-                const notesLines = doc.splitTextToSize(q.notes, innerW);
-                // Calcula altura: (linhas * altura_linha) + título + padding
-                const lineHeight = doc.getFontSize() * 1.15; // Fator de altura da linha
-                const titleHeight = 11; // "Observações"
-                const textHeight = notesLines.length * lineHeight;
-                const blockHeight = titleHeight + textHeight + 10; // 10 de padding
-
-                ensureSpace(blockHeight); // Garante espaço para o bloco todo
-
-                doc.setFont('helvetica', 'bold'); doc.setFontSize(11);
-                doc.text('Observações', M, yAfter);
-                yAfter += titleHeight + 4; // Pula o título
-
-                doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
-                doc.text(notesLines, M, yAfter);
-                yAfter += textHeight; // Avança o Y pela altura real do texto
+                const notes = doc.splitTextToSize(q.notes, innerW);
+                const lineH = 12;
+                const blockH = 20 + notes.length * lineH;
+                ensure(blockH);
+                chip('Observações', M, y - 14);
+                doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(0);
+                doc.text(notes, M, y + 8);
+                y += blockH;
             }
 
-            ensureSpace(24); // Espaço para o total
-            doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
-            doc.text(`Total estimado: ${brl(total)}`, M, yAfter + 12);
+            // Total — cartucho destacado
+            ensure(50);
+            const totalBoxW = 220, totalBoxH = 36;
+            doc.setFillColor(247, 250, 252);
+            doc.roundedRect(pageW - M - totalBoxW, y, totalBoxW, totalBoxH, 8, 8, 'F');
+            doc.setDrawColor(...BRAND.dark); doc.setLineWidth(0.8);
+            doc.roundedRect(pageW - M - totalBoxW, y, totalBoxW, totalBoxH, 8, 8);
 
-            // Salvar
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(12); doc.setTextColor(...BRAND.dark);
+            doc.text('Total estimado', pageW - M - totalBoxW + 12, y + 14);
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(14); doc.setTextColor(0);
+            doc.text(brl(total), pageW - M - 12, y + 26, { align: 'right' });
+
+            // arquivo
             const fname = `orcamento_${(q.name || 'cliente').toString().trim().replace(/\s+/g, '_')}_${q.id.slice(0, 8)}.pdf`;
             doc.save(fname);
         }
