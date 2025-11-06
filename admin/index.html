@@ -539,59 +539,84 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ unit: 'pt', format: 'a4' });
 
-            // Constantes de layout
-            const M = 40; // margem
+            // === Layout base ===
+            const M = 40;                                   // margem
             const pageW = doc.internal.pageSize.getWidth();
             const pageH = doc.internal.pageSize.getHeight();
+            const headerH = 90;                              // altura ocupada pelo cabeçalho
+            const footerH = 40;                              // altura ocupada pelo rodapé
+            const innerW = pageW - 2 * M;
 
-            // ===== Cabeçalho =====
-            let y = M;
-
-            // Logo (opcional)
+            // Pré-carrega logo (se houver) para reutilizar em cada página
+            let logoDataUrl = null;
             if (COMPANY.logoUrl) {
                 try {
-                    const img = await fetch(COMPANY.logoUrl).then(r => r.blob());
+                    const blob = await fetch(COMPANY.logoUrl, { cache: 'no-store' }).then(r => r.blob());
                     const reader = new FileReader();
-                    await new Promise(res => { reader.onload = res; reader.readAsDataURL(img); });
-                    // largura máx 120, altura proporcional (~40-50)
-                    doc.addImage(reader.result, 'PNG', M, y, 120, 40);
-                } catch (e) { /* ignora logo em erro */ }
+                    await new Promise(res => { reader.onload = res; reader.readAsDataURL(blob); });
+                    logoDataUrl = reader.result;
+                } catch (_) { /* sem logo */ }
             }
 
-            // Texto do cabeçalho
-            doc.setFont('helvetica', 'bold'); doc.setFontSize(16);
-            doc.text(COMPANY.name, M + 140, y + 18);
+            // Cabeçalho (desenhado em TODAS as páginas)
+            function drawHeader() {
+                let y = M;
+                // Logo
+                if (logoDataUrl) {
+                    // largura máxima 120, altura ~40 (mantendo proporção)
+                    doc.addImage(logoDataUrl, 'PNG', M, y, 120, 40, undefined, 'FAST');
+                }
+                // Bloco da empresa
+                doc.setFont('helvetica', 'bold'); doc.setFontSize(16);
+                doc.text(COMPANY.name, M + 140, y + 18, { maxWidth: innerW - 140 });
+                doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+                doc.text(
+                    `${COMPANY.doc}\n${COMPANY.address}\n${COMPANY.phone} • ${COMPANY.email}\n${COMPANY.site}`,
+                    M + 140, y + 36, { maxWidth: innerW - 140 }
+                );
+
+                // Linha separadora
+                y += 60;
+                doc.setDrawColor(220); doc.line(M, y, pageW - M, y);
+            }
+
+            // Rodapé (desenhado em TODAS as páginas)
+            function drawFooter() {
+                // numeração de página + disclaimer
+                const pageNo = doc.internal.getNumberOfPages();
+                doc.setFont('helvetica', 'normal'); doc.setFontSize(9);
+                doc.text(
+                    'Este documento é uma estimativa. Valores finais podem variar após visita técnica/ajustes de escopo.',
+                    M, pageH - M, { maxWidth: innerW }
+                );
+                doc.text(`Página ${pageNo}`, pageW - M, pageH - M, { align: 'right' });
+            }
+
+            // Desenha cabeçalho e rodapé da 1ª página
+            drawHeader(); drawFooter();
+
+            // ===== Título + Metadados (na 1ª página, abaixo do cabeçalho) =====
+            let y0 = M + headerH; // início de conteúdo seguro
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(18);
+            doc.text('Orçamento', M, y0 + 16);
+
+            const created = new Date(q.created_at);
             doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+            doc.text(`#${q.id.slice(0, 8)}`, M, y0 + 32);
             doc.text(
-                `${COMPANY.doc}\n${COMPANY.address}\n${COMPANY.phone} • ${COMPANY.email}\n${COMPANY.site}`,
-                M + 140, y + 36
+                `Data: ${created.toLocaleDateString('pt-BR')} ${created.toLocaleTimeString('pt-BR')}`,
+                M, y0 + 46
             );
 
-            // Linha separadora
-            y += 60;
-            doc.setDrawColor(220); doc.line(M, y, pageW - M, y);
-            y += 16;
-
-            // ===== Título/metadata =====
-            const created = new Date(q.created_at);
-            doc.setFont('helvetica', 'bold'); doc.setFontSize(18);
-            doc.text('Orçamento', M, y);
-            doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
-            doc.text(`#${q.id.slice(0, 8)}`, M, y + 16);
-            doc.text(`Data: ${created.toLocaleDateString('pt-BR')} ${created.toLocaleTimeString('pt-BR')}`, M, y + 32);
-
-            // Dados do cliente (coluna direita)
+            // Cliente (coluna direita)
             const clienteX = pageW / 2 + 20;
-            doc.setFont('helvetica', 'bold'); doc.text('Cliente', clienteX, y);
+            doc.setFont('helvetica', 'bold'); doc.text('Cliente', clienteX, y0 + 16);
             doc.setFont('helvetica', 'normal');
             doc.text([
                 `Nome: ${q.name || '-'}`,
                 `WhatsApp: ${q.phone || '-'}`,
                 `E-mail: ${q.email || '-'}`
-            ], clienteX, y + 16);
-
-            // Próxima área y
-            let startTableY = y + 60;
+            ], clienteX, y0 + 32);
 
             // ===== Tabela de itens =====
             const tableData = (items || []).map(it => {
@@ -603,72 +628,59 @@
                 return [name, it.detail || '', `${qty} ${unit}`, brl(unitPrice), brl(sub)];
             });
 
+            // A chave para NÃO bagunçar: reservar espaço fixo de header/rodapé via margin.top/bottom
             doc.autoTable({
                 head: [['Serviço', 'Detalhe', 'Qtd', 'Unitário', 'Subtotal']],
                 body: tableData.length ? tableData : [['(sem itens)', '', '', '', '']],
-                startY: startTableY,
-                margin: { left: M, right: M },
+                startY: y0 + 60,                       // começa bem abaixo do bloco do título/cliente
+                margin: { top: M + headerH, bottom: M + footerH, left: M, right: M },
+                tableWidth: innerW,                    // garante largura dentro das margens
                 styles: { font: 'helvetica', fontSize: 10, cellPadding: 6, overflow: 'linebreak' },
                 headStyles: { fillColor: [30, 41, 59], textColor: 255 },
+                theme: 'grid',
                 columnStyles: {
-                    0: { cellWidth: 220 }, // Serviço
-                    1: { cellWidth: 160 }, // Detalhe
-                    2: { halign: 'center', cellWidth: 60 }, // Qtd
+                    0: { cellWidth: 220 },              // Serviço
+                    1: { cellWidth: 180 },              // Detalhe
+                    2: { halign: 'center', cellWidth: 60 },  // Qtd
                     3: { halign: 'right', cellWidth: 80 },  // Unitário
                     4: { halign: 'right', cellWidth: 90 }   // Subtotal
                 },
-                didDrawPage: (data) => {
-                    // Cabeçalho e rodapé em todas as páginas (opcional)
-                    // Exemplo de numeração de páginas:
-                    const str = `Página ${doc.internal.getNumberOfPages()}`;
-                    doc.setFontSize(9);
-                    doc.text(str, pageW - M, pageH - 10, { align: 'right' });
-                }
+                // Redesenha header/rodapé em TODA página gerada pela tabela
+                didDrawPage: () => { drawHeader(); drawFooter(); }
             });
 
-            // Onde a tabela terminou
+            // ===== Observações e Total (após a tabela, respeitando margens) =====
             let yAfter = doc.lastAutoTable.finalY + 16;
 
-            // ===== Observações =====
-            if (q.notes) {
-                const obsBlockH = 40; // estimativa de bloco
-                // se não couber, cria nova página
-                if (yAfter + obsBlockH + 60 > pageH - M) {
+            // Se não couber o bloco seguinte nesta página, cria nova
+            function ensureSpace(h) {
+                // área útil: de (M + headerH) até (pageH - M - footerH)
+                const usableBottom = pageH - M - footerH;
+                if (yAfter + h > usableBottom) {
                     doc.addPage();
-                    yAfter = M;
+                    drawHeader(); drawFooter();
+                    yAfter = M + headerH;
                 }
+            }
+
+            if (q.notes) {
+                ensureSpace(48);
                 doc.setFont('helvetica', 'bold'); doc.setFontSize(11);
                 doc.text('Observações', M, yAfter);
                 doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
-                doc.text(q.notes, M, yAfter + 14, { maxWidth: pageW - 2 * M });
-                yAfter += 40;
+                doc.text(q.notes, M, yAfter + 14, { maxWidth: innerW });
+                yAfter += 48;
             }
 
-            // ===== Total =====
-            const totalBlockH = 20;
-            if (yAfter + totalBlockH + 40 > pageH - M) { // 40 para rodapé
-                doc.addPage();
-                yAfter = M;
-            }
+            ensureSpace(24);
             doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
-            doc.text(`Total estimado: ${brl(total)}`, M, yAfter + 10);
-            yAfter += 30;
+            doc.text(`Total estimado: ${brl(total)}`, M, yAfter + 12);
 
-            // ===== Rodapé fixo =====
-            const footerText = 'Este documento é uma estimativa. Valores finais podem variar após visita técnica/ajustes de escopo.';
-            // Se o rodapé não couber, nova página
-            const footerH = 30;
-            if (yAfter + footerH > pageH - M) {
-                doc.addPage();
-                yAfter = M;
-            }
-            doc.setFont('helvetica', 'normal'); doc.setFontSize(9);
-            doc.text(footerText, M, pageH - M, { maxWidth: pageW - 2 * M });
-
-            // ===== Salvar =====
+            // Salvar
             const fname = `orcamento_${(q.name || 'cliente').toString().trim().replace(/\s+/g, '_')}_${q.id.slice(0, 8)}.pdf`;
             doc.save(fname);
         }
+
 
     </script>
 </body>
