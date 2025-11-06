@@ -6,17 +6,13 @@
     <title>Admin — AlphaTech Orçamentos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Favicon da página principal -->
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='80'>⚡</text></svg>">
 
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Fontes (Montserrat, Exo 2, Open Sans) -->
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Exo+2:wght@700&family=Open+Sans:wght@400&display=swap"
         rel="stylesheet">
@@ -112,6 +108,7 @@
             /* Azul mais escuro */
             transform: translateY(-1px);
         }
+
 
         .btn-secondary {
             background-color: transparent;
@@ -215,7 +212,6 @@
             font-weight: 600;
         }
     </style>
-    <!-- jsPDF + autoTable (CDN) -->
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
 
@@ -225,26 +221,23 @@
 
     <div class="max-w-7xl mx-auto p-4 md:p-8">
 
-        <!-- Cabeçalho com Logo -->
-        <h1 class="font-title text-4xl font-extrabold uppercase flex items-center mb-6 text-white">
+        <h1 class="font-title text-3xl sm:text-4xl font-extrabold uppercase flex items-center mb-6 text-white">
             <i data-lucide="zap" class="w-8 h-8 mr-2" style="color: var(--color-secondary-gold);"></i>
             <span>ALPHA</span><span style="color: var(--color-secondary-gold);">TECH</span>
-            <span class="text-2xl font-light opacity-70 ml-4">/ ADMIN</span>
+            <span class="text-xl sm:text-2xl font-light opacity-70 ml-4">/ ADMIN</span>
         </h1>
 
-        <!-- Card de Autenticação e Ação Principal -->
         <div class="card">
-            <div class="flex flex-wrap gap-4 items-center">
-                <input id="token" type="text" placeholder="x-admin-token" class="flex-grow min-w-[260px]" />
-                <button id="loadQuotes" class="btn btn-primary">Carregar orçamentos</button>
-                <span id="fbQ" class="ml-4 text-sm"></span>
+            <div class="flex flex-col md:flex-row gap-4 items-center">
+                <input id="token" type="text" placeholder="x-admin-token" class="w-full md:flex-grow" />
+                <button id="loadQuotes" class="btn btn-primary w-full md:w-auto">Carregar orçamentos</button>
+                <span id="fbQ" class="text-sm w-full md:w-auto text-center md:text-left"></span>
             </div>
         </div>
 
-        <!-- Tabela de Orçamentos -->
         <div class="card mt-8">
             <h2 class="card-title">Orçamentos Recebidos</h2>
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto overflow-y-auto max-h-[70vh]">
                 <table id="qt">
                     <thead>
                         <tr>
@@ -259,24 +252,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Conteúdo preenchido via JS -->
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
         </div>
 
 
-        <!-- Card de Serviços -->
         <div class="card">
             <h2 class="card-title">Gerenciar Serviços</h2>
 
-            <div class="flex flex-wrap gap-4 items-center mb-4">
-                <button id="loadSvcs" class="btn btn-secondary">Listar serviços</button>
-                <span id="fbS" class="ml-4 text-sm"></span>
+            <div class="flex flex-col sm:flex-row gap-4 items-center mb-4">
+                <button id="loadSvcs" class="btn btn-secondary w-full sm:w-auto">Listar serviços</button>
+                <span id="fbS" class="ml-0 sm:ml-4 text-sm w-full sm:w-auto text-center sm:text-left"></span>
             </div>
 
-            <!-- Tabela de Serviços -->
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto overflow-y-auto max-h-[70vh]">
                 <table id="sv">
                     <thead>
                         <tr>
@@ -289,12 +279,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Conteúdo preenchido via JS -->
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
 
-            <!-- Formulário de Novo Serviço -->
             <h3 class="font-subtitle text-xl font-bold text-white mt-8 mb-4">Cadastrar novo serviço</h3>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 items-center text-sm">
                 <input id="sName" type="text" placeholder="Nome *" class="md:col-span-2 text-sm" />
@@ -303,12 +291,12 @@
             </div>
             <textarea id="sDesc" placeholder="Descrição (opcional)" rows="3" class="w-full"></textarea>
 
-            <div class="flex justify-between items-center mt-4">
+            <div class="flex flex-col sm:flex-row sm:justify-between items-center mt-4 gap-4">
                 <div class="flex items-center gap-2 text-sm">
                     <input id="sActive" type="checkbox" checked class="form-checkbox" />
                     <label for="sActive">Ativo (visível para orçamento)</label>
                 </div>
-                <button id="createSvc" class="btn btn-primary">Cadastrar serviço</button>
+                <button id="createSvc" class="btn btn-primary w-full sm:w-auto">Cadastrar serviço</button>
             </div>
         </div>
     </div>
@@ -333,15 +321,15 @@
         // --- ORÇAMENTOS ---
         document.getElementById('loadQuotes').onclick = async () => {
             fbQ.textContent = 'Carregando...';
-            fbQ.className = 'ml-4 text-sm';
+            fbQ.className = 'text-sm w-full md:w-auto text-center md:text-left';
             let headers;
-            try { headers = hdrs(); } catch (e) { fbQ.textContent = e.message; fbQ.className = 'err ml-4 text-sm'; return; }
+            try { headers = hdrs(); } catch (e) { fbQ.textContent = e.message; fbQ.className = 'err text-sm w-full md:w-auto text-center md:text-left'; return; }
 
             const res = await fetch('/api/admin/quotes?page=1', { headers });
             const js = await res.json().catch(() => ({}));
-            if (!res.ok) { fbQ.textContent = js.error || 'Erro'; fbQ.className = 'err ml-4 text-sm'; return; }
+            if (!res.ok) { fbQ.textContent = js.error || 'Erro'; fbQ.className = 'err text-sm w-full md:w-auto text-center md:text-left'; return; }
             fbQ.textContent = `Carregados ${js.quotes?.length || 0} orçamentos.`;
-            fbQ.className = 'ok ml-4 text-sm';
+            fbQ.className = 'ok text-sm w-full md:w-auto text-center md:text-left';
 
             const tbody = document.querySelector('#qt tbody');
             tbody.innerHTML = '';
@@ -418,15 +406,15 @@
         // --- SERVIÇOS ---
         document.getElementById('loadSvcs').onclick = async () => {
             fbS.textContent = 'Carregando...';
-            fbS.className = 'ml-4 text-sm';
+            fbS.className = 'ml-0 sm:ml-4 text-sm w-full sm:w-auto text-center sm:text-left';
             let headers;
-            try { headers = hdrs(); } catch (e) { fbS.textContent = e.message; fbS.className = 'err ml-4 text-sm'; return; }
+            try { headers = hdrs(); } catch (e) { fbS.textContent = e.message; fbS.className = 'err ml-0 sm:ml-4 text-sm w-full sm:w-auto text-center sm:text-left'; return; }
 
             const res = await fetch('/api/admin/services', { headers });
             const js = await res.json().catch(() => ({}));
-            if (!res.ok) { fbS.textContent = js.error || 'Erro'; fbS.className = 'err ml-4 text-sm'; return; }
+            if (!res.ok) { fbS.textContent = js.error || 'Erro'; fbS.className = 'err ml-0 sm:ml-4 text-sm w-full sm:w-auto text-center sm:text-left'; return; }
             fbS.textContent = `Carregados ${js.services?.length || 0} serviços.`;
-            fbS.className = 'ok ml-4 text-sm';
+            fbS.className = 'ok ml-0 sm:ml-4 text-sm w-full sm:w-auto text-center sm:text-left';
 
             const tbody = document.querySelector('#sv tbody');
             tbody.innerHTML = '';
@@ -646,11 +634,11 @@
                 theme: 'grid',
                 // larguras que cabem no innerW sem sobrar/estourar
                 columnStyles: {
-                    0: { cellWidth: 200 },          // Serviço
-                    1: { cellWidth: 160 },          // Detalhe
-                    2: { cellWidth: 60, halign: 'center' },
-                    3: { cellWidth: 50, halign: 'right' },
-                    4: { cellWidth: 45, halign: 'right' }
+                    0: { cellWidth: 175 },          // Serviço
+                    1: { cellWidth: 135 },          // Detalhe
+                    2: { cellWidth: 55, halign: 'center' },
+                    3: { cellWidth: 65, halign: 'right' },
+                    4: { cellWidth: 85, halign: 'right' }
                 },
                 didDrawPage: (data) => {
                     drawHeader();
