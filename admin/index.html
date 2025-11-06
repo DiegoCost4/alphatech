@@ -1,183 +1,295 @@
 <!doctype html>
 <html lang="pt-br">
+
 <head>
-  <meta charset="utf-8" />
-  <title>Admin — Orçamentos</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    body { font-family: system-ui, Arial; margin: 24px; }
-    table { width: 100%; border-collapse: collapse; margin: 16px 0; }
-    th, td { border: 1px solid #eee; padding: 8px; text-align: left; vertical-align: top; }
-    .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
-    fieldset { border:1px solid #ddd; border-radius:8px; padding:12px; margin:12px 0; }
-    legend { font-weight:600; }
-    input, textarea { padding:6px; }
-    .ok { color:#2e7d32; }
-    .err { color:#b00020; }
-  </style>
+    <meta charset="utf-8" />
+    <title>Admin — Orçamentos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        body {
+            font-family: system-ui, Arial;
+            margin: 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+
+        th,
+        td {
+            border: 1px solid #eee;
+            padding: 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        fieldset {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 12px 0;
+        }
+
+        legend {
+            font-weight: 600;
+        }
+
+        input,
+        textarea {
+            padding: 6px;
+        }
+
+        .ok {
+            color: #2e7d32;
+        }
+
+        .err {
+            color: #b00020;
+        }
+    </style>
 </head>
+
 <body>
-  <h1>Admin</h1>
+    <h1>Admin</h1>
 
-  <div class="row">
-    <input id="token" placeholder="x-admin-token" style="min-width:260px" />
-    <button id="loadQuotes">Carregar orçamentos</button>
-    <span id="fbQ"></span>
-  </div>
-
-  <table id="qt">
-    <thead>
-      <tr>
-        <th>Data</th><th>Cliente</th><th>Contato</th><th>Itens</th><th>Obs</th><th>Status</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
-  <fieldset>
-    <legend>Serviços</legend>
     <div class="row">
-      <button id="loadSvcs">Listar serviços</button>
-      <span id="fbS"></span>
+        <input id="token" placeholder="x-admin-token" style="min-width:260px" />
+        <button id="loadQuotes">Carregar orçamentos</button>
+        <span id="fbQ"></span>
     </div>
 
-    <table id="sv">
-      <thead>
-        <tr>
-          <th>Nome</th><th>Descrição</th><th>Unidade</th><th>Preço base</th><th>Ativo</th><th>Ações</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
+    <table id="qt">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Cliente</th>
+                <th>Contato</th>
+                <th>Itens</th>
+                <th>Total (R$)</th>
+                <th>Obs</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
     </table>
 
-    <h4>Novo serviço</h4>
-    <div class="row">
-      <input id="sName" placeholder="Nome *" />
-      <input id="sUnit" placeholder="Unidade (un, ponto...)" value="un" />
-      <input id="sPrice" placeholder="Preço base (opcional)" type="number" step="0.01" />
-      <input id="sActive" type="checkbox" checked /> Ativo
-    </div>
-    <textarea id="sDesc" placeholder="Descrição (opcional)" rows="3" style="width:100%"></textarea><br>
-    <button id="createSvc">Cadastrar serviço</button>
-  </fieldset>
+    <fieldset>
+        <legend>Serviços</legend>
+        <div class="row">
+            <button id="loadSvcs">Listar serviços</button>
+            <span id="fbS"></span>
+        </div>
 
-  <script>
-    const fbQ = document.getElementById('fbQ');
-    const fbS = document.getElementById('fbS');
+        <table id="sv">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th>Unidade</th>
+                    <th>Preço base</th>
+                    <th>Ativo</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
 
-    function hdrs() {
-      const token = document.getElementById('token').value.trim();
-      return { 'x-admin-token': token, 'Content-Type': 'application/json' };
-    }
+        <h4>Novo serviço</h4>
+        <div class="row">
+            <input id="sName" placeholder="Nome *" />
+            <input id="sUnit" placeholder="Unidade (un, ponto...)" value="un" />
+            <input id="sPrice" placeholder="Preço base (opcional)" type="number" step="0.01" />
+            <input id="sActive" type="checkbox" checked /> Ativo
+        </div>
+        <textarea id="sDesc" placeholder="Descrição (opcional)" rows="3" style="width:100%"></textarea><br>
+        <button id="createSvc">Cadastrar serviço</button>
+    </fieldset>
 
-    document.getElementById('loadQuotes').onclick = async () => {
-      fbQ.textContent = 'Carregando...';
-      const res = await fetch('/api/admin/quotes?page=1', { headers: hdrs() });
-      const js = await res.json().catch(()=>({}));
-      if (!res.ok) { fbQ.textContent = js.error || 'Erro'; fbQ.className='err'; return; }
-      fbQ.textContent = '';
-      const tbody = document.querySelector('#qt tbody');
-      tbody.innerHTML = '';
-      (js.quotes || []).forEach(q => {
-        const items = (js.itemsByQuote?.[q.id] || [])
-          .map(it => `${it.service?.name || '(?)'}: ${it.quantity} ${it.service?.unit_label || 'un'}${it.detail ? ` — ${it.detail}` : ''}`)
-          .join('<br>');
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
+    <script>
+        const fbQ = document.getElementById('fbQ');
+        const fbS = document.getElementById('fbS');
+
+        function hdrs() {
+            const token = document.getElementById('token').value.trim();
+            return { 'x-admin-token': token, 'Content-Type': 'application/json' };
+        }
+
+        document.getElementById('loadQuotes').onclick = async () => {
+            fbQ.textContent = 'Carregando...';
+            const res = await fetch('/api/admin/quotes?page=1', { headers: hdrs() });
+            const js = await res.json().catch(() => ({}));
+            if (!res.ok) { fbQ.textContent = js.error || 'Erro'; fbQ.className = 'err'; return; }
+            fbQ.textContent = '';
+            const tbody = document.querySelector('#qt tbody');
+            tbody.innerHTML = '';
+            (js.quotes || []).forEach(q => {
+                const items = (js.itemsByQuote?.[q.id] || [])
+                    .map(it => `${it.service?.name || '(?)'}: ${it.quantity} ${it.service?.unit_label || 'un'}${it.detail ? ` — ${it.detail}` : ''}`)
+                    .join('<br>');
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
           <td>${new Date(q.created_at).toLocaleString()}</td>
           <td>${q.name || '-'}</td>
-          <td>${q.phone}${q.email ? '<br>'+q.email : ''}</td>
+          <td>${q.phone}${q.email ? '<br>' + q.email : ''}</td>
           <td>${items || '-'}</td>
           <td>${q.notes || '-'}</td>
           <td>
             <select data-id="${q.id}" class="st">
-              ${['novo','contatado','fechado','perdido'].map(s => `<option ${s===q.status?'selected':''}>${s}</option>`).join('')}
+              ${['novo', 'contatado', 'fechado', 'perdido'].map(s => `<option ${s === q.status ? 'selected' : ''}>${s}</option>`).join('')}
             </select>
           </td>
         `;
-        tbody.appendChild(tr);
-      });
+                tbody.appendChild(tr);
+            });
 
-      document.querySelectorAll('.st').forEach(sel => {
-        sel.onchange = async (e) => {
-          const id = e.target.dataset.id;
-          const status = e.target.value;
-          const r = await fetch('/api/admin/quotes', {
-            method: 'PATCH',
-            headers: hdrs(),
-            body: JSON.stringify({ id, status })
-          });
-          if (!r.ok) alert('Falha ao atualizar status');
+            document.querySelectorAll('.st').forEach(sel => {
+                sel.onchange = async (e) => {
+                    const id = e.target.dataset.id;
+                    const status = e.target.value;
+                    const r = await fetch('/api/admin/quotes', {
+                        method: 'PATCH',
+                        headers: hdrs(),
+                        body: JSON.stringify({ id, status })
+                    });
+                    if (!r.ok) alert('Falha ao atualizar status');
+                };
+            });
         };
-      });
-    };
 
-    document.getElementById('loadSvcs').onclick = async () => {
-      fbS.textContent = 'Carregando...';
-      const res = await fetch('/api/admin/services', { headers: hdrs() });
-      const js = await res.json().catch(()=>({}));
-      if (!res.ok) { fbS.textContent = js.error || 'Erro'; fbS.className='err'; return; }
-      fbS.textContent = '';
-      const tbody = document.querySelector('#sv tbody');
-      tbody.innerHTML = '';
-      (js.services || []).forEach(s => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><input value="${s.name||''}" data-k="name" data-id="${s.id}" /></td>
-          <td><input value="${s.description||''}" data-k="description" data-id="${s.id}" /></td>
-          <td><input value="${s.unit_label||'un'}" data-k="unit_label" data-id="${s.id}" style="width:80px"/></td>
-          <td><input value="${s.base_price??''}" data-k="base_price" data-id="${s.id}" type="number" step="0.01" style="width:120px"/></td>
-          <td><input type="checkbox" ${s.active?'checked':''} data-k="active" data-id="${s.id}" /></td>
+        document.getElementById('loadSvcs').onclick = async () => {
+            fbS.textContent = 'Carregando...';
+            const res = await fetch('/api/admin/services', { headers: hdrs() });
+            const js = await res.json().catch(() => ({}));
+            if (!res.ok) { fbS.textContent = js.error || 'Erro'; fbS.className = 'err'; return; }
+            fbS.textContent = '';
+            const tbody = document.querySelector('#sv tbody');
+            tbody.innerHTML = '';
+            (js.services || []).forEach(s => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+          <td><input value="${s.name || ''}" data-k="name" data-id="${s.id}" /></td>
+          <td><input value="${s.description || ''}" data-k="description" data-id="${s.id}" /></td>
+          <td><input value="${s.unit_label || 'un'}" data-k="unit_label" data-id="${s.id}" style="width:80px"/></td>
+          <td><input value="${s.base_price ?? ''}" data-k="base_price" data-id="${s.id}" type="number" step="0.01" style="width:120px"/></td>
+          <td><input type="checkbox" ${s.active ? 'checked' : ''} data-k="active" data-id="${s.id}" /></td>
           <td><button class="save" data-id="${s.id}">Salvar</button></td>
         `;
-        tbody.appendChild(tr);
-      });
+                tbody.appendChild(tr);
+            });
 
-      tbody.querySelectorAll('.save').forEach(btn => {
-        btn.onclick = async () => {
-          const id = btn.dataset.id;
-          const row = tbody.querySelectorAll(`[data-id="${id}"]`);
-          const payload = { id };
-          row.forEach(inp => {
-            const k = inp.dataset.k;
-            payload[k] = (inp.type === 'checkbox') ? inp.checked
-              : (inp.type === 'number' && inp.value !== '' ? Number(inp.value) : (inp.value || null));
-          });
-          const r = await fetch('/api/admin/services', {
-            method: 'PATCH',
-            headers: hdrs(),
-            body: JSON.stringify(payload)
-          });
-          if (!r.ok) alert('Falha ao salvar serviço');
+            tbody.querySelectorAll('.save').forEach(btn => {
+                btn.onclick = async () => {
+                    const id = btn.dataset.id;
+                    const row = tbody.querySelectorAll(`[data-id="${id}"]`);
+                    const payload = { id };
+                    row.forEach(inp => {
+                        const k = inp.dataset.k;
+                        payload[k] = (inp.type === 'checkbox') ? inp.checked
+                            : (inp.type === 'number' && inp.value !== '' ? Number(inp.value) : (inp.value || null));
+                    });
+                    const r = await fetch('/api/admin/services', {
+                        method: 'PATCH',
+                        headers: hdrs(),
+                        body: JSON.stringify(payload)
+                    });
+                    if (!r.ok) alert('Falha ao salvar serviço');
+                };
+            });
         };
-      });
-    };
 
-    document.getElementById('createSvc').onclick = async () => {
-      const payload = {
-        name: document.getElementById('sName').value,
-        description: document.getElementById('sDesc').value || null,
-        unit_label: document.getElementById('sUnit').value || 'un',
-        base_price: document.getElementById('sPrice').value ? Number(document.getElementById('sPrice').value) : null,
-        active: document.getElementById('sActive').checked
-      };
-      const res = await fetch('/api/admin/services', {
-        method: 'POST',
-        headers: hdrs(),
-        body: JSON.stringify(payload)
-      });
-      if (res.ok) {
-        document.getElementById('sName').value = '';
-        document.getElementById('sDesc').value = '';
-        document.getElementById('sUnit').value = 'un';
-        document.getElementById('sPrice').value = '';
-        document.getElementById('sActive').checked = true;
-        document.getElementById('loadSvcs').click();
-      } else {
-        const js = await res.json().catch(()=>({}));
-        alert(js.error || 'Erro ao criar serviço');
-      }
-    };
-  </script>
+        document.getElementById('createSvc').onclick = async () => {
+            const payload = {
+                name: document.getElementById('sName').value,
+                description: document.getElementById('sDesc').value || null,
+                unit_label: document.getElementById('sUnit').value || 'un',
+                base_price: document.getElementById('sPrice').value ? Number(document.getElementById('sPrice').value) : null,
+                active: document.getElementById('sActive').checked
+            };
+            const res = await fetch('/api/admin/services', {
+                method: 'POST',
+                headers: hdrs(),
+                body: JSON.stringify(payload)
+            });
+            if (res.ok) {
+                document.getElementById('sName').value = '';
+                document.getElementById('sDesc').value = '';
+                document.getElementById('sUnit').value = 'un';
+                document.getElementById('sPrice').value = '';
+                document.getElementById('sActive').checked = true;
+                document.getElementById('loadSvcs').click();
+            } else {
+                const js = await res.json().catch(() => ({}));
+                alert(js.error || 'Erro ao criar serviço');
+            }
+        };
+
+        const brl = n => (Number(n || 0)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+        document.getElementById('loadQuotes').onclick = async () => {
+            fbQ.textContent = 'Carregando...';
+            const res = await fetch('/api/admin/quotes?page=1', { headers: hdrs() });
+            const js = await res.json().catch(() => ({}));
+            if (!res.ok) { fbQ.textContent = js.error || 'Erro'; fbQ.className = 'err'; return; }
+            fbQ.textContent = '';
+
+            const tbody = document.querySelector('#qt tbody');
+            tbody.innerHTML = '';
+
+            (js.quotes || []).forEach(q => {
+                const items = (js.itemsByQuote?.[q.id] || []);
+                const total = js.totalsByQuote?.[q.id] || 0;
+
+                // monta lista de itens com preço unitário e subtotal
+                const itemsHtml = items.length ? items.map(it => {
+                    const name = it.service?.name || '(?)';
+                    const unit = it.service?.unit_label || 'un';
+                    const qty = Number(it.quantity || 0);
+                    const unitPrice = Number(it.service?.base_price ?? 0);
+                    const sub = unitPrice * qty;
+                    const det = it.detail ? ` — ${it.detail}` : '';
+                    return `${name}: ${qty} ${unit} — ${brl(unitPrice)} cad — <strong>${brl(sub)}</strong>${det}`;
+                }).join('<br>') : '-';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+        <td>${new Date(q.created_at).toLocaleString()}</td>
+        <td>${q.name || '-'}</td>
+        <td>${q.phone}${q.email ? '<br>' + q.email : ''}</td>
+        <td>${itemsHtml}</td>
+        <td><strong>${brl(total)}</strong></td>
+        <td>${q.notes || '-'}</td>
+        <td>
+          <select data-id="${q.id}" class="st">
+            ${['novo', 'contatado', 'fechado', 'perdido'].map(s => `<option ${s === q.status ? 'selected' : ''}>${s}</option>`).join('')}
+          </select>
+        </td>
+      `;
+                tbody.appendChild(tr);
+            });
+
+            document.querySelectorAll('.st').forEach(sel => {
+                sel.onchange = async (e) => {
+                    const id = e.target.dataset.id;
+                    const status = e.target.value;
+                    const r = await fetch('/api/admin/quotes', {
+                        method: 'PATCH',
+                        headers: hdrs(),
+                        body: JSON.stringify({ id, status })
+                    });
+                    if (!r.ok) alert('Falha ao atualizar status');
+                };
+            });
+        };
+    </script>
 </body>
+
 </html>
