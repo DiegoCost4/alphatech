@@ -3,246 +3,345 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Admin — Orçamentos</title>
+    <title>Admin — AlphaTech Orçamentos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Favicon da página principal -->
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='80'>⚡</text></svg>">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Fontes (Montserrat, Exo 2, Open Sans) -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Exo+2:wght@700&family=Open+Sans:wght@400&display=swap"
+        rel="stylesheet">
+
     <style>
-        body {
-            font-family: system-ui, Arial;
-            margin: 24px;
+        /* Paleta de Cores e Fontes da index.html */
+        :root {
+            --color-primary-dark: #0B132B;
+            --color-secondary-gold: #FFD166;
+            --color-accent-blue: #118AB2;
+            --color-neutral-dark: #2E2E2E;
+            --color-neutral-light: #E0E0E0;
+            --color-card-dark-background: #1A243F;
+            --color-segment-seg: #06D6A0;
+            /* Verde para .ok */
+            --color-error-red: #FF6B6B;
+            /* Vermelho para .err */
         }
 
+        body {
+            background-color: var(--color-neutral-dark);
+            color: var(--color-neutral-light);
+            font-family: 'Open Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .font-title {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .font-subtitle {
+            font-family: 'Exo 2', sans-serif;
+        }
+
+        /* Estilos customizados para formulários no modo escuro */
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        input[type="password"],
+        textarea,
+        select {
+            background-color: #2a3a5e;
+            /* Um pouco mais claro que o card */
+            border: 1px solid #4a5a7e;
+            color: var(--color-neutral-light);
+            border-radius: 0.5rem;
+            /* 8px */
+            padding: 0.5rem 0.75rem;
+            /* 8px 12px */
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--color-accent-blue);
+            box-shadow: 0 0 0 3px rgba(17, 138, 178, 0.5);
+        }
+
+        input[type="checkbox"] {
+            border-radius: 0.25rem;
+            border: 1px solid #4a5a7e;
+            background-color: #2a3a5e;
+            color: var(--color-accent-blue);
+        }
+
+        input[type="checkbox"]:checked {
+            background-color: var(--color-accent-blue);
+        }
+
+        /* Classes de Botão */
+        .btn {
+            padding: 0.5rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            font-family: 'Exo 2', sans-serif;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: var(--color-accent-blue);
+            color: white;
+            box-shadow: 0 4px 15px rgba(17, 138, 178, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: #0e769c;
+            /* Azul mais escuro */
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--color-secondary-gold);
+            border: 2px solid var(--color-secondary-gold);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--color-secondary-gold);
+            color: var(--color-primary-dark);
+        }
+
+        .btn-save {
+            background-color: var(--color-segment-seg);
+            color: var(--color-primary-dark);
+            padding: 0.25rem 0.75rem;
+            font-size: 0.875rem;
+            border-radius: 0.375rem;
+        }
+
+        .btn-save:hover {
+            background-color: #05b38a;
+        }
+
+
+        /* Tabelas */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 16px 0;
+            margin: 1rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border-radius: 0.5rem;
+            overflow: hidden;
         }
 
         th,
         td {
-            border: 1px solid #eee;
-            padding: 8px;
+            padding: 0.75rem 1rem;
+            /* 12px 16px */
             text-align: left;
             vertical-align: top;
+            border-bottom: 1px solid #2a3a5e;
         }
 
-        .row {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            align-items: center;
+        thead th {
+            background-color: var(--color-primary-dark);
+            color: var(--color-secondary-gold);
+            font-family: 'Exo 2', sans-serif;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            /* 12px */
+            letter-spacing: 0.05em;
         }
 
-        fieldset {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 12px;
-            margin: 12px 0;
+        tbody tr {
+            background-color: var(--color-card-dark-background);
         }
 
-        legend {
+        tbody tr:hover {
+            background-color: #2a3a5e;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        td select {
+            padding: 0.375rem 0.5rem;
+        }
+
+        /* Card (substitui fieldset) */
+        .card {
+            background-color: var(--color-card-dark-background);
+            border-radius: 0.75rem;
+            /* 12px */
+            padding: 1.5rem;
+            /* 24px */
+            margin-top: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-title {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 1.5rem;
+            /* 24px */
+            font-weight: 700;
+            color: white;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--color-secondary-gold);
+            margin-bottom: 1rem;
+        }
+
+        /* Mensagens de Feedback */
+        .ok {
+            color: var(--color-segment-seg);
             font-weight: 600;
         }
 
-        input,
-        textarea {
-            padding: 6px;
-        }
-
-        .ok {
-            color: #2e7d32;
-        }
-
         .err {
-            color: #b00020;
+            color: var(--color-error-red);
+            font-weight: 600;
         }
     </style>
 </head>
 
 <body>
-    <h1>Admin</h1>
 
-    <div class="row">
-        <input id="token" placeholder="x-admin-token" style="min-width:260px" />
-        <button id="loadQuotes">Carregar orçamentos</button>
-        <span id="fbQ"></span>
+    <div class="max-w-7xl mx-auto p-4 md:p-8">
+
+        <!-- Cabeçalho com Logo -->
+        <h1 class="font-title text-4xl font-extrabold uppercase flex items-center mb-6 text-white">
+            <i data-lucide="zap" class="w-8 h-8 mr-2" style="color: var(--color-secondary-gold);"></i>
+            <span>ALPHA</span><span style="color: var(--color-secondary-gold);">TECH</span>
+            <span class="text-2xl font-light opacity-70 ml-4">/ ADMIN</span>
+        </h1>
+
+        <!-- Card de Autenticação e Ação Principal -->
+        <div class="card">
+            <div class="flex flex-wrap gap-4 items-center">
+                <input id="token" placeholder="x-admin-token" class="flex-grow min-w-[260px]" />
+                <button id="loadQuotes" class="btn btn-primary">Carregar orçamentos</button>
+                <span id="fbQ" class="ml-4 text-sm"></span>
+            </div>
+        </div>
+
+        <!-- Tabela de Orçamentos -->
+        <div class="card mt-8">
+            <h2 class="card-title">Orçamentos Recebidos</h2>
+            <div class="overflow-x-auto">
+                <table id="qt">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Cliente</th>
+                            <th>Contato</th>
+                            <th>Itens</th>
+                            <th>Total (R$)</th>
+                            <th>Obs</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Conteúdo preenchido via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <!-- Card de Serviços -->
+        <div class="card">
+            <h2 class="card-title">Gerenciar Serviços</h2>
+
+            <div class="flex flex-wrap gap-4 items-center mb-4">
+                <button id="loadSvcs" class="btn btn-secondary">Listar serviços</button>
+                <span id="fbS" class="ml-4 text-sm"></span>
+            </div>
+
+            <!-- Tabela de Serviços -->
+            <div class="overflow-x-auto">
+                <table id="sv">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Descrição</th>
+                            <th>Unidade</th>
+                            <th>Preço base (R$)</th>
+                            <th>Ativo</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Conteúdo preenchido via JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Formulário de Novo Serviço -->
+            <h3 class="font-subtitle text-xl font-bold text-white mt-8 mb-4">Cadastrar novo serviço</h3>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 items-center">
+                <input id="sName" placeholder="Nome *" class="md:col-span-2" />
+                <input id="sUnit" placeholder="Unidade (un, ponto...)" value="un" />
+                <input id="sPrice" placeholder="Preço base (ex: 150.00)" type="number" step="0.01" />
+            </div>
+            <textarea id="sDesc" placeholder="Descrição (opcional)" rows="3" class="w-full"></textarea>
+
+            <div class="flex justify-between items-center mt-4">
+                <div class="flex items-center gap-2 text-sm">
+                    <input id="sActive" type="checkbox" checked class="form-checkbox" />
+                    <label for="sActive">Ativo (visível para orçamento)</label>
+                </div>
+                <button id="createSvc" class="btn btn-primary">Cadastrar serviço</button>
+            </div>
+        </div>
     </div>
 
-    <table id="qt">
-        <thead>
-            <tr>
-                <th>Data</th>
-                <th>Cliente</th>
-                <th>Contato</th>
-                <th>Itens</th>
-                <th>Total (R$)</th>
-                <th>Obs</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-
-    <fieldset>
-        <legend>Serviços</legend>
-        <div class="row">
-            <button id="loadSvcs">Listar serviços</button>
-            <span id="fbS"></span>
-        </div>
-
-        <table id="sv">
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Descrição</th>
-                    <th>Unidade</th>
-                    <th>Preço base</th>
-                    <th>Ativo</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-
-        <h4>Novo serviço</h4>
-        <div class="row">
-            <input id="sName" placeholder="Nome *" />
-            <input id="sUnit" placeholder="Unidade (un, ponto...)" value="un" />
-            <input id="sPrice" placeholder="Preço base (opcional)" type="number" step="0.01" />
-            <input id="sActive" type="checkbox" checked /> Ativo
-        </div>
-        <textarea id="sDesc" placeholder="Descrição (opcional)" rows="3" style="width:100%"></textarea><br>
-        <button id="createSvc">Cadastrar serviço</button>
-    </fieldset>
 
     <script>
+        // Inicializa ícones
+        lucide.createIcons();
+
         const fbQ = document.getElementById('fbQ');
         const fbS = document.getElementById('fbS');
 
         function hdrs() {
             const token = document.getElementById('token').value.trim();
+            if (!token) {
+                alert('Por favor, insira o x-admin-token');
+                throw new Error('Token não fornecido');
+            }
             return { 'x-admin-token': token, 'Content-Type': 'application/json' };
         }
 
+        // --- ORÇAMENTOS ---
         document.getElementById('loadQuotes').onclick = async () => {
             fbQ.textContent = 'Carregando...';
-            const res = await fetch('/api/admin/quotes?page=1', { headers: hdrs() });
+            fbQ.className = 'ml-4 text-sm';
+            let headers;
+            try { headers = hdrs(); } catch (e) { fbQ.textContent = e.message; fbQ.className = 'err ml-4 text-sm'; return; }
+
+            const res = await fetch('/api/admin/quotes?page=1', { headers });
             const js = await res.json().catch(() => ({}));
-            if (!res.ok) { fbQ.textContent = js.error || 'Erro'; fbQ.className = 'err'; return; }
-            fbQ.textContent = '';
-            const tbody = document.querySelector('#qt tbody');
-            tbody.innerHTML = '';
-            (js.quotes || []).forEach(q => {
-                const items = (js.itemsByQuote?.[q.id] || [])
-                    .map(it => `${it.service?.name || '(?)'}: ${it.quantity} ${it.service?.unit_label || 'un'}${it.detail ? ` — ${it.detail}` : ''}`)
-                    .join('<br>');
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-          <td>${new Date(q.created_at).toLocaleString()}</td>
-          <td>${q.name || '-'}</td>
-          <td>${q.phone}${q.email ? '<br>' + q.email : ''}</td>
-          <td>${items || '-'}</td>
-          <td>${q.notes || '-'}</td>
-          <td>
-            <select data-id="${q.id}" class="st">
-              ${['novo', 'contatado', 'fechado', 'perdido'].map(s => `<option ${s === q.status ? 'selected' : ''}>${s}</option>`).join('')}
-            </select>
-          </td>
-        `;
-                tbody.appendChild(tr);
-            });
-
-            document.querySelectorAll('.st').forEach(sel => {
-                sel.onchange = async (e) => {
-                    const id = e.target.dataset.id;
-                    const status = e.target.value;
-                    const r = await fetch('/api/admin/quotes', {
-                        method: 'PATCH',
-                        headers: hdrs(),
-                        body: JSON.stringify({ id, status })
-                    });
-                    if (!r.ok) alert('Falha ao atualizar status');
-                };
-            });
-        };
-
-        document.getElementById('loadSvcs').onclick = async () => {
-            fbS.textContent = 'Carregando...';
-            const res = await fetch('/api/admin/services', { headers: hdrs() });
-            const js = await res.json().catch(() => ({}));
-            if (!res.ok) { fbS.textContent = js.error || 'Erro'; fbS.className = 'err'; return; }
-            fbS.textContent = '';
-            const tbody = document.querySelector('#sv tbody');
-            tbody.innerHTML = '';
-            (js.services || []).forEach(s => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-          <td><input value="${s.name || ''}" data-k="name" data-id="${s.id}" /></td>
-          <td><input value="${s.description || ''}" data-k="description" data-id="${s.id}" /></td>
-          <td><input value="${s.unit_label || 'un'}" data-k="unit_label" data-id="${s.id}" style="width:80px"/></td>
-          <td><input value="${s.base_price ?? ''}" data-k="base_price" data-id="${s.id}" type="number" step="0.01" style="width:120px"/></td>
-          <td><input type="checkbox" ${s.active ? 'checked' : ''} data-k="active" data-id="${s.id}" /></td>
-          <td><button class="save" data-id="${s.id}">Salvar</button></td>
-        `;
-                tbody.appendChild(tr);
-            });
-
-            tbody.querySelectorAll('.save').forEach(btn => {
-                btn.onclick = async () => {
-                    const id = btn.dataset.id;
-                    const row = tbody.querySelectorAll(`[data-id="${id}"]`);
-                    const payload = { id };
-                    row.forEach(inp => {
-                        const k = inp.dataset.k;
-                        payload[k] = (inp.type === 'checkbox') ? inp.checked
-                            : (inp.type === 'number' && inp.value !== '' ? Number(inp.value) : (inp.value || null));
-                    });
-                    const r = await fetch('/api/admin/services', {
-                        method: 'PATCH',
-                        headers: hdrs(),
-                        body: JSON.stringify(payload)
-                    });
-                    if (!r.ok) alert('Falha ao salvar serviço');
-                };
-            });
-        };
-
-        document.getElementById('createSvc').onclick = async () => {
-            const payload = {
-                name: document.getElementById('sName').value,
-                description: document.getElementById('sDesc').value || null,
-                unit_label: document.getElementById('sUnit').value || 'un',
-                base_price: document.getElementById('sPrice').value ? Number(document.getElementById('sPrice').value) : null,
-                active: document.getElementById('sActive').checked
-            };
-            const res = await fetch('/api/admin/services', {
-                method: 'POST',
-                headers: hdrs(),
-                body: JSON.stringify(payload)
-            });
-            if (res.ok) {
-                document.getElementById('sName').value = '';
-                document.getElementById('sDesc').value = '';
-                document.getElementById('sUnit').value = 'un';
-                document.getElementById('sPrice').value = '';
-                document.getElementById('sActive').checked = true;
-                document.getElementById('loadSvcs').click();
-            } else {
-                const js = await res.json().catch(() => ({}));
-                alert(js.error || 'Erro ao criar serviço');
-            }
-        };
-
-        const brl = n => (Number(n || 0)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
-        document.getElementById('loadQuotes').onclick = async () => {
-            fbQ.textContent = 'Carregando...';
-            const res = await fetch('/api/admin/quotes?page=1', { headers: hdrs() });
-            const js = await res.json().catch(() => ({}));
-            if (!res.ok) { fbQ.textContent = js.error || 'Erro'; fbQ.className = 'err'; return; }
-            fbQ.textContent = '';
+            if (!res.ok) { fbQ.textContent = js.error || 'Erro'; fbQ.className = 'err ml-4 text-sm'; return; }
+            fbQ.textContent = `Carregados ${js.quotes?.length || 0} orçamentos.`;
+            fbQ.className = 'ok ml-4 text-sm';
 
             const tbody = document.querySelector('#qt tbody');
             tbody.innerHTML = '';
+
+            const brl = n => (Number(n || 0)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
             (js.quotes || []).forEach(q => {
                 const items = (js.itemsByQuote?.[q.id] || []);
@@ -255,40 +354,155 @@
                     const qty = Number(it.quantity || 0);
                     const unitPrice = Number(it.service?.base_price ?? 0);
                     const sub = unitPrice * qty;
-                    const det = it.detail ? ` — ${it.detail}` : '';
-                    return `${name}: ${qty} ${unit} — ${brl(unitPrice)} cad — <strong>${brl(sub)}</strong>${det}`;
-                }).join('<br>') : '-';
+                    const det = it.detail ? ` <span class="opacity-70">— ${it.detail}</span>` : '';
+                    return `<div class="text-xs">${name}: ${qty} ${unit} (${brl(unitPrice)} c/u) = <strong>${brl(sub)}</strong>${det}</div>`;
+                }).join('') : '-';
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-        <td>${new Date(q.created_at).toLocaleString()}</td>
-        <td>${q.name || '-'}</td>
-        <td>${q.phone}${q.email ? '<br>' + q.email : ''}</td>
-        <td>${itemsHtml}</td>
-        <td><strong>${brl(total)}</strong></td>
-        <td>${q.notes || '-'}</td>
-        <td>
-          <select data-id="${q.id}" class="st">
-            ${['novo', 'contatado', 'fechado', 'perdido'].map(s => `<option ${s === q.status ? 'selected' : ''}>${s}</option>`).join('')}
-          </select>
-        </td>
-      `;
+                    <td>${new Date(q.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}</td>
+                    <td>${q.name || '-'}</td>
+                    <td>${q.phone}${q.email ? '<br>' + q.email : ''}</td>
+                    <td>${itemsHtml}</td>
+                    <td><strong>${brl(total)}</strong></td>
+                    <td>${q.notes || '-'}</td>
+                    <td>
+                        <select data-id="${q.id}" class="st">
+                            ${['novo', 'contatado', 'fechado', 'perdido'].map(s => `<option value="${s}" ${s === q.status ? 'selected' : ''}>${s.charAt(0).toUpperCase() + s.slice(1)}</option>`).join('')}
+                        </select>
+                    </td>
+                `;
                 tbody.appendChild(tr);
             });
 
-            document.querySelectorAll('.st').forEach(sel => {
+            // Adiciona listener de mudança de status
+            tbody.querySelectorAll('.st').forEach(sel => {
                 sel.onchange = async (e) => {
                     const id = e.target.dataset.id;
                     const status = e.target.value;
+                    let changeHeaders;
+                    try { changeHeaders = hdrs(); } catch (e) { alert(e.message); return; }
+
                     const r = await fetch('/api/admin/quotes', {
                         method: 'PATCH',
-                        headers: hdrs(),
+                        headers: changeHeaders,
                         body: JSON.stringify({ id, status })
                     });
-                    if (!r.ok) alert('Falha ao atualizar status');
+                    if (!r.ok) {
+                        alert('Falha ao atualizar status');
+                        // Reverte a seleção em caso de falha
+                        sel.value = [...sel.options].find(o => o.defaultSelected)?.value || sel.options[0].value;
+                    }
                 };
             });
         };
+
+        // --- SERVIÇOS ---
+        document.getElementById('loadSvcs').onclick = async () => {
+            fbS.textContent = 'Carregando...';
+            fbS.className = 'ml-4 text-sm';
+            let headers;
+            try { headers = hdrs(); } catch (e) { fbS.textContent = e.message; fbS.className = 'err ml-4 text-sm'; return; }
+
+            const res = await fetch('/api/admin/services', { headers });
+            const js = await res.json().catch(() => ({}));
+            if (!res.ok) { fbS.textContent = js.error || 'Erro'; fbS.className = 'err ml-4 text-sm'; return; }
+            fbS.textContent = `Carregados ${js.services?.length || 0} serviços.`;
+            fbS.className = 'ok ml-4 text-sm';
+
+            const tbody = document.querySelector('#sv tbody');
+            tbody.innerHTML = '';
+            (js.services || []).forEach(s => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><input value="${s.name || ''}" data-k="name" data-id="${s.id}" class="w-full" /></td>
+                    <td><input value="${s.description || ''}" data-k="description" data-id="${s.id}" class="w-full" /></td>
+                    <td><input value="${s.unit_label || 'un'}" data-k="unit_label" data-id="${s.id}" class="w-20"/></td>
+                    <td><input value="${s.base_price ?? ''}" data-k="base_price" data-id="${s.id}" type="number" step="0.01" class="w-28"/></td>
+                    <td><input type="checkbox" ${s.active ? 'checked' : ''} data-k="active" data-id="${s.id}" class="form-checkbox" /></td>
+                    <td><button class="btn btn-save save" data-id="${s.id}">Salvar</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Listener para salvar serviço
+            tbody.querySelectorAll('.save').forEach(btn => {
+                btn.onclick = async () => {
+                    const id = btn.dataset.id;
+                    const row = tbody.querySelectorAll(`[data-id="${id}"]`);
+                    const payload = { id };
+                    row.forEach(inp => {
+                        const k = inp.dataset.k;
+                        payload[k] = (inp.type === 'checkbox') ? inp.checked
+                            : (inp.type === 'number' && inp.value !== '' ? Number(inp.value) : (inp.value || null));
+                    });
+
+                    let saveHeaders;
+                    try { saveHeaders = hdrs(); } catch (e) { alert(e.message); return; }
+
+                    btn.textContent = '...';
+                    const r = await fetch('/api/admin/services', {
+                        method: 'PATCH',
+                        headers: saveHeaders,
+                        body: JSON.stringify(payload)
+                    });
+                    if (!r.ok) {
+                        alert('Falha ao salvar serviço');
+                        btn.textContent = 'Salvar';
+                    } else {
+                        btn.textContent = 'Salvo!';
+                        setTimeout(() => { btn.textContent = 'Salvar'; }, 1500);
+                    }
+                };
+            });
+        };
+
+        // --- CRIAR SERVIÇO ---
+        document.getElementById('createSvc').onclick = async () => {
+            const payload = {
+                name: document.getElementById('sName').value,
+                description: document.getElementById('sDesc').value || null,
+                unit_label: document.getElementById('sUnit').value || 'un',
+                base_price: document.getElementById('sPrice').value ? Number(document.getElementById('sPrice').value) : null,
+                active: document.getElementById('sActive').checked
+            };
+
+            if (!payload.name) {
+                alert('O campo "Nome" é obrigatório.');
+                return;
+            }
+
+            let createHeaders;
+            try { createHeaders = hdrs(); } catch (e) { alert(e.message); return; }
+
+            const btn = document.getElementById('createSvc');
+            btn.textContent = 'Cadastrando...';
+            btn.disabled = true;
+
+            const res = await fetch('/api/admin/services', {
+                method: 'POST',
+                headers: createHeaders,
+                body: JSON.stringify(payload)
+            });
+
+            btn.disabled = false;
+            btn.textContent = 'Cadastrar serviço';
+
+            if (res.ok) {
+                // Limpa o formulário
+                document.getElementById('sName').value = '';
+                document.getElementById('sDesc').value = '';
+                document.getElementById('sUnit').value = 'un';
+                document.getElementById('sPrice').value = '';
+                document.getElementById('sActive').checked = true;
+                // Recarrega a lista
+                document.getElementById('loadSvcs').click();
+            } else {
+                const js = await res.json().catch(() => ({}));
+                alert(js.error || 'Erro ao criar serviço');
+            }
+        };
+
     </script>
 </body>
 
