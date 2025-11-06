@@ -522,22 +522,11 @@
         };
 
 
-        // personalize os dados da empresa aqui
-        const COMPANY = {
-            name: 'AlphaTech Elétrica & Automação',
-            doc: 'CNPJ 00.000.000/0001-00',
-            phone: '(11) 99999-9999',
-            email: 'contato@alphatech.com.br',
-            address: 'Rua Exemplo, 123 - São Paulo/SP',
-            site: 'https://alphatech-plum.vercel.app/',
-            logoUrl: new URL('/assets/logo.png', location.origin).href // opcional: URL absoluta do logo (PNG)
-        };
-
         // paleta da marca (ajuste se quiser)
         const BRAND = {
             dark: [23, 37, 84],     // azul escuro do cabeçalho da tabela
-            mid: [100, 116, 139],  // cinza-azulado para labels
-            light: [241, 245, 249]   // fundo de listras
+            mid: [100, 116, 139],   // cinza-azulado para labels
+            light: [241, 245, 249]    // fundo de listras
         };
         const brl = n => (Number(n || 0)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
@@ -546,12 +535,13 @@
             const doc = new jsPDF({ unit: 'pt', format: 'a4' });
 
             // === layout base ===
-            const M = 40;                                  // margem
+            const M = 40;                                    // margem
             const pageW = doc.internal.pageSize.getWidth();
             const pageH = doc.internal.pageSize.getHeight();
-            const headerH = 110;                           // reserva p/ cabeçalho
-            const footerH = 40;                            // reserva p/ rodapé
-            const innerW = pageW - 2 * M;
+            // [FIX 2] Alinhado com a linha em M + 80 = 120
+            const headerH = 120;                                 // reserva p/ cabeçalho
+            const footerH = 40;                                  // reserva p/ rodapé
+            const innerW = pageW - 2 * M; // 515.28 pt
 
             // carrega logo (uma vez) para reutilizar
             let logoDataUrl = null;
@@ -590,11 +580,11 @@
                 doc.setFont('helvetica', 'bold'); doc.setFontSize(14); doc.setTextColor(0);
                 doc.text(COMPANY.name, M + 150, M + 24, { maxWidth: innerW - 160 });
                 doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(60);
-                doc.text(`${COMPANY.doc}  •  ${COMPANY.phone}  •  ${COMPANY.email}`, M + 150, M + 40, { maxWidth: innerW - 160 });
-                doc.text(`${COMPANY.address}  •  ${COMPANY.site}`, M + 150, M + 56, { maxWidth: innerW - 160 });
+                doc.text(`${COMPANY.doc}  •  ${COMPANY.phone}  •  ${COMPANY.email}`, M + 150, M + 40, { maxWidth: innerW - 160 });
+                doc.text(`${COMPANY.address}  •  ${COMPANY.site}`, M + 150, M + 56, { maxWidth: innerW - 160 });
 
                 // linha
-                doc.setDrawColor(224); doc.line(M, M + 80, pageW - M, M + 80);
+                doc.setDrawColor(224); doc.line(M, M + 80, pageW - M, M + 80); // Y = 120
             }
             function drawFooter(pageNumber, pageCount) {
                 doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(90);
@@ -603,8 +593,8 @@
                 doc.text(`Página ${pageNumber} de ${pageCount}`, pageW - M, pageH - M, { align: 'right' });
             }
 
-            // título + meta da página 1
-            const yTop = M + headerH;
+            // --- Conteúdo da Página 1 ---
+            const yTop = M + headerH; // Posição inicial do conteúdo = 160
             title('Orçamento', M, yTop);
             doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(0);
             doc.text(`#${q.id.slice(0, 8)}`, M, yTop + 16);
@@ -614,13 +604,13 @@
             );
 
             // box “Cliente”
-            chip('Cliente', pageW / 2 + 20, yTop - 14);
+            chip('Cliente', pageW / 2 + 20, yTop - 14); // Y=146 (alinhado acima do título)
             doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(0);
             doc.text([
                 `Nome: ${q.name || '-'}`,
                 `WhatsApp: ${q.phone || '-'}`,
                 `E-mail: ${q.email || '-'}`
-            ], pageW / 2 + 20, yTop + 10);
+            ], pageW / 2 + 20, yTop + 10); // Y=170
 
             // tabela
             const rows = (items || []).map(it => {
@@ -635,7 +625,7 @@
             doc.autoTable({
                 head: [['Serviço', 'Detalhe', 'Qtd', 'Unitário', 'Subtotal']],
                 body: rows.length ? rows : [['(sem itens)', '', '', '', '']],
-                startY: yTop + 46, // abaixo do chip/cliente
+                startY: yTop + 46, // 160 + 46 = 206 (abaixo do bloco cliente/título)
                 margin: { top: M + headerH, bottom: M + footerH, left: M, right: M },
                 styles: {
                     font: 'helvetica', fontSize: 10, cellPadding: 6, overflow: 'linebreak',
@@ -645,58 +635,80 @@
                 bodyStyles: { textColor: 20 },
                 alternateRowStyles: { fillColor: BRAND.light },   // listras
                 theme: 'grid',
-                // larguras somando exatamente ao innerW (515pt em A4 com M=40)
+                // [FIX 1] larguras somando exatamente innerW (515.28pt)
                 columnStyles: {
-                    0: { cellWidth: 190 },            // Serviço
-                    1: { cellWidth: 150 },            // Detalhe
-                    2: { cellWidth: 60, halign: 'center' }, // Qtd
-                    3: { cellWidth: 60, halign: 'right' }, // Unitário
-                    4: { cellWidth: 55, halign: 'right' }  // Subtotal
+                    0: { cellWidth: 190.28 },                  // Serviço
+                    1: { cellWidth: 150 },                    // Detalhe
+                    2: { cellWidth: 60, halign: 'center' },  // Qtd
+                    3: { cellWidth: 60, halign: 'right' },   // Unitário
+                    4: { cellWidth: 55, halign: 'right' }    // Subtotal
                 },
                 didDrawPage: (data) => {
                     // header/rodapé em todas as páginas
                     drawHeader();
                     const pageNumber = data.pageNumber;
-                    const pageCount = doc.internal.getNumberOfPages();
+                    const pageCount = doc.internal.getNumberOfPages(); // Total de páginas
                     drawFooter(pageNumber, pageCount);
                 }
             });
 
-            // pós-tabela
-            let y = doc.lastAutoTable.finalY + 16;
+            // --- [FIX 3] Bloco de Resumo (Observações + Total) ---
+
+            let y = doc.lastAutoTable.finalY + 24; // Posição inicial com padding
             const usableBottom = pageH - M - footerH;
+
             const ensure = (h) => {
                 if (y + h > usableBottom) {
                     doc.addPage();
-                    // cabeçalho/rodapé serão redesenhados via didDrawPage na nova página
-                    y = M + headerH;
+                    // O 'didDrawPage' já desenha header/footer na nova pág
+                    y = M + headerH; // Reseta Y para o topo da área de conteúdo
                 }
             };
 
-            // Observações
+            // 1. Calcular Alturas
+            let notesBlockH = 0;
+            let notesLines = [];
+            const totalBoxW = 220;
+            const notesMaxWidth = innerW - totalBoxW - 20; // Largura total - caixa total - padding
+
             if (q.notes) {
-                const notes = doc.splitTextToSize(q.notes, innerW);
-                const lineH = 12;
-                const blockH = 20 + notes.length * lineH;
-                ensure(blockH);
-                chip('Observações', M, y - 14);
-                doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(0);
-                doc.text(notes, M, y + 8);
-                y += blockH;
+                doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+                notesLines = doc.splitTextToSize(q.notes, notesMaxWidth);
+                const lineH = 12; // Altura da linha de nota
+                // Altura (20 pro chip + altura do texto)
+                notesBlockH = 20 + (notesLines.length * lineH);
             }
 
-            // Total — cartucho destacado
-            ensure(50);
-            const totalBoxW = 220, totalBoxH = 36;
+            const totalBlockH = 50; // Altura do bloco total
+            const finalBlockH = Math.max(notesBlockH, totalBlockH) + 20; // +20 padding final
+
+            // 2. Garantir espaço para o maior dos blocos
+            ensure(finalBlockH);
+
+            // 3. Desenhar Observações (se houver)
+            // O 'Y' do chip e do texto do total são alinhados para parecerem um bloco
+            const blockTopY = y - 14;
+
+            if (q.notes) {
+                chip('Observações', M, blockTopY);
+                doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(0);
+                doc.text(notesLines, M, blockTopY + 22, { maxWidth: notesMaxWidth });
+            }
+
+            // 4. Desenhar Total (sempre)
+            const totalBoxH = 36;
+            const totalX = pageW - M - totalBoxW;
+
             doc.setFillColor(247, 250, 252);
-            doc.roundedRect(pageW - M - totalBoxW, y, totalBoxW, totalBoxH, 8, 8, 'F');
+            doc.roundedRect(totalX, blockTopY, totalBoxW, totalBoxH, 8, 8, 'F');
             doc.setDrawColor(...BRAND.dark); doc.setLineWidth(0.8);
-            doc.roundedRect(pageW - M - totalBoxW, y, totalBoxW, totalBoxH, 8, 8);
+            doc.roundedRect(totalX, blockTopY, totalBoxW, totalBoxH, 8, 8);
 
             doc.setFont('helvetica', 'bold'); doc.setFontSize(12); doc.setTextColor(...BRAND.dark);
-            doc.text('Total estimado', pageW - M - totalBoxW + 12, y + 14);
+            doc.text('Total estimado', totalX + 12, blockTopY + 14);
             doc.setFont('helvetica', 'bold'); doc.setFontSize(14); doc.setTextColor(0);
-            doc.text(brl(total), pageW - M - 12, y + 26, { align: 'right' });
+            // [FIX 4] Alinhado à direita DA CAIXA, não da página
+            doc.text(brl(total), totalX + totalBoxW - 12, blockTopY + 26, { align: 'right' });
 
             // arquivo
             const fname = `orcamento_${(q.name || 'cliente').toString().trim().replace(/\s+/g, '_')}_${q.id.slice(0, 8)}.pdf`;
