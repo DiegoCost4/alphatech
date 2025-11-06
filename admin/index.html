@@ -540,11 +540,11 @@
             const doc = new jsPDF({ unit: 'pt', format: 'a4' });
 
             // === Layout base ===
-            const M = 40;                                   // margem
+            const M = 40;                                    // margem
             const pageW = doc.internal.pageSize.getWidth();
             const pageH = doc.internal.pageSize.getHeight();
-            const headerH = 90;                              // altura ocupada pelo cabeçalho
-            const footerH = 40;                              // altura ocupada pelo rodapé
+            const headerH = 90;                                  // altura reservada para o cabeçalho
+            const footerH = 40;                                  // altura reservada para o rodapé
             const innerW = pageW - 2 * M;
 
             // Pré-carrega logo (se houver) para reutilizar em cada página
@@ -563,7 +563,6 @@
                 let y = M;
                 // Logo
                 if (logoDataUrl) {
-                    // largura máxima 120, altura ~40 (mantendo proporção)
                     doc.addImage(logoDataUrl, 'PNG', M, y, 120, 40, undefined, 'FAST');
                 }
                 // Bloco da empresa
@@ -576,7 +575,7 @@
                 );
 
                 // Linha separadora
-                y += 60;
+                y += 60; // Esta é a altura real do conteúdo do cabeçalho
                 doc.setDrawColor(220); doc.line(M, y, pageW - M, y);
             }
 
@@ -592,10 +591,14 @@
                 doc.text(`Página ${pageNo}`, pageW - M, pageH - M, { align: 'right' });
             }
 
-            // Desenha cabeçalho e rodapé da 1ª página
-            drawHeader(); drawFooter();
+            // [FIX 2: REMOVIDO]
+            // As chamadas manuais foram removidas. O hook 'didDrawPage' do autoTable
+            // agora cuidará de desenhar o header/footer em TODAS as páginas, incluindo a primeira.
+            // drawHeader(); drawFooter(); 
 
             // ===== Título + Metadados (na 1ª página, abaixo do cabeçalho) =====
+            // Esta área é desenhada ANTES do autoTable, por isso o header/footer
+            // (desenhado pelo didDrawPage) não irá sobrepor este conteúdo.
             let y0 = M + headerH; // início de conteúdo seguro
             doc.setFont('helvetica', 'bold'); doc.setFontSize(18);
             doc.text('Orçamento', M, y0 + 16);
@@ -632,20 +635,23 @@
             doc.autoTable({
                 head: [['Serviço', 'Detalhe', 'Qtd', 'Unitário', 'Subtotal']],
                 body: tableData.length ? tableData : [['(sem itens)', '', '', '', '']],
-                startY: y0 + 60,                       // começa bem abaixo do bloco do título/cliente
+                startY: y0 + 60,                   // começa bem abaixo do bloco do título/cliente (só na Pág 1)
                 margin: { top: M + headerH, bottom: M + footerH, left: M, right: M },
-                tableWidth: innerW,                    // garante largura dentro das margens
+                tableWidth: 'auto',                // [FIX 1] Deixe 'auto' e controle pelas colunas
                 styles: { font: 'helvetica', fontSize: 10, cellPadding: 6, overflow: 'linebreak' },
                 headStyles: { fillColor: [30, 41, 59], textColor: 255 },
                 theme: 'grid',
                 columnStyles: {
-                    0: { cellWidth: 220 },              // Serviço
-                    1: { cellWidth: 180 },              // Detalhe
-                    2: { halign: 'center', cellWidth: 60 },  // Qtd
-                    3: { halign: 'right', cellWidth: 80 },  // Unitário
+                    // [FIX 1] Larguras ajustadas para somar <= 515.28 (innerW)
+                    0: { cellWidth: 160 },                 // Serviço
+                    1: { cellWidth: 120.28 },            // Detalhe
+                    2: { halign: 'center', cellWidth: 60 }, // Qtd
+                    3: { halign: 'right', cellWidth: 85 },  // Unitário (aumentei)
                     4: { halign: 'right', cellWidth: 90 }   // Subtotal
                 },
-                // Redesenha header/rodapé em TODA página gerada pela tabela
+                // [FIX 2] didDrawPage desenha em TODAS as páginas.
+                // Como as margens (top/bottom) estão corretas, ele desenha
+                // na área "vazia" reservada para o cabeçalho/rodapé.
                 didDrawPage: () => { drawHeader(); drawFooter(); }
             });
 
@@ -659,20 +665,32 @@
                 if (yAfter + h > usableBottom) {
                     doc.addPage();
                     drawHeader(); drawFooter();
-                    yAfter = M + headerH;
+                    yAfter = M + headerH; // Reseta para o topo seguro
                 }
             }
 
+            // [FIX 3] Lógica de altura dinâmica para as Observações
             if (q.notes) {
-                ensureSpace(48);
+                doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+                const notesLines = doc.splitTextToSize(q.notes, innerW);
+                // Calcula altura: (linhas * altura_linha) + título + padding
+                const lineHeight = doc.getFontSize() * 1.15; // Fator de altura da linha
+                const titleHeight = 11; // "Observações"
+                const textHeight = notesLines.length * lineHeight;
+                const blockHeight = titleHeight + textHeight + 10; // 10 de padding
+
+                ensureSpace(blockHeight); // Garante espaço para o bloco todo
+
                 doc.setFont('helvetica', 'bold'); doc.setFontSize(11);
                 doc.text('Observações', M, yAfter);
+                yAfter += titleHeight + 4; // Pula o título
+
                 doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
-                doc.text(q.notes, M, yAfter + 14, { maxWidth: innerW });
-                yAfter += 48;
+                doc.text(notesLines, M, yAfter);
+                yAfter += textHeight; // Avança o Y pela altura real do texto
             }
 
-            ensureSpace(24);
+            ensureSpace(24); // Espaço para o total
             doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
             doc.text(`Total estimado: ${brl(total)}`, M, yAfter + 12);
 
@@ -680,7 +698,6 @@
             const fname = `orcamento_${(q.name || 'cliente').toString().trim().replace(/\s+/g, '_')}_${q.id.slice(0, 8)}.pdf`;
             doc.save(fname);
         }
-
 
     </script>
 </body>
