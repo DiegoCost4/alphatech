@@ -1,4 +1,4 @@
-// api/_email_test.js
+// /api/_email_test.js
 import { Resend } from 'resend';
 
 export default async function handler(req, res) {
@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     const to = process.env.ADMIN_EMAIL;
     if (!to) return res.status(400).json({ error: 'ADMIN_EMAIL não configurado' });
 
-    const from = process.env.RESEND_FROM || 'onboarding@resend.dev'; // use onboarding para testar
+    const from = process.env.RESEND_FROM || 'onboarding@resend.dev';
     const r = await resend.emails.send({
       from,
       to,
@@ -17,7 +17,6 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ ok: true, id: r?.id || null });
   } catch (e) {
-    console.error('EMAIL_TEST_ERROR', e);
     return res.status(500).json({ error: e?.message || 'Falha ao enviar' });
   }
 }
