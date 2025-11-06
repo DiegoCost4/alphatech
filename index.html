@@ -505,8 +505,15 @@
             </p>
         </div>
     </section>
-    <div id="budget-modal" class="fixed inset-0 bg-black/60 hidden z-[100]">
-        <div class="min-h-full flex items-center justify-center p-4">
+
+    <!-- 
+    AJUSTE MOBILE: 
+    1. Adicionado 'overflow-y-auto' ao container principal (#budget-modal) para permitir a rolagem.
+    2. Removido 'items-center' do wrapper interno e substituído por 'py-12' (padding vertical) 
+       para garantir que o modal comece perto do topo em telas pequenas e permita a rolagem para baixo.
+    -->
+    <div id="budget-modal" class="fixed inset-0 bg-black/60 hidden z-[100] overflow-y-auto">
+        <div class="min-h-full flex justify-center p-4 py-12"> <!-- Alterado de items-center para py-12 -->
             <div class="w-full max-w-3xl bg-white rounded-2xl shadow-2xl">
                 <div class="flex items-center justify-between px-6 py-4 rounded-t-2xl"
                     style="background-color: var(--color-primary-dark);">
@@ -526,7 +533,12 @@
 
                     <div>
                         <h4 class="font-subtitle text-lg mb-2">Serviços e Quantidades</h4>
-                        <div id="servicesList" class="space-y-3 max-h-[40vh] overflow-y-auto pr-2">
+                        <!-- 
+                        AJUSTE MOBILE 2: 
+                        Reduzido o max-h de 40vh para 30vh para ocupar menos espaço vertical em
+                        telas pequenas, ajudando a evitar que o teclado cubra o botão de envio.
+                        -->
+                        <div id="servicesList" class="space-y-3 max-h-[30vh] overflow-y-auto pr-2"> <!-- Alterado de max-h-[40vh] para max-h-[30vh] -->
                             </div>
                         <p id="servicesEmpty" class="text-sm text-gray-500 hidden">Sem serviços cadastrados.</p>
                     </div>
@@ -680,6 +692,7 @@
         
         // Fecha clicando fora do card
         budgetModal.addEventListener('click', (e) => {
+            // AJUSTE: Garante que o clique seja no container de fundo, não no card
             if (e.target === budgetModal) closeBudgetModal();
         });
 
