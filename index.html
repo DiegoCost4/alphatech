@@ -5,36 +5,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- OTIMIZAÇÃO DE SEO COMEÇA AQUI -->
-    <!-- 1. Título Otimizado (Keyword-rich) -->
     <title>AlphaTech | Instalação, Automação Residencial e Segurança Elétrica Premium</title>
 
-    <!-- 2. Meta Descrição (Ajustada para focar em serviços + ação) -->
     <meta name="description"
         content="AlphaTech oferece serviços de Eletricidade Premium, Automação Residencial Inteligente e Segurança 24h. Aumente a eficiência e a proteção da sua casa ou empresa com nossas soluções.">
 
-    <!-- 3. Canonical URL (Para evitar conteúdo duplicado) - Ajuste o href para o domínio real -->
     <link rel="canonical" href="https://www.alphatech.com.br/">
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='80'>⚡</text></svg>">
 
-    <!-- 4. Open Graph Tags (OG) - Para compartilhamento em Mídias Sociais -->
     <meta property="og:title" content="AlphaTech | Soluções Inteligentes em Elétrica e Segurança">
     <meta property="og:description"
         content="Especialistas em instalações elétricas premium, automação residencial e monitoramento 24h.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.alphatech.com.br/">
-    <!-- Nota: A tag og:image precisa de uma URL de imagem real, se disponível -->
     <meta property="og:image" content="https://placehold.co/1200x630/0B132B/FFD166?text=AlphaTech">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- FIM DA OTIMIZAÇÃO DE SEO -->
-    <!-- Carregamento do Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Carregamento das Fontes: Montserrat (Título), Exo 2 (Subtítulo) e Open Sans (Texto) -->
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Exo+2:wght@700&family=Open+Sans:wght@400&display=swap"
         rel="stylesheet">
-    <!-- Font Awesome para ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <style>
@@ -176,7 +166,6 @@
 
 <body class="bg-gray-50">
 
-    <!-- Variáveis de Contato (Para facilitar a manutenção) -->
     <script>
         const whatsappNumber = "5511930888270"; // WhatsApp no formato DDI DDD XXXXXXXXX
         const whatsappMessage = encodeURIComponent("Olá, gostaria de solicitar um orçamento para soluções AlphaTech!");
@@ -184,16 +173,13 @@
         const contactEmail = "Alphatech.escri@gmail.com";
     </script>
 
-    <!-- Cabeçalho / Navegação - Fundo Azul Escuro Premium -->
     <header class="sticky top-0 z-50 shadow-lg" style="background-color: var(--color-primary-dark);">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <!-- Logo AlphaTech - Dourado e Montserrat (AJUSTADO: Icon com flex items-center) -->
             <div class="text-3xl font-title font-extrabold uppercase flex items-center">
                 <i data-lucide="zap" class="w-8 h-8 text-yellow-400 mr-1"></i>
                 <span class="text-white">ALPHA</span><span class="logo-text-gold">TECH</span>
             </div>
 
-            <!-- Links de Navegação -->
             <nav class="hidden md:flex space-x-8">
                 <a href="#detalhes-servicos"
                     class="text-white opacity-80 hover:opacity-100 transition duration-300 font-subtitle">Serviços</a>
@@ -205,61 +191,59 @@
                     class="text-white opacity-80 hover:opacity-100 transition duration-300 font-subtitle">Localização</a>
             </nav>
 
-            <!-- Ícones e CTAs (Alinhamento à Direita) -->
             <div class="flex items-center space-x-4">
 
-                <!-- NOVO Ícone de Telefone para Contato Rápido (Desktop) --><a id="header-phone-btn"
+                <a id="header-phone-btn"
                     href="tel:+5511930888270"
                     class="hidden sm:block text-white hover:logo-text-gold transition duration-300 text-xl"
                     aria-label="Ligar para AlphaTech">
                     <i class="fas fa-phone"></i>
                 </a>
 
-                <!-- CTA no Header - AGORA APONTA PARA O WHATSAPP COM MENSAGEM PRE-ESCRITA --><a
+                <a
                     id="header-whatsapp-btn" href="#" target="_blank"
                     class="hidden sm:block px-4 py-2 rounded-full font-bold text-white btn-cta shadow-xl hover:shadow-2xl font-subtitle">
                     <i class="fab fa-whatsapp mr-1"></i> Fale Conosco
                 </a>
+
+                <button id="openBudgetBtn"
+                    class="hidden sm:block px-8 py-4 rounded-xl text-lg font-bold text-white shadow-xl hover:shadow-2xl font-subtitle"
+                    style="background-color: var(--color-accent-blue);">
+                    <i class="fa-solid fa-clipboard-list mr-2"></i> Orçamento Online
+                </button>
             </div>
 
-            <!-- Menu Mobile (Ícone) --><button id="menu-btn"
+            <button id="menu-btn"
                 class="md:hidden text-white hover:opacity-80 focus:outline-none">
                 <i class="fas fa-bars text-xl"></i>
             </button>
 
-            <!-- +++ NOVO CTA +++ -->
-            <button id="openBudgetBtn"
-                class="px-8 py-4 rounded-xl text-lg font-bold text-white shadow-xl hover:shadow-2xl font-subtitle"
-                style="background-color: var(--color-accent-blue);">
-                <i class="fa-solid fa-clipboard-list mr-2"></i> Orçamento Online
-            </button>
-
         </div>
-        <!-- Menu Dropdown Mobile -->
         <div id="mobile-menu" class="hidden md:hidden shadow-lg" style="background-color: var(--color-primary-dark);">
             <a href="#detalhes-servicos" class="block px-4 py-2 text-white hover:bg-gray-800 font-subtitle">Serviços</a>
             <a href="#power" class="block px-4 py-2 text-white hover:bg-gray-800 font-subtitle">AlphaPower</a>
             <a href="#smart" class="block px-4 py-2 text-white hover:bg-gray-800 font-subtitle">AlphaSmart</a>
             <a href="#contato" class="block px-4 py-2 text-white hover:bg-gray-800 font-subtitle">Localização</a>
+            <button id="openBudgetBtnMobile"
+                class="block w-full text-left px-4 py-3 font-bold text-white font-subtitle"
+                style="background-color: var(--color-accent-blue);">
+                <i class="fa-solid fa-clipboard-list mr-2"></i> Orçamento Online
+            </button>
         </div>
     </header>
 
-    <!-- Seção Principal / Hero - Fundo Midnight Blue -->
     <section class="relative overflow-hidden pt-16 pb-24 lg:pt-32 lg:pb-40"
         style="background-color: var(--color-primary-dark);">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-            <!-- Título Principal - Dourado e Branco (Montserrat) -->
             <h1
                 class="text-4xl sm:text-5xl lg:text-7xl font-title font-extrabold tracking-tight mb-6 uppercase text-white">
                 O Poder da Tecnologia <span class="block lg:inline logo-text-gold">em Suas Mãos</span>
             </h1>
-            <!-- Subtítulo / Proposta de Valor - REFORÇADO COM KEYWORDS e AGORA COM STRONG -->
             <p class="mt-4 max-w-3xl mx-auto text-lg sm:text-xl mb-10" style="color: var(--color-neutral-light);">
                 Sua parceira em <strong>Instalações Elétricas de Alto Padrão</strong>, <strong>Automação
                     Residencial</strong> e <strong>Monitoramento 24h</strong>. A AlphaTech garante segurança, eficiência
                 e inovação em cada projeto.
             </p>
-            <!-- CTA Principal - Electric Blue AGORA APONTA PARA O WHATSAPP COM MENSAGEM PRE-ESCRITA -->
             <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
                 <a href="#detalhes-servicos"
                     class="px-8 py-4 rounded-xl text-lg font-bold text-white btn-cta shadow-xl hover:shadow-2xl font-subtitle">
@@ -272,7 +256,6 @@
                 </a>
             </div>
         </div>
-        <!-- Elemento Gráfico: Triângulos e Linhas Diagonais -->
         <div class="absolute inset-0 opacity-10">
             <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
                 <defs>
@@ -281,80 +264,60 @@
                         <stop offset="100%" style="stop-color:var(--color-neutral-light);stop-opacity:1" />
                     </linearGradient>
                 </defs>
-                <!-- Linhas diagonais sutis -->
                 <line x1="0" y1="50" x2="100" y2="100" stroke="url(#goldGradient)" stroke-width="0.1" />
                 <line x1="100" y1="50" x2="0" y2="100" stroke="url(#goldGradient)" stroke-width="0.1" />
             </svg>
         </div>
     </section>
 
-    <!-- Seção de Segmentos / Divisões (Os 4 Alphas) - Fundo Steel Gray -->
     <section id="servicos" class="py-16 md:py-24" style="background-color: var(--color-neutral-dark);">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- H2 OTIMIZADO PARA SEO -->
             <h2 class="text-3xl sm:text-4xl font-title font-bold text-center mb-12 uppercase text-white">Serviços
                 AlphaTech: Elétrica, Automação e Segurança</h2>
 
-            <!-- Grid dos Segmentos - Cards Aprimorados Visualmente com FUNDO ESCURO -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
 
-                <!-- 1. AlphaPower - Gold Premium - Link para #power --><a href="#power"
+                <a href="#power"
                     class="group rounded-xl shadow-2xl p-6 transition transform duration-300 segment-card flex flex-col items-center text-center">
-                    <!-- Fundo do ícone escuro e semitransparente -->
                     <div class="card-icon-container mb-4 p-4 rounded-full bg-gray-800/50"
                         style="color: var(--color-segment-power);">
                         <i class="fas fa-bolt"></i>
                     </div>
-                    <!-- Título branco -->
                     <h3 class="text-xl font-subtitle font-bold mb-1 uppercase text-white">AlphaPower</h3>
-                    <!-- Cor e Sombra Destacadas -->
                     <p class="text-sm font-bold text-glow-power">Energia & Projetos Elétricos</p>
-                    <!-- Descrição cinza claro -->
                     <p class="text-gray-300 text-xs mt-1">Alta confiabilidade e laudos técnicos.</p>
                 </a>
 
-                <!-- 2. AlphaSmart - Electric Blue - Link para #smart --><a href="#smart"
+                <a href="#smart"
                     class="group rounded-xl shadow-2xl p-6 transition transform duration-300 segment-card flex flex-col items-center text-center">
-                    <!-- Fundo do ícone escuro e semitransparente -->
                     <div class="card-icon-container mb-4 p-4 rounded-full bg-gray-800/50"
                         style="color: var(--color-segment-smart);">
                         <i class="fas fa-house-chimney-crack"></i>
                     </div>
-                    <!-- Título branco -->
                     <h3 class="text-xl font-subtitle font-bold mb-1 uppercase text-white">AlphaSmart</h3>
-                    <!-- Cor e Sombra Destacadas --"><p class="text-sm font-bold text-glow-smart">Automação & Casa Inteligente</p>
-                    <!-- Descrição cinza claro -->
+                    <p class="text-sm font-bold text-glow-smart">Automação & Casa Inteligente</p>
                     <p class="text-gray-300 text-xs mt-1">Controle total de iluminação e acesso.</p>
                 </a>
 
-                <!-- 3. AlphaSeg - Cyber Green - Link para #seg --><a href="#seg"
+                <a href="#seg"
                     class="group rounded-xl shadow-2xl p-6 transition transform duration-300 segment-card flex flex-col items-center text-center">
-                    <!-- Fundo do ícone escuro e semitransparente -->
                     <div class="card-icon-container mb-4 p-4 rounded-full bg-gray-800/50"
                         style="color: var(--color-segment-seg);">
                         <i class="fas fa-shield-alt"></i>
                     </div>
-                    <!-- Título branco -->
                     <h3 class="text-xl font-subtitle font-bold mb-1 uppercase text-white">AlphaSeg</h3>
-                    <!-- Cor e Sombra Destacadas -->
                     <p class="text-sm font-bold text-glow-seg">Monitoramento & Segurança 24h</p>
-                    <!-- Descrição cinza claro -->
                     <p class="text-gray-300 text-xs mt-1">CFTV, alarmes e proteção perimetral.</p>
                 </a>
 
-                <!-- 4. AlphaSolar (Em Breve) - Sem link, é apenas um placeholder -->
                 <div class="group rounded-xl shadow-2xl p-6 flex flex-col items-center text-center border-4 border-dashed segment-card"
                     style="border-color: var(--color-segment-solar); background-color: var(--color-card-dark-background);">
-                    <!-- Fundo do ícone escuro e semitransparente -->
                     <div class="card-icon-container mb-4 p-4 rounded-full bg-gray-800/50"
                         style="color: var(--color-segment-solar);">
                         <i class="fas fa-solar-panel"></i>
                     </div>
-                    <!-- Título branco -->
                     <h3 class="text-xl font-subtitle font-bold mb-1 uppercase text-white">AlphaSolar</h3>
-                    <!-- Cor e Sombra Destacadas -->
                     <p class="text-sm font-bold text-glow-solar">Energia Solar Fotovoltaica</p>
-                    <!-- Descrição cinza claro -->
                     <p class="text-gray-300 text-xs mt-1">Geração de energia limpa e sustentável.</p>
                     <span class="mt-4 inline-block text-xs font-semibold px-3 py-1 rounded-full uppercase text-white"
                         style="background-color: var(--color-segment-solar);">
@@ -367,7 +330,6 @@
         </div>
     </section>
 
-    <!-- SEÇÃO: Detalhes dos Serviços (FUNDO ESCURO) -->
     <section id="detalhes-servicos" class="py-16 md:py-24" style="background-color: var(--color-neutral-dark);">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl sm:text-4xl font-title font-bold text-center mb-12 uppercase text-white">O que fazemos
@@ -375,9 +337,7 @@
 
             <div class="space-y-12">
 
-                <!-- Detalhe AlphaPower (Card interno ESCURO) -->
                 <div id="power" class="service-detail-section">
-                    <!-- Título H3 usa cor branca, e o ícone usa a cor do segmento -->
                     <h3 class="text-3xl font-subtitle font-bold service-detail-title mb-4">
                         <i class="fas fa-bolt mr-2" style="color: var(--color-segment-power);"></i> AlphaPower: Soluções
                         Elétricas Premium
@@ -388,7 +348,6 @@
                         sempre com foco em segurança e eficiência energética.
                     </p>
 
-                    <!-- Lista de serviços AlphaPower (Texto claro herdado) -->
                     <div class="space-y-3 opacity-90">
                         <p>
                             <span class="font-bold mr-1" style="color: var(--color-segment-power);">Instalações
@@ -408,12 +367,9 @@
                                 NR-10:</span> Conformidade legal e segurança do trabalho.
                         </p>
                     </div>
-                    <!-- Fim da lista AlphaPower -->
-                </div>
+                    </div>
 
-                <!-- Detalhe AlphaSmart (Card interno ESCURO) -->
                 <div id="smart" class="service-detail-section">
-                    <!-- Título H3 usa cor branca, e o ícone usa a cor do segmento -->
                     <h3 class="text-3xl font-subtitle font-bold service-detail-title mb-4">
                         <i class="fas fa-house-chimney-crack mr-2" style="color: var(--color-segment-smart);"></i>
                         AlphaSmart: Automação e Inteligência Residencial
@@ -424,7 +380,6 @@
                         conforto e economia.
                     </p>
 
-                    <!-- Lista de serviços AlphaSmart (Texto claro herdado) -->
                     <div class="space-y-3 opacity-90">
                         <p>
                             <span class="font-bold mr-1" style="color: var(--color-segment-smart);">Controle de
@@ -443,12 +398,9 @@
                                 Integração de Dispositivos:</span> Controle total via Alexa, Google Home ou aplicativos.
                         </p>
                     </div>
-                    <!-- Fim da lista AlphaSmart -->
-                </div>
+                    </div>
 
-                <!-- Detalhe AlphaSeg (Card interno ESCURO) -->
                 <div id="seg" class="service-detail-section">
-                    <!-- Título H3 usa cor branca, e o ícone usa a cor do segmento -->
                     <h3 class="text-3xl font-subtitle font-bold service-detail-title mb-4">
                         <i class="fas fa-shield-alt mr-2" style="color: var(--color-segment-seg);"></i> AlphaSeg:
                         Monitoramento e Segurança 24 Horas
@@ -458,7 +410,6 @@
                         ativo, com resposta rápida a qualquer incidente, protegendo seu patrimônio a todo momento.
                     </p>
 
-                    <!-- Lista de serviços AlphaSeg (Texto claro herdado) -->
                     <div class="space-y-3 opacity-90">
                         <p>
                             <span class="font-bold mr-1" style="color: var(--color-segment-seg);">Monitoramento 24h por
@@ -477,30 +428,25 @@
                                 Sistemas de Barreira:</span> Dissuasão e segurança física avançada.
                         </p>
                     </div>
-                    <!-- Fim da lista AlphaSeg -->
-                </div>
+                    </div>
 
             </div>
         </div>
     </section>
 
-    <!-- Seção Por Que AlphaTech (FUNDO ESCURO) -->
     <section class="py-16 md:py-24" style="background-color: var(--color-neutral-dark);">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
                 <div class="mb-10 lg:mb-0">
-                    <!-- Título ajustado para branco -->
                     <h2 class="text-3xl sm:text-4xl font-title font-bold mb-6 uppercase text-white">
                         Confiabilidade e <span class="logo-text-gold">Poder Tecnológico</span>
                     </h2>
-                    <!-- Parágrafo ajustado para branco/claro -->
                     <p class="text-lg text-white opacity-80 mb-8 font-opensans">
                         Nosso compromisso é entregar soluções que elevam o padrão de segurança e eficiência. Escolha
                         AlphaTech e garanta inovação em cada detalhe.
                     </p>
 
                     <ul class="space-y-4">
-                        <!-- Itens da lista ajustados para branco/claro -->
                         <li class="flex items-start">
                             <i class="fas fa-check-circle text-2xl mr-3 mt-1"
                                 style="color: var(--color-accent-blue);"></i>
@@ -521,7 +467,6 @@
                     </ul>
                 </div>
 
-                <!-- Imagem Ilustrativa (AGORA COM ALT TEXT DESCRITIVO) -->
                 <div class="rounded-xl overflow-hidden shadow-2xl">
                     <img src="https://placehold.co/600x400/0B132B/FFD166/png?font=Exo%202&text=INOVA%C3%87%C3%83O%20%26%20PODER"
                         alt="Painel de controle de automação residencial AlphaTech com sistemas de segurança integrados."
@@ -531,7 +476,6 @@
         </div>
     </section>
 
-    <!-- NOVA SEÇÃO DE CONTATO/MAPA (Substitui o Formulário) - Electric Blue -->
     <section id="contato" class="py-16 md:py-24" style="background-color: var(--color-accent-blue);">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 class="text-3xl sm:text-4xl font-title font-bold mb-4 uppercase text-white">Onde Estamos e Como Falar
@@ -540,14 +484,13 @@
                 Venha nos visitar ou faça seu orçamento de forma rápida via WhatsApp.
             </p>
 
-            <!-- Botão Faça Seu Orçamento - AGORA APONTA PARA O WHATSAPP COM MENSAGEM PRE-ESCRITA --><a
+            <a
                 id="contact-whatsapp-btn" href="#" target="_blank"
                 class="inline-block px-10 py-4 rounded-xl text-xl font-bold text-white shadow-lg hover:shadow-xl transition duration-300 font-subtitle uppercase mb-10"
                 style="background-color: var(--color-primary-dark); color: var(--color-secondary-gold);">
                 <i class="fab fa-whatsapp mr-2"></i> Faça Seu Orçamento Agora!
             </a>
 
-            <!-- Mapa Incorporado -->
             <div class="bg-white rounded-xl overflow-hidden shadow-2xl max-w-4xl mx-auto">
                 <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d117075.2926710497!2d-47.01639016912384!3d-23.3653130193392!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cf180e0c0d8d01%3A0x2a9a5f7e7f6d4d14!2sR.%20Vicente%20Paulo%20da%20Costa%2C%20Jordan%C3%A9sia%2C%20Cajamar%20-%20SP%2C%2007787-750!5e0!3m2!1spt-BR!2sbr!4v1700000000000!5m2!1spt-BR!2sbr"
@@ -562,11 +505,9 @@
             </p>
         </div>
     </section>
-    <!-- ===== Modal de Orçamento ===== -->
     <div id="budget-modal" class="fixed inset-0 bg-black/60 hidden z-[100]">
         <div class="min-h-full flex items-center justify-center p-4">
             <div class="w-full max-w-3xl bg-white rounded-2xl shadow-2xl">
-                <!-- Cabeçalho -->
                 <div class="flex items-center justify-between px-6 py-4 rounded-t-2xl"
                     style="background-color: var(--color-primary-dark);">
                     <h3 class="text-xl font-title text-white">Solicitar Orçamento</h3>
@@ -575,7 +516,6 @@
                     </button>
                 </div>
 
-                <!-- Corpo / Form -->
                 <form id="budgetForm" class="p-6 space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                         <input name="name" class="border rounded-lg px-3 py-2" placeholder="Seu nome">
@@ -586,9 +526,8 @@
 
                     <div>
                         <h4 class="font-subtitle text-lg mb-2">Serviços e Quantidades</h4>
-                        <div id="servicesList" class="space-y-3">
-                            <!-- preenchido via JS com /api/services -->
-                        </div>
+                        <div id="servicesList" class="space-y-3 max-h-[40vh] overflow-y-auto pr-2">
+                            </div>
                         <p id="servicesEmpty" class="text-sm text-gray-500 hidden">Sem serviços cadastrados.</p>
                     </div>
 
@@ -606,14 +545,10 @@
             </div>
         </div>
     </div>
-    <!-- ===== /Modal ===== -->
-
-    <!-- Rodapé - Midnight Blue -->
     <footer class="py-10" style="background-color: var(--color-primary-dark);">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center md:text-left">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-                <!-- Coluna 1: Logo e Descrição -->
                 <div>
                     <div class="text-2xl font-title font-extrabold mb-3 uppercase text-white"><span
                             class="logo-text-gold">Alpha</span>Tech</div>
@@ -622,7 +557,6 @@
                     </p>
                 </div>
 
-                <!-- Coluna 2: Contato Rápido (Atualizado com o endereço correto) -->
                 <div>
                     <h4 class="text-lg font-subtitle font-semibold mb-3 logo-text-gold">Contato</h4>
                     <ul class="space-y-2 text-sm font-opensans" style="color: var(--color-neutral-light);">
@@ -631,13 +565,11 @@
                         <li><i class="fab fa-whatsapp mr-2" style="color: #25D366;"></i> (11) 93088-8270</li>
                         <li><i class="fas fa-phone mr-2" style="color: var(--color-accent-blue);"></i> (11) 98765-4321
                         </li>
-                        <!-- EMAIL ATUALIZADO AQUI -->
                         <li id="footer-email-link"><i class="fas fa-envelope mr-2"
                                 style="color: var(--color-accent-blue);"></i> Alphatech.escri@gmail.com</li>
                     </ul>
                 </div>
 
-                <!-- Coluna 3: Links Úteis (Atualizado para a nova seção de detalhes) -->
                 <div>
                     <h4 class="text-lg font-subtitle font-semibold mb-3 logo-text-gold">Serviços</h4>
                     <ul class="space-y-2 text-sm font-opensans" style="color: var(--color-neutral-light);">
@@ -651,8 +583,8 @@
 
             <div class="mt-10 pt-6 border-t border-gray-700 text-center">
                 <p class="text-sm" style="color: var(--color-neutral-light);">
-                    &copy; 2025 AlphaTech. Todos os direitos reservados.
-                    <!-- CRÉDITO VOKKA INSERIDO AQUI --><span class="block mt-2">
+                    © 2025 AlphaTech. Todos os direitos reservados.
+                    <span class="block mt-2">
                         Desenvolvido por <a href="https://www.vokka.com.br/" target="_blank"
                             class="logo-text-gold font-bold hover:text-white transition duration-300 underline">Vokka</a>
                     </span>
@@ -661,7 +593,7 @@
         </div>
     </footer>
 
-    <!-- Botão Flutuante do WhatsApp (ATUALIZADO COM MENSAGEM PRE-ESCRITA) --><a id="floating-whatsapp-btn" href="#"
+    <a id="floating-whatsapp-btn" href="#"
         target="_blank"
         class="fixed bottom-6 right-6 z-50 p-4 rounded-full shadow-2xl transition duration-300 transform hover:scale-110"
         style="background-color: #25D366; color: white; box-shadow: 0 10px 20px rgba(37, 211, 102, 0.6);">
@@ -720,7 +652,9 @@
 
         // === Modal handlers ===
         const budgetModal = document.getElementById('budget-modal');
-        const openBudgetBtn = document.getElementById('openBudgetBtn');
+        // === AJUSTE JS: Seleciona os dois botões ===
+        const openBudgetBtn = document.getElementById('openBudgetBtn'); // Botão Desktop
+        const openBudgetBtnMobile = document.getElementById('openBudgetBtnMobile'); // Botão Mobile
         const closeBudgetBtn = document.getElementById('closeBudgetBtn');
         const servicesList = document.getElementById('servicesList');
         const servicesEmpty = document.getElementById('servicesEmpty');
@@ -739,8 +673,11 @@
             document.body.classList.remove('overflow-hidden');
         }
 
+        // === AJUSTE JS: Adiciona listener nos dois botões ===
         if (openBudgetBtn) openBudgetBtn.addEventListener('click', openBudgetModal);
+        if (openBudgetBtnMobile) openBudgetBtnMobile.addEventListener('click', openBudgetModal);
         if (closeBudgetBtn) closeBudgetBtn.addEventListener('click', closeBudgetModal);
+        
         // Fecha clicando fora do card
         budgetModal.addEventListener('click', (e) => {
             if (e.target === budgetModal) closeBudgetModal();
