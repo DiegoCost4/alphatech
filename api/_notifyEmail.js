@@ -8,7 +8,13 @@ const resend = new Resend(process.env.RESEND_API_KEY);
  */
 export async function notifyAdminEmail({ quote, items }) {
   const to = (process.env.ADMIN_EMAIL || '').trim();
-  if (!to) return;
+  if (!to) {
+    console.log('❌ ADMIN_EMAIL não configurado');
+    return;
+  }
+
+  console.log('📧 Enviando e-mail para', to);
+  console.log('🧾 Dados do orçamento:', quote?.name, quote?.phone);
 
   const itemLines = (items || []).map(
     it => `<li>${it.service_name || it.service?.name || 'Serviço'} x${it.quantity}</li>`
@@ -25,10 +31,17 @@ export async function notifyAdminEmail({ quote, items }) {
     <p>Veja todos em: <a href="https://alphatech-plum.vercel.app/admin/">Painel Admin</a></p>
   `;
 
-  await resend.emails.send({
-    from: process.env.RESEND_FROM || 'AlphaTech <notificacoes@alphatech.com.br>',
-    to,
-    subject: 'Novo orçamento recebido',
-    html
-  });
+  try {
+    const resend = new (await import('resend')).Resend(process.env.RESEND_API_KEY);
+    const from = process.env.RESEND_FROM || 'onboarding@resend.dev';
+    const response = await resend.emails.send({
+      from,
+      to,
+      subject: 'Novo orçamento recebido',
+      html,
+    });
+    console.log('✅ E-mail enviado com sucesso:', response?.id || response);
+  } catch (err) {
+    console.error('❌ Erro ao enviar e-mail:', err);
+  }
 }
