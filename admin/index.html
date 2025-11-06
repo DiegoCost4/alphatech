@@ -5,14 +5,14 @@
     <meta charset="utf-8" />
     <title>Admin — AlphaTech Orçamentos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    
+
     <!-- Favicon da página principal -->
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='80'>⚡</text></svg>">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -30,8 +30,10 @@
             --color-neutral-dark: #2E2E2E;
             --color-neutral-light: #E0E0E0;
             --color-card-dark-background: #1A243F;
-            --color-segment-seg: #06D6A0; /* Verde para .ok */
-            --color-error-red: #FF6B6B;  /* Vermelho para .err */
+            --color-segment-seg: #06D6A0;
+            /* Verde para .ok */
+            --color-error-red: #FF6B6B;
+            /* Vermelho para .err */
         }
 
         body {
@@ -42,8 +44,13 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        .font-title { font-family: 'Montserrat', sans-serif; }
-        .font-subtitle { font-family: 'Exo 2', sans-serif; }
+        .font-title {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .font-subtitle {
+            font-family: 'Exo 2', sans-serif;
+        }
 
         /* Estilos customizados para formulários no modo escuro */
         input[type="text"],
@@ -52,15 +59,20 @@
         input[type="password"],
         textarea,
         select {
-            background-color: #2a3a5e; /* Um pouco mais claro que o card */
+            background-color: #2a3a5e;
+            /* Um pouco mais claro que o card */
             border: 1px solid #4a5a7e;
             color: var(--color-neutral-light);
-            border-radius: 0.5rem; /* 8px */
-            padding: 0.5rem 0.75rem; /* 8px 12px */
+            border-radius: 0.5rem;
+            /* 8px */
+            padding: 0.5rem 0.75rem;
+            /* 8px 12px */
             transition: border-color 0.3s, box-shadow 0.3s;
         }
 
-        input:focus, textarea:focus, select:focus {
+        input:focus,
+        textarea:focus,
+        select:focus {
             outline: none;
             border-color: var(--color-accent-blue);
             box-shadow: 0 0 0 3px rgba(17, 138, 178, 0.5);
@@ -72,6 +84,7 @@
             background-color: #2a3a5e;
             color: var(--color-accent-blue);
         }
+
         input[type="checkbox"]:checked {
             background-color: var(--color-accent-blue);
         }
@@ -87,31 +100,38 @@
             cursor: pointer;
             text-align: center;
         }
+
         .btn-primary {
             background-color: var(--color-accent-blue);
             color: white;
             box-shadow: 0 4px 15px rgba(17, 138, 178, 0.2);
         }
+
         .btn-primary:hover {
-            background-color: #0e769c; /* Azul mais escuro */
+            background-color: #0e769c;
+            /* Azul mais escuro */
             transform: translateY(-1px);
         }
+
         .btn-secondary {
             background-color: transparent;
             color: var(--color-secondary-gold);
             border: 2px solid var(--color-secondary-gold);
         }
+
         .btn-secondary:hover {
             background-color: var(--color-secondary-gold);
             color: var(--color-primary-dark);
         }
-         .btn-save {
+
+        .btn-save {
             background-color: var(--color-segment-seg);
             color: var(--color-primary-dark);
             padding: 0.25rem 0.75rem;
             font-size: 0.875rem;
             border-radius: 0.375rem;
         }
+
         .btn-save:hover {
             background-color: #05b38a;
         }
@@ -122,13 +142,15 @@
             width: 100%;
             border-collapse: collapse;
             margin: 1rem 0;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
             border-radius: 0.5rem;
             overflow: hidden;
         }
 
-        th, td {
-            padding: 0.75rem 1rem; /* 12px 16px */
+        th,
+        td {
+            padding: 0.75rem 1rem;
+            /* 12px 16px */
             text-align: left;
             vertical-align: top;
             border-bottom: 1px solid #2a3a5e;
@@ -139,10 +161,11 @@
             color: var(--color-secondary-gold);
             font-family: 'Exo 2', sans-serif;
             text-transform: uppercase;
-            font-size: 0.75rem; /* 12px */
+            font-size: 0.75rem;
+            /* 12px */
             letter-spacing: 0.05em;
         }
-        
+
         tbody tr {
             background-color: var(--color-card-dark-background);
         }
@@ -154,7 +177,7 @@
         tbody tr:last-child td {
             border-bottom: none;
         }
-        
+
         td select {
             padding: 0.375rem 0.5rem;
         }
@@ -162,14 +185,18 @@
         /* Card (substitui fieldset) */
         .card {
             background-color: var(--color-card-dark-background);
-            border-radius: 0.75rem; /* 12px */
-            padding: 1.5rem; /* 24px */
+            border-radius: 0.75rem;
+            /* 12px */
+            padding: 1.5rem;
+            /* 24px */
             margin-top: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
+
         .card-title {
             font-family: 'Exo 2', sans-serif;
-            font-size: 1.5rem; /* 24px */
+            font-size: 1.5rem;
+            /* 24px */
             font-weight: 700;
             color: white;
             padding-bottom: 0.5rem;
@@ -178,13 +205,24 @@
         }
 
         /* Mensagens de Feedback */
-        .ok { color: var(--color-segment-seg); font-weight: 600; }
-        .err { color: var(--color-error-red); font-weight: 600; }
+        .ok {
+            color: var(--color-segment-seg);
+            font-weight: 600;
+        }
+
+        .err {
+            color: var(--color-error-red);
+            font-weight: 600;
+        }
     </style>
+    <!-- jsPDF + autoTable (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+
 </head>
 
 <body>
-    
+
     <div class="max-w-7xl mx-auto p-4 md:p-8">
 
         <!-- Cabeçalho com Logo -->
@@ -204,8 +242,8 @@
         </div>
 
         <!-- Tabela de Orçamentos -->
-         <div class="card mt-8">
-             <h2 class="card-title">Orçamentos Recebidos</h2>
+        <div class="card mt-8">
+            <h2 class="card-title">Orçamentos Recebidos</h2>
             <div class="overflow-x-auto">
                 <table id="qt">
                     <thead>
@@ -217,6 +255,7 @@
                             <th>Total (R$)</th>
                             <th>Obs</th>
                             <th>Status</th>
+                            <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -230,7 +269,7 @@
         <!-- Card de Serviços -->
         <div class="card">
             <h2 class="card-title">Gerenciar Serviços</h2>
-            
+
             <div class="flex flex-wrap gap-4 items-center mb-4">
                 <button id="loadSvcs" class="btn btn-secondary">Listar serviços</button>
                 <span id="fbS" class="ml-4 text-sm"></span>
@@ -250,7 +289,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                         <!-- Conteúdo preenchido via JS -->
+                        <!-- Conteúdo preenchido via JS -->
                     </tbody>
                 </table>
             </div>
@@ -263,7 +302,7 @@
                 <input id="sPrice" placeholder="Preço base (ex: 150.00)" type="number" step="0.01" />
             </div>
             <textarea id="sDesc" placeholder="Descrição (opcional)" rows="3" class="w-full"></textarea>
-            
+
             <div class="flex justify-between items-center mt-4">
                 <div class="flex items-center gap-2 text-sm">
                     <input id="sActive" type="checkbox" checked class="form-checkbox" />
@@ -278,7 +317,7 @@
     <script>
         // Inicializa ícones
         lucide.createIcons();
-        
+
         const fbQ = document.getElementById('fbQ');
         const fbS = document.getElementById('fbS');
 
@@ -306,7 +345,7 @@
 
             const tbody = document.querySelector('#qt tbody');
             tbody.innerHTML = '';
-            
+
             const brl = n => (Number(n || 0)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
             (js.quotes || []).forEach(q => {
@@ -324,6 +363,7 @@
                     return `<div class="text-xs">${name}: ${qty} ${unit} (${brl(unitPrice)} c/u) = <strong>${brl(sub)}</strong>${det}</div>`;
                 }).join('') : '-';
 
+                const rowId = q.id;
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${new Date(q.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}</td>
@@ -337,8 +377,20 @@
                             ${['novo', 'contatado', 'fechado', 'perdido'].map(s => `<option value="${s}" ${s === q.status ? 'selected' : ''}>${s.charAt(0).toUpperCase() + s.slice(1)}</option>`).join('')}
                         </select>
                     </td>
+                      <td>
+                        <button class="btn-pdf" data-id="${rowId}">PDF</button>
+                    </td>
                 `;
                 tbody.appendChild(tr);
+                const btnPdf = tr.querySelector('.btn-pdf');
+                btnPdf.onclick = () => {
+                    const id = btnPdf.dataset.id;
+                    const quote = (js.quotes || []).find(q => q.id === id);
+                    const items = js.itemsByQuote?.[id] || [];
+                    const total = js.totalsByQuote?.[id] || 0;
+                    generateQuotePDF(quote, items, total);
+                };
+
             });
 
             // Adiciona listener de mudança de status
@@ -355,9 +407,9 @@
                         body: JSON.stringify({ id, status })
                     });
                     if (!r.ok) {
-                         alert('Falha ao atualizar status');
-                         // Reverte a seleção em caso de falha
-                         sel.value = [...sel.options].find(o => o.defaultSelected)?.value || sel.options[0].value;
+                        alert('Falha ao atualizar status');
+                        // Reverte a seleção em caso de falha
+                        sel.value = [...sel.options].find(o => o.defaultSelected)?.value || sel.options[0].value;
                     }
                 };
             });
@@ -369,7 +421,7 @@
             fbS.className = 'ml-4 text-sm';
             let headers;
             try { headers = hdrs(); } catch (e) { fbS.textContent = e.message; fbS.className = 'err ml-4 text-sm'; return; }
-            
+
             const res = await fetch('/api/admin/services', { headers });
             const js = await res.json().catch(() => ({}));
             if (!res.ok) { fbS.textContent = js.error || 'Erro'; fbS.className = 'err ml-4 text-sm'; return; }
@@ -437,10 +489,10 @@
                 alert('O campo "Nome" é obrigatório.');
                 return;
             }
-            
+
             let createHeaders;
             try { createHeaders = hdrs(); } catch (e) { alert(e.message); return; }
-            
+
             const btn = document.getElementById('createSvc');
             btn.textContent = 'Cadastrando...';
             btn.disabled = true;
@@ -468,6 +520,114 @@
                 alert(js.error || 'Erro ao criar serviço');
             }
         };
+
+
+        // personalize os dados da empresa aqui
+        const COMPANY = {
+            name: 'AlphaTech Elétrica & Automação',
+            doc: 'CNPJ 00.000.000/0001-00',
+            phone: '(11) 99999-9999',
+            email: 'contato@alphatech.com.br',
+            address: 'Rua Exemplo, 123 - São Paulo/SP',
+            site: 'www.alphatech.com.br',
+            logoUrl: '' // opcional: URL absoluta do logo (PNG)
+        };
+
+        const brl = n => (Number(n || 0)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+        async function generateQuotePDF(q, items, total) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+
+            // (opcional) desenhar o logo se houver URL válida
+            let y = 40;
+            if (COMPANY.logoUrl) {
+                try {
+                    const img = await fetch(COMPANY.logoUrl).then(r => r.blob());
+                    const reader = new FileReader();
+                    await new Promise(res => { reader.onload = res; reader.readAsDataURL(img); });
+                    doc.addImage(reader.result, 'PNG', 40, y, 120, 40);
+                } catch (e) { /* ignora logo */ }
+            }
+
+            // Cabeçalho da empresa
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(16);
+            doc.text(COMPANY.name, 200, y + 20, { align: 'left' });
+            doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+            doc.text(`${COMPANY.doc}\n${COMPANY.address}\n${COMPANY.phone} • ${COMPANY.email}\n${COMPANY.site}`, 200, y + 36);
+
+            // Título/metadata
+            const created = new Date(q.created_at);
+            const tituloY = 120;
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(18);
+            doc.text('Orçamento', 40, tituloY);
+            doc.setFontSize(10); doc.setFont('helvetica', 'normal');
+            doc.text(`#${q.id.slice(0, 8)}`, 40, tituloY + 16);
+            doc.text(`Data: ${created.toLocaleDateString('pt-BR')} ${created.toLocaleTimeString('pt-BR')}`, 40, tituloY + 32);
+
+            // Dados do cliente
+            const clienteX = 320;
+            doc.setFont('helvetica', 'bold'); doc.text('Cliente', clienteX, tituloY);
+            doc.setFont('helvetica', 'normal');
+            doc.text([
+                `Nome: ${q.name || '-'}`,
+                `WhatsApp: ${q.phone || '-'}`,
+                `E-mail: ${q.email || '-'}`
+            ], clienteX, tituloY + 16);
+
+            // Tabela de itens
+            const tableData = items.map(it => {
+                const name = it.service?.name || '(?)';
+                const unit = it.service?.unit_label || 'un';
+                const qty = Number(it.quantity || 0);
+                const unitPrice = Number(it.service?.base_price ?? 0);
+                const sub = unitPrice * qty;
+                return [
+                    name,
+                    it.detail || '',
+                    `${qty} ${unit}`,
+                    brl(unitPrice),
+                    brl(sub)
+                ];
+            });
+
+            doc.autoTable({
+                startY: tituloY + 60,
+                head: [['Serviço', 'Detalhe', 'Qtd', 'Unitário', 'Subtotal']],
+                body: tableData.length ? tableData : [['(sem itens)', '', '', '', '']],
+                styles: { font: 'helvetica', fontSize: 10, cellPadding: 6 },
+                headStyles: { fillColor: [30, 41, 59], textColor: 255 }, // azul-escuro
+                columnStyles: {
+                    0: { cellWidth: 200 },
+                    1: { cellWidth: 160 },
+                    2: { halign: 'center', cellWidth: 60 },
+                    3: { halign: 'right', cellWidth: 80 },
+                    4: { halign: 'right', cellWidth: 90 }
+                }
+            });
+
+            // Observações
+            let yAfter = doc.lastAutoTable.finalY + 16;
+            if (q.notes) {
+                doc.setFont('helvetica', 'bold'); doc.text('Observações', 40, yAfter);
+                doc.setFont('helvetica', 'normal');
+                doc.text(q.notes, 40, yAfter + 14, { maxWidth: 515 });
+                yAfter = yAfter + 40;
+            }
+
+            // Total
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
+            doc.text(`Total estimado: ${brl(total)}`, 40, yAfter + 10);
+
+            // Rodapé
+            const footer = 'Este documento é uma estimativa. Valores finais podem variar após visita técnica/ajustes de escopo.';
+            doc.setFont('helvetica', 'normal'); doc.setFontSize(9);
+            doc.text(footer, 40, 800, { maxWidth: 515 });
+
+            // Nome do arquivo
+            const fname = `orcamento_${(q.name || 'cliente').toString().trim().replace(/\s+/g, '_')}_${q.id.slice(0, 8)}.pdf`;
+            doc.save(fname);
+        }
 
     </script>
 </body>
