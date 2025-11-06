@@ -529,8 +529,8 @@
             phone: '(11) 99999-9999',
             email: 'contato@alphatech.com.br',
             address: 'Rua Exemplo, 123 - São Paulo/SP',
-            site: 'www.alphatech.com.br',
-            logoUrl: '' // opcional: URL absoluta do logo (PNG)
+            site: 'https://alphatech-plum.vercel.app/',
+            logoUrl: new URL('/assets/logo.png', location.origin).href // opcional: URL absoluta do logo (PNG)
         };
 
         const brl = n => (Number(n || 0)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -539,92 +539,133 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ unit: 'pt', format: 'a4' });
 
-            // (opcional) desenhar o logo se houver URL válida
-            let y = 40;
+            // Constantes de layout
+            const M = 40; // margem
+            const pageW = doc.internal.pageSize.getWidth();
+            const pageH = doc.internal.pageSize.getHeight();
+
+            // ===== Cabeçalho =====
+            let y = M;
+
+            // Logo (opcional)
             if (COMPANY.logoUrl) {
                 try {
                     const img = await fetch(COMPANY.logoUrl).then(r => r.blob());
                     const reader = new FileReader();
                     await new Promise(res => { reader.onload = res; reader.readAsDataURL(img); });
-                    doc.addImage(reader.result, 'PNG', 40, y, 120, 40);
-                } catch (e) { /* ignora logo */ }
+                    // largura máx 120, altura proporcional (~40-50)
+                    doc.addImage(reader.result, 'PNG', M, y, 120, 40);
+                } catch (e) { /* ignora logo em erro */ }
             }
 
-            // Cabeçalho da empresa
+            // Texto do cabeçalho
             doc.setFont('helvetica', 'bold'); doc.setFontSize(16);
-            doc.text(COMPANY.name, 200, y + 20, { align: 'left' });
+            doc.text(COMPANY.name, M + 140, y + 18);
             doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
-            doc.text(`${COMPANY.doc}\n${COMPANY.address}\n${COMPANY.phone} • ${COMPANY.email}\n${COMPANY.site}`, 200, y + 36);
+            doc.text(
+                `${COMPANY.doc}\n${COMPANY.address}\n${COMPANY.phone} • ${COMPANY.email}\n${COMPANY.site}`,
+                M + 140, y + 36
+            );
 
-            // Título/metadata
+            // Linha separadora
+            y += 60;
+            doc.setDrawColor(220); doc.line(M, y, pageW - M, y);
+            y += 16;
+
+            // ===== Título/metadata =====
             const created = new Date(q.created_at);
-            const tituloY = 120;
             doc.setFont('helvetica', 'bold'); doc.setFontSize(18);
-            doc.text('Orçamento', 40, tituloY);
-            doc.setFontSize(10); doc.setFont('helvetica', 'normal');
-            doc.text(`#${q.id.slice(0, 8)}`, 40, tituloY + 16);
-            doc.text(`Data: ${created.toLocaleDateString('pt-BR')} ${created.toLocaleTimeString('pt-BR')}`, 40, tituloY + 32);
+            doc.text('Orçamento', M, y);
+            doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+            doc.text(`#${q.id.slice(0, 8)}`, M, y + 16);
+            doc.text(`Data: ${created.toLocaleDateString('pt-BR')} ${created.toLocaleTimeString('pt-BR')}`, M, y + 32);
 
-            // Dados do cliente
-            const clienteX = 320;
-            doc.setFont('helvetica', 'bold'); doc.text('Cliente', clienteX, tituloY);
+            // Dados do cliente (coluna direita)
+            const clienteX = pageW / 2 + 20;
+            doc.setFont('helvetica', 'bold'); doc.text('Cliente', clienteX, y);
             doc.setFont('helvetica', 'normal');
             doc.text([
                 `Nome: ${q.name || '-'}`,
                 `WhatsApp: ${q.phone || '-'}`,
                 `E-mail: ${q.email || '-'}`
-            ], clienteX, tituloY + 16);
+            ], clienteX, y + 16);
 
-            // Tabela de itens
-            const tableData = items.map(it => {
+            // Próxima área y
+            let startTableY = y + 60;
+
+            // ===== Tabela de itens =====
+            const tableData = (items || []).map(it => {
                 const name = it.service?.name || '(?)';
                 const unit = it.service?.unit_label || 'un';
                 const qty = Number(it.quantity || 0);
                 const unitPrice = Number(it.service?.base_price ?? 0);
                 const sub = unitPrice * qty;
-                return [
-                    name,
-                    it.detail || '',
-                    `${qty} ${unit}`,
-                    brl(unitPrice),
-                    brl(sub)
-                ];
+                return [name, it.detail || '', `${qty} ${unit}`, brl(unitPrice), brl(sub)];
             });
 
             doc.autoTable({
-                startY: tituloY + 60,
                 head: [['Serviço', 'Detalhe', 'Qtd', 'Unitário', 'Subtotal']],
                 body: tableData.length ? tableData : [['(sem itens)', '', '', '', '']],
-                styles: { font: 'helvetica', fontSize: 10, cellPadding: 6 },
-                headStyles: { fillColor: [30, 41, 59], textColor: 255 }, // azul-escuro
+                startY: startTableY,
+                margin: { left: M, right: M },
+                styles: { font: 'helvetica', fontSize: 10, cellPadding: 6, overflow: 'linebreak' },
+                headStyles: { fillColor: [30, 41, 59], textColor: 255 },
                 columnStyles: {
-                    0: { cellWidth: 200 },
-                    1: { cellWidth: 160 },
-                    2: { halign: 'center', cellWidth: 60 },
-                    3: { halign: 'right', cellWidth: 80 },
-                    4: { halign: 'right', cellWidth: 90 }
+                    0: { cellWidth: 220 }, // Serviço
+                    1: { cellWidth: 160 }, // Detalhe
+                    2: { halign: 'center', cellWidth: 60 }, // Qtd
+                    3: { halign: 'right', cellWidth: 80 },  // Unitário
+                    4: { halign: 'right', cellWidth: 90 }   // Subtotal
+                },
+                didDrawPage: (data) => {
+                    // Cabeçalho e rodapé em todas as páginas (opcional)
+                    // Exemplo de numeração de páginas:
+                    const str = `Página ${doc.internal.getNumberOfPages()}`;
+                    doc.setFontSize(9);
+                    doc.text(str, pageW - M, pageH - 10, { align: 'right' });
                 }
             });
 
-            // Observações
+            // Onde a tabela terminou
             let yAfter = doc.lastAutoTable.finalY + 16;
+
+            // ===== Observações =====
             if (q.notes) {
-                doc.setFont('helvetica', 'bold'); doc.text('Observações', 40, yAfter);
-                doc.setFont('helvetica', 'normal');
-                doc.text(q.notes, 40, yAfter + 14, { maxWidth: 515 });
-                yAfter = yAfter + 40;
+                const obsBlockH = 40; // estimativa de bloco
+                // se não couber, cria nova página
+                if (yAfter + obsBlockH + 60 > pageH - M) {
+                    doc.addPage();
+                    yAfter = M;
+                }
+                doc.setFont('helvetica', 'bold'); doc.setFontSize(11);
+                doc.text('Observações', M, yAfter);
+                doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+                doc.text(q.notes, M, yAfter + 14, { maxWidth: pageW - 2 * M });
+                yAfter += 40;
             }
 
-            // Total
+            // ===== Total =====
+            const totalBlockH = 20;
+            if (yAfter + totalBlockH + 40 > pageH - M) { // 40 para rodapé
+                doc.addPage();
+                yAfter = M;
+            }
             doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
-            doc.text(`Total estimado: ${brl(total)}`, 40, yAfter + 10);
+            doc.text(`Total estimado: ${brl(total)}`, M, yAfter + 10);
+            yAfter += 30;
 
-            // Rodapé
-            const footer = 'Este documento é uma estimativa. Valores finais podem variar após visita técnica/ajustes de escopo.';
+            // ===== Rodapé fixo =====
+            const footerText = 'Este documento é uma estimativa. Valores finais podem variar após visita técnica/ajustes de escopo.';
+            // Se o rodapé não couber, nova página
+            const footerH = 30;
+            if (yAfter + footerH > pageH - M) {
+                doc.addPage();
+                yAfter = M;
+            }
             doc.setFont('helvetica', 'normal'); doc.setFontSize(9);
-            doc.text(footer, 40, 800, { maxWidth: 515 });
+            doc.text(footerText, M, pageH - M, { maxWidth: pageW - 2 * M });
 
-            // Nome do arquivo
+            // ===== Salvar =====
             const fname = `orcamento_${(q.name || 'cliente').toString().trim().replace(/\s+/g, '_')}_${q.id.slice(0, 8)}.pdf`;
             doc.save(fname);
         }
