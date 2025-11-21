@@ -2,213 +2,522 @@
 <html lang="pt-BR">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Loja Parceira | Produtos recomendados</title>
-  <meta name="description"
-        content="Veja os produtos recomendados e compre direto pelo Mercado Livre com segurança.">
+    <title>Loja AlphaTech | Seleção Premium de Elétrica e Automação</title>
+    <meta name="description" content="Compre produtos de elétrica e automação recomendados pela AlphaTech. Segurança e garantia do Mercado Livre.">
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Exo+2:wght@700&family=Open+Sans:wght@400&display=swap"
-    rel="stylesheet">
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='80'>⚡</text></svg>">
 
-  <style>
-    :root {
-      --color-primary-dark: #0B132B;
-      --color-secondary-gold: #FFD166;
-      --color-accent-blue: #118AB2;
-      --color-neutral-dark: #2E2E2E;
-      --color-neutral-light: #E0E0E0;
-      --color-card-dark-background: #1A243F;
-    }
+    <!-- Bibliotecas -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Exo+2:wght@500;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    body {
-      font-family: 'Open Sans', sans-serif;
-      background-color: #f7f9fc;
-      color: var(--color-neutral-dark);
-    }
-
-    .font-title {
-      font-family: 'Montserrat', sans-serif;
-    }
-
-    .font-subtitle {
-      font-family: 'Exo 2', sans-serif;
-    }
-
-    .logo-text-gold {
-      color: var(--color-secondary-gold);
-    }
-
-    .btn-primary {
-      background-color: var(--color-accent-blue);
-      transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
-    }
-
-    .btn-primary:hover {
-      background-color: #0c6a8f;
-      transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(17, 138, 178, 0.4);
-    }
-
-    .product-card {
-      background-color: white;
-      border-radius: 1rem;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    .product-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12);
-    }
-  </style>
-</head>
-
-<body class="bg-gray-50">
-
-  <!-- Header simples -->
-  <header class="sticky top-0 z-40 shadow-lg" style="background-color: var(--color-primary-dark);">
-    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-      <div class="text-2xl sm:text-3xl font-title font-extrabold uppercase text-white flex items-center">
-        <i class="fas fa-store mr-2 text-yellow-400"></i>
-        <span>LOJA</span><span class="logo-text-gold">&nbsp;PARCEIRA</span>
-      </div>
-      <a href="/" class="text-sm text-white/80 hover:text-white font-subtitle">← Voltar ao site</a>
-    </div>
-  </header>
-
-  <!-- Seção hero -->
-  <section class="py-10 sm:py-14" style="background-color: var(--color-primary-dark);">
-    <div class="max-w-6xl mx-auto px-4 text-center text-white">
-      <h1 class="text-3xl sm:text-4xl font-title font-bold mb-4 uppercase">
-        Produtos selecionados especialmente para você
-      </h1>
-      <p class="max-w-2xl mx-auto text-sm sm:text-base text-gray-100">
-        Aqui você encontra uma vitrine de produtos recomendados.
-        Ao clicar, você será direcionado para o <b>Mercado Livre</b> para finalizar a compra
-        com toda a segurança da plataforma.
-      </p>
-    </div>
-  </section>
-
-  <!-- Lista de produtos -->
-  <main class="py-10 sm:py-16">
-    <div class="max-w-6xl mx-auto px-4">
-      <div id="products-wrapper" class="min-h-[120px]">
-        <div id="products-loading" class="text-center text-gray-500">
-          Carregando produtos...
-        </div>
-        <div id="products-empty" class="hidden text-center text-gray-500">
-          Nenhum produto cadastrado no momento.
-        </div>
-
-        <div id="products-grid"
-             class="hidden grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          <!-- cards são injetados via JS -->
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <footer class="py-8 mt-6" style="background-color: var(--color-primary-dark);">
-    <div class="max-w-6xl mx-auto px-4 text-center text-sm text-gray-300">
-      <p>
-        Compras realizadas através dos links acima são processadas pelo Mercado Livre.
-        Nós recebemos uma comissão como afiliados, sem custo extra para você.
-      </p>
-      <p class="mt-2">
-        © <span id="year"></span> Loja Parceira · Desenvolvido por
-        <a href="https://www.vokka.com.br" target="_blank"
-           class="logo-text-gold font-bold hover:text-white underline">Vokka</a>
-      </p>
-    </div>
-  </footer>
-
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    async function loadAffiliateProducts() {
-      const loading = document.getElementById('products-loading');
-      const empty = document.getElementById('products-empty');
-      const grid = document.getElementById('products-grid');
-
-      loading.classList.remove('hidden');
-      empty.classList.add('hidden');
-      grid.classList.add('hidden');
-      grid.innerHTML = '';
-
-      try {
-        const res = await fetch('/api/affiliate-products');
-        const js = await res.json();
-        const products = js?.products || [];
-
-        loading.classList.add('hidden');
-
-        if (!products.length) {
-          empty.classList.remove('hidden');
-          return;
+    <style>
+        /* === Identidade Visual AlphaTech === */
+        :root {
+            --color-primary-dark: #0B132B;    /* Midnight Blue */
+            --color-secondary-gold: #FFD166;  /* Royal Gold */
+            --color-accent-blue: #118AB2;     /* Electric Blue */
+            --color-bg-light: #F4F6F8;        /* Light Gray Background */
+            --color-text-dark: #1A202C;
         }
 
-        grid.classList.remove('hidden');
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--color-bg-light);
+            color: var(--color-text-dark);
+        }
 
-        products.forEach(p => {
-          const card = document.createElement('article');
-          card.className = 'product-card flex flex-col overflow-hidden';
+        .font-title { font-family: 'Montserrat', sans-serif; }
+        .font-subtitle { font-family: 'Exo 2', sans-serif; }
+        .text-gold { color: var(--color-secondary-gold); }
+        
+        /* E-commerce Card Styles */
+        .product-card {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border: 1px solid #e2e8f0;
+        }
 
-          const hasImage = !!p.image_url;
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            border-color: var(--color-accent-blue);
+        }
 
-          card.innerHTML = `
-            ${hasImage ? `
-              <div class="w-full h-48 bg-gray-100 overflow-hidden">
-                <img src="${p.image_url}"
-                     alt="${p.name || 'Produto'}"
-                     class="w-full h-full object-cover" loading="lazy" />
-              </div>
-            ` : `
-              <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500 text-sm">
-                <i class="fas fa-image mr-2"></i> Sem imagem
-              </div>
-            `}
-            <div class="flex-1 flex flex-col p-4 space-y-2">
-              <h2 class="font-subtitle text-lg font-semibold text-gray-900 line-clamp-2">
-                ${p.name}
-              </h2>
-              ${p.description ? `
-                <p class="text-sm text-gray-600 line-clamp-3">
-                  ${p.description}
-                </p>` : ''
-              }
-              ${p.price_display ? `
-                <p class="text-base font-bold text-emerald-700 mt-1">R$ 
-                  ${p.price_display}
-                </p>` : ''
-              }
-              <div class="mt-3">
-                <a href="${p.affiliate_url}"
-                   target="_blank"
-                   rel="noopener noreferrer nofollow"
-                   class="inline-flex items-center justify-center w-full px-4 py-2.5 rounded-xl text-sm font-semibold text-white btn-primary">
-                  <i class="fas fa-shopping-cart mr-2"></i>
-                  Ver no Mercado Livre
-                </a>
-              </div>
+        .btn-shop {
+            background-color: var(--color-accent-blue);
+            transition: all 0.2s;
+        }
+        .btn-shop:hover {
+            background-color: #0e7490;
+            filter: brightness(1.1);
+        }
+
+        .discount-badge {
+            background: linear-gradient(135deg, #FFD166 0%, #F4A261 100%);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+
+<body class="flex flex-col min-h-screen">
+
+    <!-- === HEADER TIPO AMAZON/MERCADO LIVRE === -->
+    <header class="sticky top-0 z-50 shadow-lg" style="background-color: var(--color-primary-dark);">
+        
+        <!-- Top Bar (Desktop) -->
+        <div class="hidden md:block border-b border-gray-700/50">
+            <div class="max-w-7xl mx-auto px-4 py-1 flex justify-between text-xs text-gray-300">
+                <div class="flex gap-4">
+                    <span><i class="fas fa-shield-alt text-green-400 mr-1"></i> Compra Garantida</span>
+                    <span><i class="fas fa-truck text-blue-400 mr-1"></i> Envio para todo o Brasil</span>
+                </div>
+                <div class="flex gap-4">
+                    <a href="/index.html#contato" class="hover:text-white transition">Atendimento</a>
+                    <a href="#" class="hover:text-white transition">Rastrear Pedido</a>
+                </div>
             </div>
-          `;
+        </div>
 
-          grid.appendChild(card);
-        });
-      } catch (err) {
-        console.error(err);
-        loading.textContent = 'Erro ao carregar produtos. Tente novamente em instantes.';
-      }
-    }
+        <!-- Main Header -->
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center gap-4 md:gap-8">
+            
+            <!-- Logo -->
+            <a href="/index.html" class="flex-shrink-0 flex items-center group">
+                <div class="relative">
+                    <i data-lucide="zap" class="w-8 h-8 text-yellow-400 group-hover:scale-110 transition transform"></i>
+                </div>
+                <div class="ml-2 hidden sm:block">
+                    <div class="text-xl font-title font-extrabold uppercase text-white leading-none">
+                        ALPHA<span class="text-gold">STORE</span>
+                    </div>
+                    <div class="text-[10px] text-gray-400 uppercase tracking-widest">Loja Oficial Parceira</div>
+                </div>
+            </a>
 
-    document.addEventListener('DOMContentLoaded', loadAffiliateProducts);
-  </script>
+            <!-- Barra de Busca (Funcional via JS) -->
+            <div class="flex-1 max-w-3xl relative">
+                <div class="flex h-10 md:h-11">
+                    <div class="relative w-full">
+                        <input type="text" id="searchInput" 
+                            class="w-full h-full pl-4 pr-10 rounded-l-lg border-0 focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder-gray-500 font-opensans text-sm md:text-base" 
+                            placeholder="Buscar produtos, marcas e muito mais...">
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </div>
+                    <button id="searchBtn" class="bg-yellow-500 hover:bg-yellow-400 text-gray-900 px-6 rounded-r-lg font-bold transition hidden sm:block">
+                        Buscar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Ações -->
+            <div class="flex items-center gap-4 text-white">
+                <a href="/index.html" class="hidden md:flex flex-col items-center text-xs hover:text-yellow-400 transition">
+                    <i class="fas fa-home text-lg mb-0.5"></i>
+                    <span>Site Principal</span>
+                </a>
+                
+                <div class="relative group cursor-pointer">
+                    <div class="flex flex-col items-center text-xs group-hover:text-yellow-400 transition">
+                        <div class="relative">
+                            <i class="fas fa-shopping-cart text-xl mb-0.5"></i>
+                            <span class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-[#0B132B]">0</span>
+                        </div>
+                        <span class="hidden sm:inline">Carrinho</span>
+                    </div>
+                    <!-- Tooltip Carrinho -->
+                    <div class="absolute right-0 top-full mt-2 w-64 bg-white text-gray-800 rounded-lg shadow-xl p-4 hidden group-hover:block border border-gray-200 z-50">
+                        <p class="text-sm text-center text-gray-500">Seu carrinho no Mercado Livre é gerenciado diretamente na plataforma deles.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categorias (Visual) -->
+        <div class="bg-[#1A243F] border-t border-gray-700">
+            <div class="max-w-7xl mx-auto px-4 overflow-x-auto scrollbar-hide">
+                <div class="flex space-x-6 py-2 text-sm font-medium text-gray-300 whitespace-nowrap">
+                    <a href="#" class="text-yellow-400 hover:text-white flex items-center gap-1"><i class="fas fa-tags"></i> Ofertas do Dia</a>
+                    <a href="#" class="hover:text-white transition" onclick="filterCategory('all')">Todos</a>
+                    <a href="#" class="hover:text-white transition" onclick="filterCategory('Automação')">Casa Inteligente</a>
+                    <a href="#" class="hover:text-white transition" onclick="filterCategory('Segurança')">Segurança & CFTV</a>
+                    <a href="#" class="hover:text-white transition" onclick="filterCategory('Elétrica')">Materiais Elétricos</a>
+                    <a href="#" class="hover:text-white transition" onclick="filterCategory('Iluminação')">Iluminação LED</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- === HERO BANNER (PROMOÇÃO) === -->
+    <section class="relative bg-gray-900 text-white overflow-hidden h-[200px] md:h-[320px]">
+        <!-- Background Abstract -->
+        <div class="absolute inset-0 bg-gradient-to-r from-[#0B132B] to-[#118AB2]"></div>
+        <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 h-full flex items-center relative z-10">
+            <div class="max-w-2xl animate-fade-in-up">
+                <span class="inline-block py-1 px-3 rounded bg-yellow-500 text-[#0B132B] text-xs font-bold uppercase tracking-wider mb-2 shadow-lg">
+                    Parceria Oficial
+                </span>
+                <h1 class="text-3xl md:text-5xl font-title font-extrabold mb-4 leading-tight">
+                    Tecnologia Premium <br>para sua <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">Casa Conectada</span>
+                </h1>
+                <p class="text-gray-200 text-sm md:text-lg mb-6 max-w-lg font-opensans">
+                    Selecionamos os melhores equipamentos do mercado. Compre com a segurança e logística do Mercado Livre.
+                </p>
+                <a href="#vitrine" class="inline-flex items-center bg-white text-[#0B132B] hover:bg-gray-100 font-bold py-2.5 px-6 rounded-full transition shadow-lg group">
+                    Ver Ofertas
+                    <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                </a>
+            </div>
+            
+            <!-- Imagem Ilustrativa (Direita) -->
+            <div class="hidden md:block absolute right-4 bottom-0 h-[90%]">
+                <img src="https://placehold.co/500x400/transparent/FFFFFF?text=Smart+Home+Device&font=Montserrat" alt="Smart Home" class="h-full object-contain drop-shadow-2xl opacity-90">
+            </div>
+        </div>
+    </section>
+
+    <!-- === FAIXA DE BENEFÍCIOS === -->
+    <section class="bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 py-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-center sm:text-left">
+                <div class="flex items-center justify-center sm:justify-start gap-3 group">
+                    <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition">
+                        <i class="fas fa-shield-alt text-lg"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm text-gray-800">Pagamento Seguro</h4>
+                        <p class="text-xs text-gray-500">Via Mercado Pago</p>
+                    </div>
+                </div>
+                <div class="flex items-center justify-center sm:justify-start gap-3 group">
+                    <div class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition">
+                        <i class="fas fa-truck-fast text-lg"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm text-gray-800">Envio Rápido</h4>
+                        <p class="text-xs text-gray-500">Logística Full/Express</p>
+                    </div>
+                </div>
+                <div class="flex items-center justify-center sm:justify-start gap-3 group">
+                    <div class="w-10 h-10 rounded-full bg-yellow-50 flex items-center justify-center text-yellow-600 group-hover:bg-yellow-500 group-hover:text-white transition">
+                        <i class="fas fa-thumbs-up text-lg"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm text-gray-800">Curadoria Alpha</h4>
+                        <p class="text-xs text-gray-500">Produtos testados</p>
+                    </div>
+                </div>
+                <div class="flex items-center justify-center sm:justify-start gap-3 group">
+                    <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 group-hover:bg-gray-800 group-hover:text-white transition">
+                        <i class="fas fa-headset text-lg"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm text-gray-800">Suporte Técnico</h4>
+                        <p class="text-xs text-gray-500">Dúvidas sobre instalação</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- === ÁREA DE PRODUTOS === -->
+    <main id="vitrine" class="flex-grow py-8 md:py-12 max-w-7xl mx-auto px-4 w-full">
+        
+        <!-- Barra de Ferramentas (Contador e Ordenação) -->
+        <div class="flex flex-col md:flex-row justify-between items-center mb-8 pb-4 border-b border-gray-200 gap-4">
+            <h2 class="text-2xl font-subtitle font-bold text-gray-800">
+                Destaques <span class="text-blue-600">Recomendados</span>
+            </h2>
+            
+            <div class="flex items-center gap-4 w-full md:w-auto">
+                <span id="productCount" class="text-sm text-gray-500 whitespace-nowrap">Carregando produtos...</span>
+                
+                <div class="relative w-full md:w-48">
+                    <select id="sortSelect" class="w-full appearance-none bg-white border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded-lg leading-tight focus:outline-none focus:border-blue-500 text-sm font-semibold cursor-pointer">
+                        <option value="default">Relevância</option>
+                        <option value="price-asc">Menor Preço</option>
+                        <option value="price-desc">Maior Preço</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        <i class="fas fa-chevron-down text-xs"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grid de Produtos -->
+        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Loader Skeleton -->
+            <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm h-96 animate-pulse">
+                <div class="bg-gray-200 h-48 w-full rounded-lg mb-4"></div>
+                <div class="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                <div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+                <div class="h-8 bg-gray-200 rounded w-1/3 mt-auto"></div>
+            </div>
+            <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm h-96 animate-pulse hidden sm:block">
+                <div class="bg-gray-200 h-48 w-full rounded-lg mb-4"></div>
+                <div class="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                <div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+                <div class="h-8 bg-gray-200 rounded w-1/3 mt-auto"></div>
+            </div>
+            <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm h-96 animate-pulse hidden lg:block">
+                <div class="bg-gray-200 h-48 w-full rounded-lg mb-4"></div>
+                <div class="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                <div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+                <div class="h-8 bg-gray-200 rounded w-1/3 mt-auto"></div>
+            </div>
+            <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm h-96 animate-pulse hidden xl:block">
+                <div class="bg-gray-200 h-48 w-full rounded-lg mb-4"></div>
+                <div class="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                <div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+                <div class="h-8 bg-gray-200 rounded w-1/3 mt-auto"></div>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div id="products-empty" class="hidden flex flex-col items-center justify-center py-20 text-center">
+            <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center text-gray-400 mb-4">
+                <i class="fas fa-search text-4xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Nenhum produto encontrado</h3>
+            <p class="text-gray-500 max-w-md">Não encontramos produtos com os termos pesquisados. Tente buscar por palavras mais genéricas como "Câmera" ou "Lâmpada".</p>
+            <button onclick="resetSearch()" class="mt-6 text-blue-600 font-bold hover:underline">Limpar filtros</button>
+        </div>
+
+    </main>
+
+    <!-- === FOOTER === -->
+    <footer class="bg-[#0B132B] text-gray-400 pt-12 pb-8 border-t-4 border-[#FFD166]">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <div class="text-2xl font-title font-extrabold uppercase text-white mb-4">
+                        ALPHA<span class="text-gold">STORE</span>
+                    </div>
+                    <p class="text-sm mb-4">
+                        A sua loja de confiança para automação e elétrica. Todos os produtos são processados e entregues pelo Mercado Livre, garantindo a segurança da sua compra.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded bg-gray-800 flex items-center justify-center hover:bg-blue-600 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="w-10 h-10 rounded bg-gray-800 flex items-center justify-center hover:bg-pink-600 hover:text-white transition"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="w-10 h-10 rounded bg-gray-800 flex items-center justify-center hover:bg-green-500 hover:text-white transition"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold text-lg mb-4">Links Rápidos</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/index.html" class="hover:text-white transition">Voltar ao Site Institucional</a></li>
+                        <li><a href="#" class="hover:text-white transition">Política de Privacidade</a></li>
+                        <li><a href="#" class="hover:text-white transition">Termos de Uso</a></li>
+                        <li><a href="https://www.mercadolivre.com.br/ajuda" target="_blank" class="hover:text-white transition">Ajuda Mercado Livre</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold text-lg mb-4">Aviso Legal</h4>
+                    <p class="text-xs leading-relaxed">
+                        A AlphaTech participa do Programa de Associados do Mercado Livre, um programa de publicidade de afiliados projetado para fornecer um meio para sites ganharem taxas de publicidade anunciando e vinculando ao mercadolivre.com.br.
+                    </p>
+                    <div class="mt-4 flex items-center gap-2 opacity-70">
+                        <i class="fas fa-lock"></i>
+                        <span class="text-xs">Site Seguro com SSL</span>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 text-center text-xs">
+                <p>© 2025 AlphaTech. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- === SCRIPTS === -->
+    <script>
+        lucide.createIcons();
+
+        let allProducts = [];
+        const grid = document.getElementById('products-grid');
+        const emptyState = document.getElementById('products-empty');
+        const countLabel = document.getElementById('productCount');
+        const searchInput = document.getElementById('searchInput');
+        const sortSelect = document.getElementById('sortSelect');
+
+        // Função para formatar moeda
+        const formatCurrency = (val) => {
+            if(!val) return '';
+            return val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        };
+
+        // Função para extrair valor numérico de strings como "R$ 199,90"
+        const parsePrice = (priceStr) => {
+            if (!priceStr) return 0;
+            // Remove R$, espaços, troca , por .
+            return parseFloat(priceStr.replace(/[^0-9,-]+/g,"").replace(",","."));
+        };
+
+        // Renderiza os cards
+        function renderProducts(products) {
+            grid.innerHTML = '';
+            
+            if (products.length === 0) {
+                grid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                countLabel.textContent = '0 produtos';
+                return;
+            }
+
+            grid.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+            countLabel.textContent = `${products.length} produtos encontrados`;
+
+            products.forEach((p, index) => {
+                // Simula parcelamento (preço / 10 ou 12)
+                const priceNum = parsePrice(p.price_display);
+                const installmentVal = priceNum > 0 ? (priceNum / 12) : 0;
+                const installmentStr = installmentVal > 0 ? formatCurrency(installmentVal) : null;
+
+                // Badge lógica (mock)
+                let badgeHtml = '';
+                if (index === 0) badgeHtml = '<span class="absolute top-3 left-3 bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded shadow">MAIS VENDIDO</span>';
+                else if (p.price_display && priceNum > 500) badgeHtml = '<span class="absolute top-3 left-3 bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow">FRETE GRÁTIS</span>';
+
+                const card = document.createElement('div');
+                card.className = 'product-card bg-white rounded-xl overflow-hidden flex flex-col relative group h-full';
+                
+                // Imagem com fallback
+                const imgSrc = p.image_url || 'https://placehold.co/300x300/f3f4f6/9ca3af?text=Sem+Imagem';
+
+                card.innerHTML = `
+                    <a href="${p.affiliate_url}" target="_blank" rel="noopener" class="relative block overflow-hidden bg-white h-56 p-4 flex items-center justify-center">
+                        ${badgeHtml}
+                        <img src="${imgSrc}" alt="${p.name}" class="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-110">
+                        <!-- Botão "Espiar" no hover -->
+                        <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                             <span class="bg-white text-gray-800 px-4 py-2 rounded-full text-xs font-bold shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">Ver no Mercado Livre</span>
+                        </div>
+                    </a>
+                    
+                    <div class="p-4 flex-1 flex flex-col border-t border-gray-100">
+                        <div class="flex-1">
+                            <p class="text-xs text-gray-500 mb-1 uppercase tracking-wide font-bold">AlphaTech Indica</p>
+                            <a href="${p.affiliate_url}" target="_blank" class="block">
+                                <h3 class="font-opensans text-sm md:text-base text-gray-800 font-semibold leading-snug line-clamp-2 hover:text-blue-600 transition mb-2" title="${p.name}">
+                                    ${p.name}
+                                </h3>
+                            </a>
+                            
+                            <!-- Estrelas (Fake Rating) -->
+                            <div class="flex items-center mb-2">
+                                <div class="flex text-yellow-400 text-xs">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                                </div>
+                                <span class="text-xs text-gray-400 ml-1">(4.8)</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            ${p.price_display ? `
+                                <div class="flex items-baseline gap-2">
+                                    <span class="text-2xl font-bold text-gray-900">${p.price_display}</span>
+                                </div>
+                                ${installmentStr ? `
+                                    <p class="text-xs text-green-600 font-medium">
+                                        em <span class="font-bold">12x ${installmentStr}</span>
+                                    </p>
+                                ` : ''}
+                            ` : '<p class="text-sm text-gray-500 italic">Ver preço no site</p>'}
+                        </div>
+
+                        <div class="mt-4 pt-3 border-t border-dashed border-gray-200">
+                            <a href="${p.affiliate_url}" target="_blank" rel="noopener" 
+                               class="btn-shop w-full flex items-center justify-center gap-2 text-white font-bold py-2.5 px-4 rounded-lg shadow-md text-sm uppercase tracking-wide">
+                                <i class="fas fa-shopping-bag"></i> Comprar Agora
+                            </a>
+                            <p class="text-[10px] text-center text-gray-400 mt-2">
+                                <i class="fas fa-lock text-green-500 mr-1"></i> Compra segura via ML
+                            </p>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Carrega dados
+        async function loadData() {
+            try {
+                const res = await fetch('/api/affiliate-products');
+                const json = await res.json();
+                allProducts = json.products || [];
+                
+                // Ordenação padrão
+                renderProducts(allProducts);
+            } catch (e) {
+                console.error("Erro ao buscar produtos", e);
+                grid.innerHTML = '<div class="col-span-full text-center py-10 text-red-500">Erro ao carregar catálogo. Tente novamente.</div>';
+            }
+        }
+
+        // Filtragem e Busca
+        function applyFilters() {
+            const term = searchInput.value.toLowerCase();
+            const sortType = sortSelect.value;
+
+            // 1. Filtro por texto
+            let filtered = allProducts.filter(p => 
+                p.name.toLowerCase().includes(term) || 
+                (p.description && p.description.toLowerCase().includes(term))
+            );
+
+            // 2. Ordenação
+            if (sortType === 'price-asc') {
+                filtered.sort((a, b) => parsePrice(a.price_display) - parsePrice(b.price_display));
+            } else if (sortType === 'price-desc') {
+                filtered.sort((a, b) => parsePrice(b.price_display) - parsePrice(a.price_display));
+            }
+            // 'default' usa a ordem da API (banco de dados)
+
+            renderProducts(filtered);
+        }
+
+        // Event Listeners
+        searchInput.addEventListener('input', applyFilters);
+        document.getElementById('searchBtn').addEventListener('click', applyFilters);
+        sortSelect.addEventListener('change', applyFilters);
+
+        // Filtro rápido de categoria (simulado via texto por enquanto)
+        window.filterCategory = (cat) => {
+            if(cat === 'all') {
+                searchInput.value = '';
+            } else {
+                searchInput.value = cat;
+            }
+            applyFilters();
+            
+            // Scroll suave até a vitrine
+            document.getElementById('vitrine').scrollIntoView({behavior: 'smooth'});
+        };
+
+        window.resetSearch = () => {
+            searchInput.value = '';
+            sortSelect.value = 'default';
+            applyFilters();
+        };
+
+        document.addEventListener('DOMContentLoaded', loadData);
+
+    </script>
 </body>
 </html>
