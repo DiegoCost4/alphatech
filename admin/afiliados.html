@@ -2,194 +2,295 @@
 <html lang="pt-BR">
 
 <head>
-  <meta charset="UTF-8">
-  <title>Painel · Produtos Afiliados</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Painel · Produtos Afiliados</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-gray-100">
-  <div class="max-w-5xl mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold mb-6">Produtos Afiliados</h1>
+    <div class="max-w-5xl mx-auto px-4 py-8">
+        <h1 class="text-2xl font-bold mb-6">Produtos Afiliados</h1>
 
-    <!-- ALERTA: token -->
-    <div class="mb-4 text-sm text-gray-600">
-      <b>Atenção:</b> defina o <code>ADMIN_TOKEN</code> corretamente no script abaixo
-      (o mesmo que está no ambiente do servidor).
+        <!-- ALERTA: token -->
+        <div class="mb-4 text-sm text-gray-600">
+            <b>Atenção:</b> defina o <code>ADMIN_TOKEN</code> corretamente no script abaixo
+            (o mesmo que está no ambiente do servidor).
+        </div>
+
+        <!-- Formulário -->
+        <form id="productForm" class="bg-white rounded-xl shadow p-4 mb-8 space-y-3">
+            <input type="hidden" name="id" id="productId" />
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Nome *</label>
+                    <input name="name" class="w-full border rounded-lg px-3 py-2" required />
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Preço (texto livre)</label>
+                    <input name="price_display" class="w-full border rounded-lg px-3 py-2"
+                        placeholder="Ex: R$ 199,90 ou A partir de R$ 99" />
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold mb-1">Descrição</label>
+                <textarea name="description" rows="2" class="w-full border rounded-lg px-3 py-2"></textarea>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold mb-1">URL da imagem (opcional)</label>
+                <input name="image_url" class="w-full border rounded-lg px-3 py-2" placeholder="https://..." />
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold mb-1">Link de afiliado (Mercado Livre) *</label>
+                <input name="affiliate_url" class="w-full border rounded-lg px-3 py-2"
+                    placeholder="https://mercadolivre.com.br/..." required />
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Ordem</label>
+                    <input name="sort_order" type="number" value="0" class="w-full border rounded-lg px-3 py-2" />
+                </div>
+                <div class="flex items-center gap-2 mt-4 md:mt-7">
+                    <input id="active" name="active" type="checkbox" class="h-4 w-4" checked />
+                    <label for="active" class="text-sm font-semibold">Ativo</label>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-2">
+                <p id="formFb" class="text-sm"></p>
+                <button type="submit"
+                    class="px-4 py-2 rounded-lg text-white text-sm font-semibold bg-blue-600 hover:bg-blue-700">
+                    Salvar produto
+                </button>
+            </div>
+        </form>
+
+        <!-- Lista -->
+        <div class="bg-white rounded-xl shadow p-4">
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="text-lg font-semibold">Produtos cadastrados</h2>
+                <button id="reloadBtn" class="text-sm px-3 py-1 rounded-lg bg-gray-100 hover:bg-gray-200">
+                    Recarregar
+                </button>
+            </div>
+            <div id="listFb" class="text-sm text-gray-500 mb-2">Carregando...</div>
+            <table class="w-full text-sm border-collapse hidden" id="productsTable">
+                <thead>
+                    <tr class="bg-gray-50">
+                        <th class="border px-2 py-1 text-left">ID</th>
+                        <th class="border px-2 py-1 text-left">Nome</th>
+                        <th class="border px-2 py-1 text-left">Preço</th>
+                        <th class="border px-2 py-1 text-left">Ativo</th>
+                        <th class="border px-2 py-1 text-left">Ordem</th>
+                        <th class="border px-2 py-1 text-left">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="productsTbody"></tbody>
+            </table>
+        </div>
     </div>
 
-    <!-- Formulário -->
-    <form id="productForm" class="bg-white rounded-xl shadow p-4 mb-8 space-y-3">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <div>
-          <label class="block text-sm font-semibold mb-1">Nome *</label>
-          <input name="name" class="w-full border rounded-lg px-3 py-2" required />
-        </div>
-        <div>
-          <label class="block text-sm font-semibold mb-1">Preço (texto livre)</label>
-          <input name="price_display" class="w-full border rounded-lg px-3 py-2"
-                 placeholder="Ex: R$ 199,90 ou A partir de R$ 99" />
-        </div>
-      </div>
+    <script>
+        // ⚠️ Preencha com o mesmo token que está em process.env.ADMIN_TOKEN
+        const ADMIN_TOKEN = 'tiagimanda';
 
-      <div>
-        <label class="block text-sm font-semibold mb-1">Descrição</label>
-        <textarea name="description" rows="2"
-                  class="w-full border rounded-lg px-3 py-2"></textarea>
-      </div>
+        const form = document.getElementById('productForm');
+        const formFb = document.getElementById('formFb');
+        const listFb = document.getElementById('listFb');
+        const tbody = document.getElementById('productsTbody');
+        const table = document.getElementById('productsTable');
+        const reloadBtn = document.getElementById('reloadBtn');
+        const idInput = document.getElementById('productId');
+        const submitBtn = form.querySelector('button[type="submit"]');
 
-      <div>
-        <label class="block text-sm font-semibold mb-1">URL da imagem (opcional)</label>
-        <input name="image_url" class="w-full border rounded-lg px-3 py-2"
-               placeholder="https://..." />
-      </div>
+        let editingId = null;
 
-      <div>
-        <label class="block text-sm font-semibold mb-1">Link de afiliado (Mercado Livre) *</label>
-        <input name="affiliate_url" class="w-full border rounded-lg px-3 py-2"
-               placeholder="https://mercadolivre.com.br/..." required />
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <div>
-          <label class="block text-sm font-semibold mb-1">Ordem</label>
-          <input name="sort_order" type="number" value="0"
-                 class="w-full border rounded-lg px-3 py-2" />
-        </div>
-        <div class="flex items-center gap-2 mt-4 md:mt-7">
-          <input id="active" name="active" type="checkbox" class="h-4 w-4" checked />
-          <label for="active" class="text-sm font-semibold">Ativo</label>
-        </div>
-      </div>
-
-      <div class="flex items-center justify-between pt-2">
-        <p id="formFb" class="text-sm"></p>
-        <button type="submit"
-                class="px-4 py-2 rounded-lg text-white text-sm font-semibold bg-blue-600 hover:bg-blue-700">
-          Salvar produto
-        </button>
-      </div>
-    </form>
-
-    <!-- Lista -->
-    <div class="bg-white rounded-xl shadow p-4">
-      <div class="flex items-center justify-between mb-3">
-        <h2 class="text-lg font-semibold">Produtos cadastrados</h2>
-        <button id="reloadBtn"
-                class="text-sm px-3 py-1 rounded-lg bg-gray-100 hover:bg-gray-200">
-          Recarregar
-        </button>
-      </div>
-      <div id="listFb" class="text-sm text-gray-500 mb-2">Carregando...</div>
-      <table class="w-full text-sm border-collapse hidden" id="productsTable">
-        <thead>
-          <tr class="bg-gray-50">
-            <th class="border px-2 py-1 text-left">ID</th>
-            <th class="border px-2 py-1 text-left">Nome</th>
-            <th class="border px-2 py-1 text-left">Preço</th>
-            <th class="border px-2 py-1 text-left">Ativo</th>
-            <th class="border px-2 py-1 text-left">Ordem</th>
-          </tr>
-        </thead>
-        <tbody id="productsTbody"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <script>
-    // ⚠️ Preencha com o mesmo token que está em process.env.ADMIN_TOKEN
-    const ADMIN_TOKEN = 'tiagimanda';
-
-    const form = document.getElementById('productForm');
-    const formFb = document.getElementById('formFb');
-    const listFb = document.getElementById('listFb');
-    const tbody = document.getElementById('productsTbody');
-    const table = document.getElementById('productsTable');
-    const reloadBtn = document.getElementById('reloadBtn');
-
-    async function loadProducts() {
-      listFb.textContent = 'Carregando...';
-      table.classList.add('hidden');
-      tbody.innerHTML = '';
-
-      try {
-        const res = await fetch('/api/admin/affiliate-products', {
-          headers: { 'x-admin-token': ADMIN_TOKEN }
-        });
-        const js = await res.json();
-        if (!res.ok) throw new Error(js?.error || 'Falha ao carregar');
-
-        const products = js?.products || [];
-        if (!products.length) {
-          listFb.textContent = 'Nenhum produto cadastrado ainda.';
-          return;
+        function resetFormMode() {
+            editingId = null;
+            idInput.value = '';
+            submitBtn.textContent = 'Salvar produto';
         }
 
-        listFb.textContent = '';
-        table.classList.remove('hidden');
+        async function loadProducts() {
+            listFb.textContent = 'Carregando...';
+            table.classList.add('hidden');
+            tbody.innerHTML = '';
 
-        products.forEach(p => {
-          const tr = document.createElement('tr');
-          tr.className = 'hover:bg-gray-50';
-          tr.innerHTML = `
-            <td class="border px-2 py-1">${p.id}</td>
-            <td class="border px-2 py-1">${p.name}</td>
-            <td class="border px-2 py-1">${p.price_display || '-'}</td>
-            <td class="border px-2 py-1">${p.active ? 'Sim' : 'Não'}</td>
-            <td class="border px-2 py-1">${p.sort_order ?? 0}</td>
-          `;
-          tbody.appendChild(tr);
+            try {
+                const res = await fetch('/api/admin/affiliate-products', {
+                    headers: { 'x-admin-token': ADMIN_TOKEN }
+                });
+                const js = await res.json();
+                if (!res.ok) throw new Error(js?.error || 'Falha ao carregar');
+
+                const products = js?.products || [];
+                if (!products.length) {
+                    listFb.textContent = 'Nenhum produto cadastrado ainda.';
+                    return;
+                }
+
+                listFb.textContent = '';
+                table.classList.remove('hidden');
+
+                products.forEach(p => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-gray-50';
+
+                    tr.innerHTML = `
+          <td class="border px-2 py-1">${p.id}</td>
+          <td class="border px-2 py-1">${p.name}</td>
+          <td class="border px-2 py-1">${p.price_display || '-'}</td>
+          <td class="border px-2 py-1">${p.active ? 'Sim' : 'Não'}</td>
+          <td class="border px-2 py-1">${p.sort_order ?? 0}</td>
+          <td class="border px-2 py-1">
+            <button
+              type="button"
+              class="text-xs px-2 py-1 rounded bg-yellow-100 hover:bg-yellow-200 mr-2 btn-edit"
+              data-id="${p.id}">
+              Editar
+            </button>
+            <button
+              type="button"
+              class="text-xs px-2 py-1 rounded bg-red-100 hover:bg-red-200 text-red-700 btn-delete"
+              data-id="${p.id}">
+              Excluir
+            </button>
+          </td>
+        `;
+
+                    // Anexa o produto como dado no elemento para facilitar edição
+                    tr.dataset.product = JSON.stringify(p);
+                    tbody.appendChild(tr);
+                });
+
+                // Delegação dos botões
+                tbody.querySelectorAll('.btn-edit').forEach(btn => {
+                    btn.addEventListener('click', onEditClick);
+                });
+
+                tbody.querySelectorAll('.btn-delete').forEach(btn => {
+                    btn.addEventListener('click', onDeleteClick);
+                });
+
+            } catch (err) {
+                console.error(err);
+                listFb.textContent = err.message || 'Erro ao carregar produtos.';
+            }
+        }
+
+        function onEditClick(e) {
+            const id = e.currentTarget.dataset.id;
+            const tr = e.currentTarget.closest('tr');
+            if (!tr || !tr.dataset.product) return;
+
+            const p = JSON.parse(tr.dataset.product);
+
+            editingId = p.id;
+            idInput.value = p.id;
+
+            form.name.value = p.name || '';
+            form.description.value = p.description || '';
+            form.price_display.value = p.price_display || '';
+            form.image_url.value = p.image_url || '';
+            form.affiliate_url.value = p.affiliate_url || '';
+            form.sort_order.value = p.sort_order ?? 0;
+            form.active.checked = !!p.active;
+
+            submitBtn.textContent = 'Atualizar produto';
+            formFb.textContent = `Editando ID ${p.id}`;
+            formFb.className = 'text-sm text-blue-700';
+        }
+
+        async function onDeleteClick(e) {
+            const id = e.currentTarget.dataset.id;
+            if (!id) return;
+
+            const ok = confirm(`Tem certeza que deseja excluir o produto ID ${id}?`);
+            if (!ok) return;
+
+            try {
+                const res = await fetch('/api/admin/affiliate-products', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-admin-token': ADMIN_TOKEN
+                    },
+                    body: JSON.stringify({ id: Number(id) })
+                });
+
+                const js = await res.json();
+                if (!res.ok) throw new Error(js?.error || 'Falha ao excluir');
+
+                await loadProducts();
+            } catch (err) {
+                console.error(err);
+                alert(err.message || 'Erro ao excluir produto.');
+            }
+        }
+
+        reloadBtn.addEventListener('click', () => {
+            resetFormMode();
+            loadProducts();
         });
-      } catch (err) {
-        console.error(err);
-        listFb.textContent = err.message || 'Erro ao carregar produtos.';
-      }
-    }
 
-    reloadBtn.addEventListener('click', loadProducts);
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            formFb.textContent = '';
+            formFb.className = 'text-sm';
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      formFb.textContent = '';
-      formFb.className = 'text-sm';
+            const fd = new FormData(form);
+            const body = {
+                name: fd.get('name'),
+                description: fd.get('description') || null,
+                price_display: fd.get('price_display') || null,
+                image_url: fd.get('image_url') || null,
+                affiliate_url: fd.get('affiliate_url'),
+                sort_order: Number(fd.get('sort_order') || 0),
+                active: fd.get('active') === 'on',
+            };
 
-      const fd = new FormData(form);
-      const body = {
-        name: fd.get('name'),
-        description: fd.get('description') || null,
-        price_display: fd.get('price_display') || null,
-        image_url: fd.get('image_url') || null,
-        affiliate_url: fd.get('affiliate_url'),
-        sort_order: Number(fd.get('sort_order') || 0),
-        active: fd.get('active') === 'on',
-      };
+            const isEdit = !!editingId;
+            const method = isEdit ? 'PATCH' : 'POST';
 
-      try {
-        const res = await fetch('/api/admin/affiliate-products', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-admin-token': ADMIN_TOKEN,
-          },
-          body: JSON.stringify(body),
+            if (isEdit) {
+                body.id = Number(editingId);
+            }
+
+            try {
+                const res = await fetch('/api/admin/affiliate-products', {
+                    method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-admin-token': ADMIN_TOKEN,
+                    },
+                    body: JSON.stringify(body),
+                });
+
+                const js = await res.json();
+                if (!res.ok) throw new Error(js?.error || 'Falha ao salvar');
+
+                formFb.textContent = isEdit
+                    ? 'Produto atualizado com sucesso.'
+                    : 'Produto cadastrado com sucesso.';
+                formFb.classList.add('text-green-700');
+
+                form.reset();
+                resetFormMode();
+                loadProducts();
+            } catch (err) {
+                console.error(err);
+                formFb.textContent = err.message || 'Erro ao salvar produto.';
+                formFb.classList.add('text-red-600');
+            }
         });
 
-        const js = await res.json();
-        if (!res.ok) throw new Error(js?.error || 'Falha ao salvar');
-
-        formFb.textContent = 'Produto cadastrado com sucesso.';
-        formFb.classList.add('text-green-700');
-        form.reset();
-        loadProducts();
-      } catch (err) {
-        console.error(err);
-        formFb.textContent = err.message || 'Erro ao salvar produto.';
-        formFb.classList.add('text-red-600');
-      }
-    });
-
-    document.addEventListener('DOMContentLoaded', loadProducts);
-  </script>
+        document.addEventListener('DOMContentLoaded', loadProducts);
+    </script>
 </body>
+
 </html>
