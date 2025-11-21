@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Loja Parceira | Produtos recomendados</title>
+  <meta name="description"
+        content="Veja os produtos recomendados e compre direto pelo Mercado Livre com segurança.">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Exo+2:wght@700&family=Open+Sans:wght@400&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --color-primary-dark: #0B132B;
+      --color-secondary-gold: #FFD166;
+      --color-accent-blue: #118AB2;
+      --color-neutral-dark: #2E2E2E;
+      --color-neutral-light: #E0E0E0;
+      --color-card-dark-background: #1A243F;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: #f7f9fc;
+      color: var(--color-neutral-dark);
+    }
+
+    .font-title {
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .font-subtitle {
+      font-family: 'Exo 2', sans-serif;
+    }
+
+    .logo-text-gold {
+      color: var(--color-secondary-gold);
+    }
+
+    .btn-primary {
+      background-color: var(--color-accent-blue);
+      transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+    }
+
+    .btn-primary:hover {
+      background-color: #0c6a8f;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(17, 138, 178, 0.4);
+    }
+
+    .product-card {
+      background-color: white;
+      border-radius: 1rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12);
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50">
+
+  <!-- Header simples -->
+  <header class="sticky top-0 z-40 shadow-lg" style="background-color: var(--color-primary-dark);">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="text-2xl sm:text-3xl font-title font-extrabold uppercase text-white flex items-center">
+        <i class="fas fa-store mr-2 text-yellow-400"></i>
+        <span>LOJA</span><span class="logo-text-gold">&nbsp;PARCEIRA</span>
+      </div>
+      <a href="/" class="text-sm text-white/80 hover:text-white font-subtitle">← Voltar ao site</a>
+    </div>
+  </header>
+
+  <!-- Seção hero -->
+  <section class="py-10 sm:py-14" style="background-color: var(--color-primary-dark);">
+    <div class="max-w-6xl mx-auto px-4 text-center text-white">
+      <h1 class="text-3xl sm:text-4xl font-title font-bold mb-4 uppercase">
+        Produtos selecionados especialmente para você
+      </h1>
+      <p class="max-w-2xl mx-auto text-sm sm:text-base text-gray-100">
+        Aqui você encontra uma vitrine de produtos recomendados.
+        Ao clicar, você será direcionado para o <b>Mercado Livre</b> para finalizar a compra
+        com toda a segurança da plataforma.
+      </p>
+    </div>
+  </section>
+
+  <!-- Lista de produtos -->
+  <main class="py-10 sm:py-16">
+    <div class="max-w-6xl mx-auto px-4">
+      <div id="products-wrapper" class="min-h-[120px]">
+        <div id="products-loading" class="text-center text-gray-500">
+          Carregando produtos...
+        </div>
+        <div id="products-empty" class="hidden text-center text-gray-500">
+          Nenhum produto cadastrado no momento.
+        </div>
+
+        <div id="products-grid"
+             class="hidden grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <!-- cards são injetados via JS -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="py-8 mt-6" style="background-color: var(--color-primary-dark);">
+    <div class="max-w-6xl mx-auto px-4 text-center text-sm text-gray-300">
+      <p>
+        Compras realizadas através dos links acima são processadas pelo Mercado Livre.
+        Nós recebemos uma comissão como afiliados, sem custo extra para você.
+      </p>
+      <p class="mt-2">
+        © <span id="year"></span> Loja Parceira · Desenvolvido por
+        <a href="https://www.vokka.com.br" target="_blank"
+           class="logo-text-gold font-bold hover:text-white underline">Vokka</a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    async function loadAffiliateProducts() {
+      const loading = document.getElementById('products-loading');
+      const empty = document.getElementById('products-empty');
+      const grid = document.getElementById('products-grid');
+
+      loading.classList.remove('hidden');
+      empty.classList.add('hidden');
+      grid.classList.add('hidden');
+      grid.innerHTML = '';
+
+      try {
+        const res = await fetch('/api/affiliate-products');
+        const js = await res.json();
+        const products = js?.products || [];
+
+        loading.classList.add('hidden');
+
+        if (!products.length) {
+          empty.classList.remove('hidden');
+          return;
+        }
+
+        grid.classList.remove('hidden');
+
+        products.forEach(p => {
+          const card = document.createElement('article');
+          card.className = 'product-card flex flex-col overflow-hidden';
+
+          const hasImage = !!p.image_url;
+
+          card.innerHTML = `
+            ${hasImage ? `
+              <div class="w-full h-48 bg-gray-100 overflow-hidden">
+                <img src="${p.image_url}"
+                     alt="${p.name || 'Produto'}"
+                     class="w-full h-full object-cover" loading="lazy" />
+              </div>
+            ` : `
+              <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500 text-sm">
+                <i class="fas fa-image mr-2"></i> Sem imagem
+              </div>
+            `}
+            <div class="flex-1 flex flex-col p-4 space-y-2">
+              <h2 class="font-subtitle text-lg font-semibold text-gray-900 line-clamp-2">
+                ${p.name}
+              </h2>
+              ${p.description ? `
+                <p class="text-sm text-gray-600 line-clamp-3">
+                  ${p.description}
+                </p>` : ''
+              }
+              ${p.price_display ? `
+                <p class="text-base font-bold text-emerald-700 mt-1">
+                  ${p.price_display}
+                </p>` : ''
+              }
+              <div class="mt-3">
+                <a href="${p.affiliate_url}"
+                   target="_blank"
+                   rel="noopener noreferrer nofollow"
+                   class="inline-flex items-center justify-center w-full px-4 py-2.5 rounded-xl text-sm font-semibold text-white btn-primary">
+                  <i class="fas fa-shopping-cart mr-2"></i>
+                  Ver no Mercado Livre
+                </a>
+              </div>
+            </div>
+          `;
+
+          grid.appendChild(card);
+        });
+      } catch (err) {
+        console.error(err);
+        loading.textContent = 'Erro ao carregar produtos. Tente novamente em instantes.';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadAffiliateProducts);
+  </script>
+</body>
+</html>
