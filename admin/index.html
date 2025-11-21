@@ -1,528 +1,288 @@
-<!doctype html>
-<html lang="pt-br">
+<!DOCTYPE html>
+<html lang="pt-BR">
 
 <head>
-    <meta charset="utf-8" />
-    <title>Admin — AlphaTech Orçamentos</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>AlphaTech | Painel Administrativo Geral</title>
+
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Favicon -->
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='80'>⚡</text></svg>">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-
+    <!-- Bibliotecas -->
     <script src="https://unpkg.com/lucide@latest"></script>
-
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+    
     <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Exo+2:wght@700&family=Open+Sans:wght@400&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Exo+2:wght@700&family=Open+Sans:wght@400;600&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <style>
-        /* Paleta de Cores e Fontes da index.html */
+        /* === Identidade Visual AlphaTech === */
         :root {
             --color-primary-dark: #0B132B;
             --color-secondary-gold: #FFD166;
             --color-accent-blue: #118AB2;
             --color-neutral-dark: #2E2E2E;
-            --color-neutral-light: #E0E0E0;
             --color-card-dark-background: #1A243F;
-            --color-segment-seg: #06D6A0;
-            /* Verde para .ok */
-            --color-error-red: #FF6B6B;
-            /* Vermelho para .err */
         }
 
         body {
-            background-color: var(--color-neutral-dark);
-            color: var(--color-neutral-light);
             font-family: 'Open Sans', sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            background-color: #f7f9fc;
+            color: var(--color-neutral-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        .font-title {
-            font-family: 'Montserrat', sans-serif;
-        }
+        /* Tipografia */
+        .font-title { font-family: 'Montserrat', sans-serif; }
+        .font-subtitle { font-family: 'Exo 2', sans-serif; }
+        .logo-text-gold { color: var(--color-secondary-gold); }
 
-        .font-subtitle {
-            font-family: 'Exo 2', sans-serif;
-        }
-
-        /* Estilos customizados para formulários no modo escuro */
-        input[type="text"],
-        input[type="email"],
-        input[type="number"],
-        input[type="password"],
-        textarea,
-        select {
-            background-color: #2a3a5e;
-            /* Um pouco mais claro que o card */
-            border: 1px solid #4a5a7e;
-            color: var(--color-neutral-light);
-            border-radius: 0.5rem;
-            /* 8px */
-            padding: 0.5rem 0.75rem;
-            /* 8px 12px */
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-
-        input:focus,
-        textarea:focus,
-        select:focus {
-            outline: none;
-            border-color: var(--color-accent-blue);
-            box-shadow: 0 0 0 3px rgba(17, 138, 178, 0.5);
-        }
-
-        input[type="checkbox"] {
-            border-radius: 0.25rem;
-            border: 1px solid #4a5a7e;
-            background-color: #2a3a5e;
-            color: var(--color-accent-blue);
-        }
-
-        input[type="checkbox"]:checked {
-            background-color: var(--color-accent-blue);
-        }
-
-        /* Classes de Botão */
-        .btn {
-            padding: 0.5rem 1.25rem;
-            border-radius: 0.5rem;
-            font-weight: 700;
-            font-family: 'Exo 2', sans-serif;
-            text-transform: uppercase;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            text-align: center;
-        }
-
+        /* Botões */
         .btn-primary {
             background-color: var(--color-accent-blue);
             color: white;
-            box-shadow: 0 4px 15px rgba(17, 138, 178, 0.2);
+            transition: all 0.3s;
         }
-
         .btn-primary:hover {
-            background-color: #0e769c;
-            /* Azul mais escuro */
-            transform: translateY(-1px);
+            background-color: #0c6a8f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(17, 138, 178, 0.4);
         }
-
 
         .btn-secondary {
-            background-color: transparent;
-            color: var(--color-secondary-gold);
-            border: 2px solid var(--color-secondary-gold);
+            background-color: #fff;
+            color: var(--color-primary-dark);
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s;
         }
-
         .btn-secondary:hover {
-            background-color: var(--color-secondary-gold);
-            color: var(--color-primary-dark);
+            background-color: #f3f4f6;
+            border-color: var(--color-primary-dark);
         }
 
-        .btn-save {
-            background-color: var(--color-segment-seg);
-            color: var(--color-primary-dark);
+        /* Inputs */
+        .admin-input {
+            background-color: #fff;
+            border: 1px solid #d1d5db;
+            color: #111827;
+            transition: all 0.2s;
+        }
+        .admin-input:focus {
+            outline: none;
+            border-color: var(--color-accent-blue);
+            box-shadow: 0 0 0 3px rgba(17, 138, 178, 0.1);
+        }
+
+        /* Tabelas e Status */
+        .status-badge {
             padding: 0.25rem 0.75rem;
-            font-size: 0.875rem;
-            border-radius: 0.375rem;
-        }
-
-        .btn-save:hover {
-            background-color: #05b38a;
-        }
-
-
-        /* Tabelas */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            border-radius: 0.5rem;
-            overflow: hidden;
-        }
-
-        th,
-        td {
-            padding: 0.75rem 1rem;
-            /* 12px 16px */
-            text-align: left;
-            vertical-align: top;
-            border-bottom: 1px solid #2a3a5e;
-        }
-
-        thead th {
-            background-color: var(--color-primary-dark);
-            color: var(--color-secondary-gold);
-            font-family: 'Exo 2', sans-serif;
-            text-transform: uppercase;
+            border-radius: 9999px;
             font-size: 0.75rem;
-            /* 12px */
-            letter-spacing: 0.05em;
-        }
-
-        tbody tr {
-            background-color: var(--color-card-dark-background);
-        }
-
-        tbody tr:hover {
-            background-color: #2a3a5e;
-        }
-
-        tbody tr:last-child td {
-            border-bottom: none;
-        }
-
-        td select {
-            padding: 0.375rem 0.5rem;
-        }
-
-        /* Card (substitui fieldset) */
-        .card {
-            background-color: var(--color-card-dark-background);
-            border-radius: 0.75rem;
-            /* 12px */
-            padding: 1.5rem;
-            /* 24px */
-            margin-top: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .card-title {
-            font-family: 'Exo 2', sans-serif;
-            font-size: 1.5rem;
-            /* 24px */
             font-weight: 700;
-            color: white;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--color-secondary-gold);
-            margin-bottom: 1rem;
+            text-transform: uppercase;
         }
-
-        /* Mensagens de Feedback */
-        .ok {
-            color: var(--color-segment-seg);
-            font-weight: 600;
-        }
-
-        .err {
-            color: var(--color-error-red);
-            font-weight: 600;
-        }
+        .status-novo { background-color: #dbeafe; color: #1e40af; }
+        .status-contatado { background-color: #fef3c7; color: #92400e; }
+        .status-fechado { background-color: #dcfce7; color: #166534; }
+        .status-perdido { background-color: #fee2e2; color: #991b1b; }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
-
 </head>
 
-<body>
+<body class="bg-gray-50">
 
-    <div class="max-w-7xl mx-auto p-4 md:p-8">
-
-        <h1 class="font-title text-3xl sm:text-4xl font-extrabold uppercase flex items-center mb-6 text-white">
-            <i data-lucide="zap" class="w-8 h-8 mr-2" style="color: var(--color-secondary-gold);"></i>
-            <span>ALPHA</span><span style="color: var(--color-secondary-gold);">TECH</span>
-            <span class="text-xl sm:text-2xl font-light opacity-70 ml-4">/ ADMIN</span>
-        </h1>
-        <!-- Card de acesso ao cadastro de produtos afiliados -->
-        <div class="card mb-6">
-            <h2 class="card-title">Loja Parceira — Produtos</h2>
-
-            <p class="text-neutral-300 mb-4">
-                Gerencie os produtos do e-commerce de afiliados exibidos para os clientes.
-            </p>
-
-            <a href="/admin/afiliados.html" class="btn btn-primary text-center inline-block w-full sm:w-auto">
-                Gerenciar Produtos da Loja
+    <!-- === HEADER === -->
+    <header class="sticky top-0 z-50 shadow-lg bg-[#0B132B]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="/index.html" class="text-2xl sm:text-3xl font-title font-extrabold uppercase flex items-center whitespace-nowrap no-underline">
+                <i data-lucide="zap" class="w-7 h-7 sm:w-8 sm:h-8 text-yellow-400 mr-1"></i>
+                <span class="text-white">ALPHA</span><span class="logo-text-gold">TECH</span>
             </a>
-        </div>
 
-        <div class="card">
-            <div class="flex flex-col md:flex-row gap-4 items-center">
-                <input id="token" type="password" placeholder="x-admin-token" class="w-full md:flex-grow" />
-                <button id="loadQuotes" class="btn btn-primary w-full md:w-auto">Carregar orçamentos</button>
-                <span id="fbQ" class="text-sm w-full md:w-auto text-center md:text-left"></span>
-            </div>
-        </div>
-
-        <div class="card mt-8">
-            <h2 class="card-title">Orçamentos Recebidos</h2>
-            <div class="overflow-x-auto overflow-y-auto max-h-[70vh]">
-                <table id="qt">
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Cliente</th>
-                            <th>Contato</th>
-                            <th>Itens</th>
-                            <th>Total (R$)</th>
-                            <th>Obs</th>
-                            <th>Status</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-
-        <div class="card">
-            <h2 class="card-title">Gerenciar Serviços</h2>
-
-            <div class="flex flex-col sm:flex-row gap-4 items-center mb-4">
-                <button id="loadSvcs" class="btn btn-secondary w-full sm:w-auto">Listar serviços</button>
-                <span id="fbS" class="ml-0 sm:ml-4 text-sm w-full sm:w-auto text-center sm:text-left"></span>
-            </div>
-
-            <div class="overflow-x-auto overflow-y-auto max-h-[70vh]">
-                <table id="sv">
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Descrição</th>
-                            <th>Unidade</th>
-                            <th>Preço base (R$)</th>
-                            <th>Ativo</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-
-            <h3 class="font-subtitle text-xl font-bold text-white mt-8 mb-4">Cadastrar novo serviço</h3>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 items-center text-sm">
-                <input id="sName" type="text" placeholder="Nome *" class="md:col-span-2 text-sm" />
-                <input id="sUnit" type="text" placeholder="Unidade (un, ponto...)" value="un" />
-                <input id="sPrice" placeholder="Preço base (ex: 150.00)" type="number" step="0.01" />
-            </div>
-            <textarea id="sDesc" placeholder="Descrição (opcional)" rows="3" class="w-full"></textarea>
-
-            <div class="flex flex-col sm:flex-row sm:justify-between items-center mt-4 gap-4">
-                <div class="flex items-center gap-2 text-sm">
-                    <input id="sActive" type="checkbox" checked class="form-checkbox" />
-                    <label for="sActive">Ativo (visível para orçamento)</label>
+            <!-- Navegação Admin -->
+            <div class="flex items-center gap-4">
+                <a href="afiliados.html" class="hidden md:flex items-center gap-2 text-sm font-bold text-gray-300 hover:text-white transition px-3 py-2 rounded-lg hover:bg-white/10">
+                    <i class="fas fa-store"></i> Painel de Afiliados
+                </a>
+                <div class="text-white font-subtitle opacity-80 text-sm hidden sm:block border-l border-gray-600 pl-4 ml-2">
+                    <i class="fas fa-tools mr-2"></i> Gestão Geral
                 </div>
-                <button id="createSvc" class="btn btn-primary w-full sm:w-auto">Cadastrar serviço</button>
             </div>
         </div>
-    </div>
+    </header>
 
+    <!-- === CONTEÚDO PRINCIPAL === -->
+    <main class="flex-grow py-10 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto space-y-10">
+            
+            <!-- 1. BARRA DE CONTROLE E ACESSO -->
+            <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div>
+                    <h1 class="text-2xl font-title font-bold text-gray-800 uppercase">Dashboard</h1>
+                    <p class="text-sm text-gray-500">Insira sua credencial para gerenciar dados.</p>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto items-center">
+                    <div class="relative w-full md:w-64">
+                        <span class="absolute left-3 top-2.5 text-gray-400"><i class="fas fa-key"></i></span>
+                        <input id="token" type="password" class="admin-input w-full rounded-lg pl-9 pr-3 py-2 text-sm" placeholder="Token de Administrador" />
+                    </div>
+                    <button id="loadDataBtn" class="btn-primary px-6 py-2 rounded-lg font-bold text-sm w-full sm:w-auto shadow-md flex items-center justify-center gap-2">
+                        <i class="fas fa-sync-alt"></i> Carregar Dados
+                    </button>
+                </div>
+            </div>
 
+            <p id="globalFb" class="text-center font-bold hidden"></p>
+
+            <!-- 2. SEÇÃO DE ORÇAMENTOS (TABELA WIDE) -->
+            <section>
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl md:text-2xl font-title font-bold text-gray-800 uppercase border-l-4 border-yellow-400 pl-3">
+                        Orçamentos <span style="color: var(--color-accent-blue);">Recebidos</span>
+                    </h2>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+                    <div class="overflow-x-auto">
+                        <table id="quotesTable" class="w-full text-left border-collapse">
+                            <thead class="bg-gray-100 text-gray-600 uppercase text-xs font-bold">
+                                <tr>
+                                    <th class="px-4 py-3 whitespace-nowrap">Data</th>
+                                    <th class="px-4 py-3">Cliente</th>
+                                    <th class="px-4 py-3">Itens do Pedido</th>
+                                    <th class="px-4 py-3 text-right">Total</th>
+                                    <th class="px-4 py-3 w-40">Status</th>
+                                    <th class="px-4 py-3 text-right">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="quotesTbody" class="divide-y divide-gray-100 text-sm text-gray-700">
+                                <tr>
+                                    <td colspan="6" class="px-6 py-8 text-center text-gray-400 italic">
+                                        Aguardando carregamento dos dados...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. SEÇÃO DE SERVIÇOS (GRID: FORM + LISTA) -->
+            <section>
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl md:text-2xl font-title font-bold text-gray-800 uppercase border-l-4 border-blue-500 pl-3">
+                        Catálogo de <span style="color: var(--color-accent-blue);">Serviços</span>
+                    </h2>
+                    <button id="newServiceBtn" class="text-sm text-blue-600 hover:text-blue-800 font-bold md:hidden">
+                        + Novo Serviço
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
+                    <!-- FORMULÁRIO DE SERVIÇO (Esquerda) -->
+                    <div class="lg:col-span-1">
+                        <div class="bg-white rounded-2xl shadow-xl overflow-hidden sticky top-24 border border-gray-100">
+                            <div class="p-4 bg-gray-800 text-white font-subtitle font-bold flex justify-between items-center">
+                                <span><i class="fas fa-edit mr-2"></i> Gerenciar Serviço</span>
+                                <button id="resetSvcBtn" class="text-xs bg-gray-600 hover:bg-gray-500 px-2 py-1 rounded text-white transition">Novo</button>
+                            </div>
+                            
+                            <form id="serviceForm" class="p-6 space-y-4">
+                                <input type="hidden" id="svcId">
+                                
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 mb-1 uppercase">Nome do Serviço *</label>
+                                    <input id="sName" class="admin-input w-full rounded-lg px-3 py-2 text-sm" placeholder="Ex: Instalação de Tomada" required />
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-700 mb-1 uppercase">Unidade</label>
+                                        <input id="sUnit" class="admin-input w-full rounded-lg px-3 py-2 text-sm" placeholder="un, m, pt" value="un" />
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-700 mb-1 uppercase">Preço Base (R$)</label>
+                                        <input id="sPrice" type="number" step="0.01" class="admin-input w-full rounded-lg px-3 py-2 text-sm" placeholder="0.00" />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 mb-1 uppercase">Descrição</label>
+                                    <textarea id="sDesc" rows="3" class="admin-input w-full rounded-lg px-3 py-2 text-sm" placeholder="Detalhes técnicos..."></textarea>
+                                </div>
+
+                                <div class="flex items-center pt-2">
+                                    <label class="inline-flex items-center cursor-pointer">
+                                        <input id="sActive" type="checkbox" class="sr-only peer" checked>
+                                        <div class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                                        <span class="ms-2 text-sm font-medium text-gray-700">Ativo no Site</span>
+                                    </label>
+                                </div>
+
+                                <div class="pt-2">
+                                    <button type="submit" id="svcSubmitBtn" class="w-full btn-primary py-2.5 rounded-xl font-bold uppercase text-sm shadow-lg">
+                                        <i class="fas fa-save mr-2"></i> Salvar Serviço
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- LISTA DE SERVIÇOS (Direita) -->
+                    <div class="lg:col-span-2">
+                        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 h-full flex flex-col">
+                            <div class="overflow-x-auto flex-grow">
+                                <table class="w-full text-left border-collapse">
+                                    <thead class="bg-gray-50 text-gray-600 uppercase text-xs font-bold">
+                                        <tr>
+                                            <th class="px-4 py-3">Serviço</th>
+                                            <th class="px-4 py-3 w-24">Unid.</th>
+                                            <th class="px-4 py-3 w-32 text-right">Preço</th>
+                                            <th class="px-4 py-3 w-24 text-center">Status</th>
+                                            <th class="px-4 py-3 w-16"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="servicesTbody" class="divide-y divide-gray-100 text-sm text-gray-700">
+                                        <!-- JS Preenche -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- === FOOTER === -->
+    <footer class="py-6 mt-auto bg-[#0B132B]">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-sm text-white opacity-60 font-opensans">
+                © 2025 AlphaTech - Painel Administrativo.
+            </p>
+        </div>
+    </footer>
+
+    <!-- === LÓGICA JAVASCRIPT === -->
     <script>
-        // Inicializa ícones
         lucide.createIcons();
 
-        const fbQ = document.getElementById('fbQ');
-        const fbS = document.getElementById('fbS');
-
-        function hdrs() {
-            const token = document.getElementById('token').value.trim();
-            if (!token) {
-                alert('Por favor, insira o x-admin-token');
-                throw new Error('Token não fornecido');
-            }
-            return { 'x-admin-token': token, 'Content-Type': 'application/json' };
-        }
-
-        // --- ORÇAMENTOS ---
-        document.getElementById('loadQuotes').onclick = async () => {
-            fbQ.textContent = 'Carregando...';
-            fbQ.className = 'text-sm w-full md:w-auto text-center md:text-left';
-            let headers;
-            try { headers = hdrs(); } catch (e) { fbQ.textContent = e.message; fbQ.className = 'err text-sm w-full md:w-auto text-center md:text-left'; return; }
-
-            const res = await fetch('/api/admin/quotes?page=1', { headers });
-            const js = await res.json().catch(() => ({}));
-            if (!res.ok) { fbQ.textContent = js.error || 'Erro'; fbQ.className = 'err text-sm w-full md:w-auto text-center md:text-left'; return; }
-            fbQ.textContent = `Carregados ${js.quotes?.length || 0} orçamentos.`;
-            fbQ.className = 'ok text-sm w-full md:w-auto text-center md:text-left';
-
-            const tbody = document.querySelector('#qt tbody');
-            tbody.innerHTML = '';
-
-            const brl = n => (Number(n || 0)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
-            (js.quotes || []).forEach(q => {
-                const items = (js.itemsByQuote?.[q.id] || []);
-                const total = js.totalsByQuote?.[q.id] || 0;
-
-                // monta lista de itens com preço unitário e subtotal
-                const itemsHtml = items.length ? items.map(it => {
-                    const name = it.service?.name || '(?)';
-                    const unit = it.service?.unit_label || 'un';
-                    const qty = Number(it.quantity || 0);
-                    const unitPrice = Number(it.service?.base_price ?? 0);
-                    const sub = unitPrice * qty;
-                    const det = it.detail ? ` <span class="opacity-70">— ${it.detail}</span>` : '';
-                    return `<div class="text-xs">${name}: ${qty} ${unit} (${brl(unitPrice)} c/u) = <strong>${brl(sub)}</strong>${det}</div>`;
-                }).join('') : '-';
-
-                const rowId = q.id;
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${new Date(q.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}</td>
-                    <td>${q.name || '-'}</td>
-                    <td>${q.phone}${q.email ? '<br>' + q.email : ''}</td>
-                    <td>${itemsHtml}</td>
-                    <td><strong>${brl(total)}</strong></td>
-                    <td>${q.notes || '-'}</td>
-                    <td>
-                        <select data-id="${q.id}" class="st">
-                            ${['novo', 'contatado', 'fechado', 'perdido'].map(s => `<option value="${s}" ${s === q.status ? 'selected' : ''}>${s.charAt(0).toUpperCase() + s.slice(1)}</option>`).join('')}
-                        </select>
-                    </td>
-                      <td>
-                        <button class="btn-pdf" data-id="${rowId}">PDF</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-                const btnPdf = tr.querySelector('.btn-pdf');
-                btnPdf.onclick = () => {
-                    const id = btnPdf.dataset.id;
-                    const quote = (js.quotes || []).find(q => q.id === id);
-                    const items = js.itemsByQuote?.[id] || [];
-                    const total = js.totalsByQuote?.[id] || 0;
-                    generateQuotePDF(quote, items, total);
-                };
-
-            });
-
-            // Adiciona listener de mudança de status
-            tbody.querySelectorAll('.st').forEach(sel => {
-                sel.onchange = async (e) => {
-                    const id = e.target.dataset.id;
-                    const status = e.target.value;
-                    let changeHeaders;
-                    try { changeHeaders = hdrs(); } catch (e) { alert(e.message); return; }
-
-                    const r = await fetch('/api/admin/quotes', {
-                        method: 'PATCH',
-                        headers: changeHeaders,
-                        body: JSON.stringify({ id, status })
-                    });
-                    if (!r.ok) {
-                        alert('Falha ao atualizar status');
-                        // Reverte a seleção em caso de falha
-                        sel.value = [...sel.options].find(o => o.defaultSelected)?.value || sel.options[0].value;
-                    }
-                };
-            });
-        };
-
-        // --- SERVIÇOS ---
-        document.getElementById('loadSvcs').onclick = async () => {
-            fbS.textContent = 'Carregando...';
-            fbS.className = 'ml-0 sm:ml-4 text-sm w-full sm:w-auto text-center sm:text-left';
-            let headers;
-            try { headers = hdrs(); } catch (e) { fbS.textContent = e.message; fbS.className = 'err ml-0 sm:ml-4 text-sm w-full sm:w-auto text-center sm:text-left'; return; }
-
-            const res = await fetch('/api/admin/services', { headers });
-            const js = await res.json().catch(() => ({}));
-            if (!res.ok) { fbS.textContent = js.error || 'Erro'; fbS.className = 'err ml-0 sm:ml-4 text-sm w-full sm:w-auto text-center sm:text-left'; return; }
-            fbS.textContent = `Carregados ${js.services?.length || 0} serviços.`;
-            fbS.className = 'ok ml-0 sm:ml-4 text-sm w-full sm:w-auto text-center sm:text-left';
-
-            const tbody = document.querySelector('#sv tbody');
-            tbody.innerHTML = '';
-            (js.services || []).forEach(s => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><input type="text" value="${s.name || ''}" data-k="name" data-id="${s.id}" class="w-full" /></td>
-                    <td><input type="text" value="${s.description || ''}" data-k="description" data-id="${s.id}" class="w-full" /></td>
-                    <td><input type="text" value="${s.unit_label || 'un'}" data-k="unit_label" data-id="${s.id}" class="w-20"/></td>
-                    <td><input value="${s.base_price ?? ''}" data-k="base_price" data-id="${s.id}" type="number" step="0.01" class="w-28"/></td>
-                    <td><input type="checkbox" ${s.active ? 'checked' : ''} data-k="active" data-id="${s.id}" class="form-checkbox" /></td>
-                    <td><button class="btn btn-save save" data-id="${s.id}">Salvar</button></td>
-                `;
-                tbody.appendChild(tr);
-            });
-
-            // Listener para salvar serviço
-            tbody.querySelectorAll('.save').forEach(btn => {
-                btn.onclick = async () => {
-                    const id = btn.dataset.id;
-                    const row = tbody.querySelectorAll(`[data-id="${id}"]`);
-                    const payload = { id };
-                    row.forEach(inp => {
-                        const k = inp.dataset.k;
-                        payload[k] = (inp.type === 'checkbox') ? inp.checked
-                            : (inp.type === 'number' && inp.value !== '' ? Number(inp.value) : (inp.value || null));
-                    });
-
-                    let saveHeaders;
-                    try { saveHeaders = hdrs(); } catch (e) { alert(e.message); return; }
-
-                    btn.textContent = '...';
-                    const r = await fetch('/api/admin/services', {
-                        method: 'PATCH',
-                        headers: saveHeaders,
-                        body: JSON.stringify(payload)
-                    });
-                    if (!r.ok) {
-                        alert('Falha ao salvar serviço');
-                        btn.textContent = 'Salvar';
-                    } else {
-                        btn.textContent = 'Salvo!';
-                        setTimeout(() => { btn.textContent = 'Salvar'; }, 1500);
-                    }
-                };
-            });
-        };
-
-        // --- CRIAR SERVIÇO ---
-        document.getElementById('createSvc').onclick = async () => {
-            const payload = {
-                name: document.getElementById('sName').value,
-                description: document.getElementById('sDesc').value || null,
-                unit_label: document.getElementById('sUnit').value || 'un',
-                base_price: document.getElementById('sPrice').value ? Number(document.getElementById('sPrice').value) : null,
-                active: document.getElementById('sActive').checked
-            };
-
-            if (!payload.name) {
-                alert('O campo "Nome" é obrigatório.');
-                return;
-            }
-
-            let createHeaders;
-            try { createHeaders = hdrs(); } catch (e) { alert(e.message); return; }
-
-            const btn = document.getElementById('createSvc');
-            btn.textContent = 'Cadastrando...';
-            btn.disabled = true;
-
-            const res = await fetch('/api/admin/services', {
-                method: 'POST',
-                headers: createHeaders,
-                body: JSON.stringify(payload)
-            });
-
-            btn.disabled = false;
-            btn.textContent = 'Cadastrar serviço';
-
-            if (res.ok) {
-                // Limpa o formulário
-                document.getElementById('sName').value = '';
-                document.getElementById('sDesc').value = '';
-                document.getElementById('sUnit').value = 'un';
-                document.getElementById('sPrice').value = '';
-                document.getElementById('sActive').checked = true;
-                // Recarrega a lista
-                document.getElementById('loadSvcs').click();
-            } else {
-                const js = await res.json().catch(() => ({}));
-                alert(js.error || 'Erro ao criar serviço');
-            }
-        };
-
-
-        // personalize os dados da empresa aqui
+        // --- DADOS DA EMPRESA (Para PDF) ---
         const COMPANY = {
             name: 'AlphaTech Elétrica & Automação',
             doc: 'CNPJ 56.888.854/0001-00',
@@ -530,176 +290,351 @@
             email: 'Alphatech.escri@gmail.com',
             address: 'R. Vicente Paulo da Costa - Jordanésia, Cajamar - SP.',
             site: 'https://alphatech-plum.vercel.app/',
-            logoUrl: new URL('/assets/logo.png', location.origin).href // opcional: URL absoluta do logo (PNG)
+            logoUrl: '/assets/logo.png' // Ajuste se necessário
         };
 
-        const brl = n => (Number(n || 0)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        // Elementos DOM
+        const tokenInput = document.getElementById('token');
+        const loadDataBtn = document.getElementById('loadDataBtn');
+        const globalFb = document.getElementById('globalFb');
+        
+        // Quotes
+        const quotesTbody = document.getElementById('quotesTbody');
 
+        // Services
+        const serviceForm = document.getElementById('serviceForm');
+        const sName = document.getElementById('sName');
+        const sUnit = document.getElementById('sUnit');
+        const sPrice = document.getElementById('sPrice');
+        const sDesc = document.getElementById('sDesc');
+        const sActive = document.getElementById('sActive');
+        const svcIdInput = document.getElementById('svcId');
+        const servicesTbody = document.getElementById('servicesTbody');
+        const svcSubmitBtn = document.getElementById('svcSubmitBtn');
+        const resetSvcBtn = document.getElementById('resetSvcBtn');
+        const newServiceBtn = document.getElementById('newServiceBtn');
+
+        let editingSvcId = null;
+
+        // --- UTILITÁRIOS ---
+        const formatBRL = (n) => (Number(n || 0)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        
+        function getHeaders() {
+            const t = tokenInput.value.trim();
+            if(!t) throw new Error('Token de administrador obrigatório.');
+            return { 'x-admin-token': t, 'Content-Type': 'application/json' };
+        }
+
+        function showFeedback(msg, type = 'info') {
+            globalFb.textContent = msg;
+            globalFb.className = `text-center font-bold text-sm py-2 px-4 rounded mb-4 ${type === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'} block`;
+            setTimeout(() => globalFb.classList.add('hidden'), 5000);
+        }
+
+        // --- CARREGAMENTO GERAL ---
+        loadDataBtn.onclick = async () => {
+            try {
+                const h = getHeaders(); // Valida token
+                loadDataBtn.disabled = true;
+                loadDataBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
+                
+                await Promise.all([loadQuotes(h), loadServices(h)]);
+                
+                showFeedback('Dados atualizados com sucesso!', 'success');
+            } catch (err) {
+                showFeedback(err.message, 'error');
+            } finally {
+                loadDataBtn.disabled = false;
+                loadDataBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Carregar Dados';
+            }
+        };
+
+        // --- ORÇAMENTOS (QUOTES) ---
+        async function loadQuotes(headers) {
+            const res = await fetch('/api/admin/quotes?page=1', { headers });
+            if (!res.ok) throw new Error('Falha ao carregar orçamentos.');
+            const js = await res.json();
+            
+            renderQuotes(js.quotes || [], js.itemsByQuote || {}, js.totalsByQuote || {});
+        }
+
+        function renderQuotes(quotes, itemsMap, totalsMap) {
+            quotesTbody.innerHTML = '';
+            
+            if(quotes.length === 0) {
+                quotesTbody.innerHTML = '<tr><td colspan="6" class="p-6 text-center text-gray-500">Nenhum orçamento recebido.</td></tr>';
+                return;
+            }
+
+            quotes.forEach(q => {
+                const items = itemsMap[q.id] || [];
+                const total = totalsMap[q.id] || 0;
+                
+                // Resumo dos itens (HTML)
+                const itemsSummary = items.map(it => 
+                    `<div class="text-xs mb-1">
+                        <span class="font-bold text-gray-700">${it.quantity}x</span> ${it.service?.name || 'Item removido'}
+                    </div>`
+                ).join('') || '<span class="text-gray-400 italic">Sem itens</span>';
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-blue-50 transition';
+                
+                // Seletor de Status
+                const statusOptions = ['novo', 'contatado', 'fechado', 'perdido'].map(st => 
+                    `<option value="${st}" ${q.status === st ? 'selected' : ''}>${st.toUpperCase()}</option>`
+                ).join('');
+
+                tr.innerHTML = `
+                    <td class="px-4 py-4 align-top whitespace-nowrap text-xs text-gray-500">
+                        ${new Date(q.created_at).toLocaleDateString('pt-BR')}<br>
+                        ${new Date(q.created_at).toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}
+                    </td>
+                    <td class="px-4 py-4 align-top">
+                        <div class="font-bold text-gray-800">${q.name || 'Desconhecido'}</div>
+                        <div class="text-xs text-gray-500 flex flex-col mt-1 gap-1">
+                            ${q.email ? `<span><i class="fas fa-envelope w-4"></i> ${q.email}</span>` : ''}
+                            ${q.phone ? `<span><i class="fas fa-whatsapp w-4"></i> ${q.phone}</span>` : ''}
+                        </div>
+                        ${q.notes ? `<div class="mt-2 text-xs bg-yellow-50 p-2 rounded text-gray-600 border border-yellow-100 italic">Obs: ${q.notes}</div>` : ''}
+                    </td>
+                    <td class="px-4 py-4 align-top">
+                        ${itemsSummary}
+                    </td>
+                    <td class="px-4 py-4 align-top text-right font-bold text-gray-800">
+                        ${formatBRL(total)}
+                    </td>
+                    <td class="px-4 py-4 align-top">
+                        <select class="text-xs border border-gray-300 rounded p-1.5 w-full bg-white focus:ring-2 focus:ring-blue-200 outline-none status-select" data-id="${q.id}">
+                            ${statusOptions}
+                        </select>
+                    </td>
+                    <td class="px-4 py-4 align-top text-right">
+                        <button class="text-red-600 hover:bg-red-50 border border-red-200 rounded-lg px-3 py-1.5 text-xs font-bold transition btn-pdf" data-id="${q.id}">
+                            <i class="fas fa-file-pdf mr-1"></i> PDF
+                        </button>
+                    </td>
+                `;
+                
+                // Evento Troca Status
+                tr.querySelector('.status-select').addEventListener('change', async (e) => {
+                    try {
+                        const h = getHeaders();
+                        await fetch('/api/admin/quotes', {
+                            method: 'PATCH',
+                            headers: h,
+                            body: JSON.stringify({ id: q.id, status: e.target.value })
+                        });
+                        e.target.classList.add('bg-green-50', 'border-green-300');
+                        setTimeout(() => e.target.classList.remove('bg-green-50', 'border-green-300'), 1000);
+                    } catch (err) {
+                        alert('Erro ao mudar status: ' + err.message);
+                    }
+                });
+
+                // Evento PDF
+                tr.querySelector('.btn-pdf').onclick = () => generateQuotePDF(q, items, total);
+
+                quotesTbody.appendChild(tr);
+            });
+        }
+
+        // --- SERVIÇOS (SERVICES) ---
+        async function loadServices(headers) {
+            const res = await fetch('/api/admin/services', { headers });
+            if (!res.ok) throw new Error('Falha ao carregar serviços.');
+            const js = await res.json();
+            renderServices(js.services || []);
+        }
+
+        function renderServices(list) {
+            servicesTbody.innerHTML = '';
+            list.forEach(s => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-blue-50 transition group';
+                
+                tr.innerHTML = `
+                    <td class="px-4 py-3 align-middle">
+                        <div class="font-bold text-gray-800">${s.name}</div>
+                        <div class="text-xs text-gray-500 truncate max-w-[200px]">${s.description || '-'}</div>
+                    </td>
+                    <td class="px-4 py-3 align-middle text-gray-600 text-xs font-mono">${s.unit_label || 'un'}</td>
+                    <td class="px-4 py-3 align-middle text-right font-semibold text-gray-700">${formatBRL(s.base_price)}</td>
+                    <td class="px-4 py-3 align-middle text-center">
+                        ${s.active 
+                            ? '<span class="w-2 h-2 bg-green-500 rounded-full inline-block" title="Ativo"></span>' 
+                            : '<span class="w-2 h-2 bg-red-400 rounded-full inline-block" title="Inativo"></span>'}
+                    </td>
+                    <td class="px-4 py-3 align-middle text-right">
+                        <button class="text-blue-600 hover:bg-blue-100 p-2 rounded-lg transition edit-svc-btn">
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                    </td>
+                `;
+                
+                // Botão Editar preenche o form
+                tr.querySelector('.edit-svc-btn').onclick = () => {
+                    editingSvcId = s.id;
+                    svcIdInput.value = s.id;
+                    sName.value = s.name;
+                    sDesc.value = s.description || '';
+                    sUnit.value = s.unit_label || 'un';
+                    sPrice.value = s.base_price || '';
+                    sActive.checked = !!s.active;
+                    
+                    svcSubmitBtn.innerHTML = '<i class="fas fa-sync-alt mr-2"></i> Atualizar';
+                    svcSubmitBtn.classList.replace('btn-primary', 'bg-yellow-500');
+                    svcSubmitBtn.classList.add('text-white', 'hover:bg-yellow-600');
+                    
+                    // Scroll mobile
+                    if(window.innerWidth < 1024) serviceForm.scrollIntoView({behavior:'smooth'});
+                };
+
+                servicesTbody.appendChild(tr);
+            });
+        }
+
+        // Reset Form Serviço
+        function resetSvcForm() {
+            editingSvcId = null;
+            svcIdInput.value = '';
+            serviceForm.reset();
+            sActive.checked = true;
+            sUnit.value = 'un';
+            svcSubmitBtn.innerHTML = '<i class="fas fa-save mr-2"></i> Salvar Serviço';
+            svcSubmitBtn.className = 'w-full btn-primary py-2.5 rounded-xl font-bold uppercase text-sm shadow-lg';
+        }
+        
+        resetSvcBtn.onclick = resetSvcForm;
+        newServiceBtn.onclick = () => {
+            resetSvcForm();
+            serviceForm.scrollIntoView({behavior:'smooth'});
+        };
+
+        // Salvar Serviço (Create/Update)
+        serviceForm.onsubmit = async (e) => {
+            e.preventDefault();
+            
+            const payload = {
+                name: sName.value,
+                description: sDesc.value || null,
+                unit_label: sUnit.value || 'un',
+                base_price: sPrice.value ? Number(sPrice.value) : null,
+                active: sActive.checked
+            };
+
+            // Se for edição, inclui ID
+            if (editingSvcId) payload.id = editingSvcId;
+
+            try {
+                const h = getHeaders();
+                svcSubmitBtn.disabled = true;
+                svcSubmitBtn.textContent = 'Processando...';
+
+                // Usa PATCH para update e POST para create
+                const method = editingSvcId ? 'PATCH' : 'POST';
+                
+                const res = await fetch('/api/admin/services', {
+                    method: method,
+                    headers: h,
+                    body: JSON.stringify(payload)
+                });
+
+                if(!res.ok) {
+                    const js = await res.json();
+                    throw new Error(js.error || 'Erro ao salvar.');
+                }
+
+                showFeedback(editingSvcId ? 'Serviço atualizado!' : 'Serviço criado!', 'success');
+                resetSvcForm();
+                loadServices(h); // Recarrega lista
+                
+            } catch (err) {
+                showFeedback(err.message, 'error');
+            } finally {
+                svcSubmitBtn.disabled = false;
+                if(!editingSvcId) svcSubmitBtn.innerHTML = '<i class="fas fa-save mr-2"></i> Salvar Serviço';
+            }
+        };
+
+        // --- GERAÇÃO DE PDF (Copiado e adaptado da original) ---
         async function generateQuotePDF(q, items, total) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ unit: 'pt', format: 'a4' });
 
-            // ===== Layout fixo e margens =====
-            const M = 40;                                  // margem
+            const M = 40; 
             const pageW = doc.internal.pageSize.getWidth();
             const pageH = doc.internal.pageSize.getHeight();
-            const headerH = 110;                           // reserva cabeçalho
-            const footerH = 40;                            // reserva rodapé
             const innerW = pageW - 2 * M;
 
-            // ===== Logo (carrega uma vez) =====
-            let logoDataUrl = null, logoW = 0, logoH = 0;
-            if (COMPANY.logoUrl) {
-                try {
-                    const blob = await fetch(COMPANY.logoUrl, { cache: 'no-store' }).then(r => r.blob());
-                    const reader = new FileReader();
-                    await new Promise(res => { reader.onload = res; reader.readAsDataURL(blob); });
-                    logoDataUrl = reader.result;
-                    // define tamanho máximo sem invadir textos
-                    logoW = 110; logoH = 36;                   // estável, sem alongar
-                } catch (_) { }
-            }
+            // Cabeçalho
+            let y = M;
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(18); doc.setTextColor(11, 19, 43);
+            doc.text(COMPANY.name, M, y);
+            
+            doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(100);
+            y += 14; doc.text(`${COMPANY.doc} | ${COMPANY.phone}`, M, y);
+            y += 12; doc.text(COMPANY.email, M, y);
+            
+            doc.setDrawColor(220); doc.line(M, y+10, pageW-M, y+10);
+            
+            // Info do Orçamento
+            y += 40;
+            doc.setFontSize(14); doc.setTextColor(0); doc.setFont('helvetica', 'bold');
+            doc.text(`Orçamento #${q.id.toString().slice(0,6).toUpperCase()}`, M, y);
+            
+            y += 16;
+            doc.setFontSize(10); doc.setFont('helvetica', 'normal');
+            doc.text(`Data: ${new Date(q.created_at).toLocaleDateString()}`, M, y);
+            
+            // Cliente Box
+            y += 20;
+            doc.setFillColor(247, 249, 252); doc.roundedRect(M, y, innerW, 50, 4, 4, 'F');
+            doc.setFont('helvetica', 'bold'); doc.text('Cliente:', M + 10, y + 18);
+            doc.setFont('helvetica', 'normal'); 
+            doc.text(`${q.name} ${q.phone ? ' - ' + q.phone : ''}`, M + 10, y + 32);
+            doc.text(q.email || '', M + 10, y + 44);
 
-            // ===== Cabeçalho/rodapé simples, sem ícones/bullets =====
-            function drawHeader() {
-                const yTop = M;
-
-                // 1) Logo (esquerda)
-                if (logoDataUrl) {
-                    doc.addImage(logoDataUrl, 'PNG', M, yTop, logoW, logoH, undefined, 'FAST');
-                }
-
-                // 2) Dados da empresa (direita)
-                const rightX = M + (logoDataUrl ? (logoW + 16) : 0); // recua se tiver logo
-                const rightW = innerW - (logoDataUrl ? (logoW + 16) : 0);
-
-                doc.setFont('helvetica', 'bold'); doc.setTextColor(0); doc.setFontSize(14);
-                doc.text(COMPANY.name, rightX, yTop + 16, { maxWidth: rightW });
-
-                doc.setFont('helvetica', 'normal'); doc.setTextColor(60); doc.setFontSize(10);
-                const compLines = [
-                    COMPANY.doc,
-                    COMPANY.address,
-                    `${COMPANY.phone} / ${COMPANY.email}`,
-                    COMPANY.site
-                ];
-                let yy = yTop + 32;
-                compLines.forEach(line => { doc.text(line, rightX, yy, { maxWidth: rightW }); yy += 14; });
-
-                // 3) Linha separadora
-                const sepY = M + 80;
-                doc.setDrawColor(220); doc.line(M, sepY, pageW - M, sepY);
-            }
-
-            function drawFooter(pageNumber, pageCount) {
-                const y = pageH - M;
-                doc.setFont('helvetica', 'normal'); doc.setTextColor(90); doc.setFontSize(9);
-                const disclaimer = 'Este documento é uma estimativa. Valores finais podem variar após visita técnica/ajustes de escopo.';
-                doc.text(disclaimer, M, y, { maxWidth: innerW });
-                doc.text(`Página ${pageNumber} de ${pageCount}`, pageW - M, y, { align: 'right' });
-            }
-
-            // ===== Título + meta (página 1) =====
-            const yTop = M + headerH;
-            doc.setFont('helvetica', 'bold'); doc.setTextColor(0); doc.setFontSize(18);
-            doc.text('Orçamento', M, yTop);
-
-            const created = new Date(q.created_at);
-            doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
-            doc.text(`#${q.id.slice(0, 8)}`, M, yTop + 18);
-            doc.text(`Data: ${created.toLocaleDateString('pt-BR')} ${created.toLocaleTimeString('pt-BR')}`, M, yTop + 32);
-
-            // bloco Cliente (coluna à direita, sem ícone)
-            const clienteX = pageW / 2 + 20;
-            doc.setFont('helvetica', 'bold'); doc.text('Cliente', clienteX, yTop);
-            doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
-            const clientLines = [
-                `Nome: ${q.name || '-'}`,
-                `WhatsApp: ${q.phone || '-'}`,
-                `E-mail: ${q.email || '-'}`
-            ];
-            let cy = yTop + 16;
-            clientLines.forEach(line => { doc.text(line, clienteX, cy, { maxWidth: innerW / 2 - 20 }); cy += 14; });
-
-            // ===== Tabela de itens (sem emojis/bullets) =====
-            const rows = (items || []).map(it => {
-                const name = it.service?.name || '(?)';
-                const unit = it.service?.unit_label || 'un';
-                const qty = Number(it.quantity || 0);
-                const unitPrice = Number(it.service?.base_price ?? 0);
-                const sub = unitPrice * qty;
-                return [name, it.detail || '', `${qty} ${unit}`, brl(unitPrice), brl(sub)];
-            });
+            // Tabela
+            const rows = items.map(it => [
+                it.service?.name || 'Item',
+                it.quantity,
+                formatBRL(it.service?.base_price),
+                formatBRL((it.service?.base_price || 0) * it.quantity)
+            ]);
 
             doc.autoTable({
-                head: [['Serviço', 'Detalhe', 'Qtd', 'Unitário', 'Subtotal']],
-                body: rows.length ? rows : [['(sem itens)', '', '', '', '']],
-                startY: yTop + 48,
-                margin: { top: M + headerH, bottom: M + footerH, left: M, right: M },
-                styles: {
-                    font: 'helvetica', fontSize: 10, cellPadding: 6, overflow: 'linebreak',
-                    lineColor: [230, 233, 238], lineWidth: 0.6, textColor: 20
-                },
-                headStyles: { fillColor: [23, 37, 84], textColor: 255, halign: 'left' },
-                bodyStyles: { fillColor: [255, 255, 255] },
-                alternateRowStyles: { fillColor: [246, 248, 250] },
-                theme: 'grid',
-                // larguras que cabem no innerW sem sobrar/estourar
-                columnStyles: {
-                    0: { cellWidth: 175 },          // Serviço
-                    1: { cellWidth: 135 },          // Detalhe
-                    2: { cellWidth: 55, halign: 'center' },
-                    3: { cellWidth: 65, halign: 'right' },
-                    4: { cellWidth: 85, halign: 'right' }
-                },
-                didDrawPage: (data) => {
-                    drawHeader();
-                    drawFooter(data.pageNumber, doc.internal.getNumberOfPages());
-                }
+                head: [['Descrição', 'Qtd', 'Unitário', 'Subtotal']],
+                body: rows,
+                startY: y + 60,
+                margin: { left: M, right: M },
+                styles: { font: 'helvetica', fontSize: 10, cellPadding: 6 },
+                headStyles: { fillColor: [11, 19, 43], textColor: 255 },
+                theme: 'grid'
             });
 
-            // ===== Pós-tabela =====
-            let y = doc.lastAutoTable.finalY + 16;
-            const usableBottom = pageH - M - footerH;
-            const ensure = (h) => {
-                if (y + h > usableBottom) {
-                    doc.addPage();
-                    // header/rodapé redesenhados pelo didDrawPage
-                    y = M + headerH;
-                }
-            };
-
-            // Observações (sem ícone)
-            if (q.notes) {
-                doc.setFont('helvetica', 'bold'); doc.setTextColor(0); doc.setFontSize(11);
-                const titleH = 14;
-                const notes = doc.splitTextToSize(q.notes, innerW);
-                const lineH = 12;
-                const textH = notes.length * lineH;
-
-                ensure(titleH + 6 + textH);
-                doc.text('Observações', M, y); y += titleH;
-                doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
-                doc.text(notes, M, y + 4); y += (textH + 6);
+            // Total e Obs
+            let finalY = doc.lastAutoTable.finalY + 20;
+            
+            // Observações
+            if(q.notes) {
+                doc.setFont('helvetica', 'bold'); doc.text('Observações:', M, finalY);
+                doc.setFont('helvetica', 'normal');
+                const splitNotes = doc.splitTextToSize(q.notes, innerW);
+                doc.text(splitNotes, M, finalY + 12);
+                finalY += (splitNotes.length * 12) + 20;
             }
 
-            // Total (caixa simples, sem ícone)
-            ensure(40);
-            const boxW = 220, boxH = 32, boxX = pageW - M - boxW, boxY = y;
-            doc.setDrawColor(23, 37, 84); doc.setLineWidth(0.8);
-            doc.roundedRect(boxX, boxY, boxW, boxH, 6, 6);
-            doc.setFont('helvetica', 'bold'); doc.setFontSize(11);
-            doc.text('Total estimado', boxX + 10, boxY + 14);
-            doc.setFont('helvetica', 'bold'); doc.setFontSize(13);
-            doc.text(brl(total), boxX + boxW - 10, boxY + 22, { align: 'right' });
+            // Total Box
+            doc.setFontSize(12); doc.setFont('helvetica', 'bold');
+            doc.text(`TOTAL ESTIMADO: ${formatBRL(total)}`, pageW - M, finalY, { align: 'right' });
+            
+            // Disclaimer
+            doc.setFontSize(8); doc.setTextColor(150); doc.setFont('helvetica', 'italic');
+            doc.text('Valores sujeitos a alteração após visita técnica.', M, pageH - 20);
 
-            // arquivo
-            const fname = `orcamento_${(q.name || 'cliente').toString().trim().replace(/\s+/g, '_')}_${q.id.slice(0, 8)}.pdf`;
-            doc.save(fname);
+            doc.save(`Orcamento_${q.name}_${q.id.slice(0,4)}.pdf`);
         }
-
-
     </script>
 </body>
-
 </html>
