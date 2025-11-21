@@ -3,121 +3,309 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Painel · Produtos Afiliados</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>AlphaTech | Gestão de Produtos Parceiros</title>
+
+    <meta name="robots" content="noindex, nofollow"> <!-- Página administrativa não deve ser indexada -->
+
+    <!-- Favicon -->
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='80'>⚡</text></svg>">
+
+    <!-- Bibliotecas Externas (Mesmas da Index) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Exo+2:wght@700&family=Open+Sans:wght@400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        /* === Identidade Visual AlphaTech (Copiada e Adaptada da Index) === */
+        :root {
+            --color-primary-dark: #0B132B;
+            --color-secondary-gold: #FFD166;
+            --color-accent-blue: #118AB2;
+            --color-neutral-dark: #2E2E2E;
+            --color-neutral-light: #E0E0E0;
+            --color-card-dark-background: #1A243F;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #f7f9fc; /* Fundo claro para melhor contraste em áreas de dados, ou use escuro se preferir full dark */
+            color: var(--color-neutral-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Tipografia */
+        .font-title { font-family: 'Montserrat', sans-serif; }
+        .font-subtitle { font-family: 'Exo 2', sans-serif; }
+
+        .logo-text-gold { color: var(--color-secondary-gold); }
+
+        /* Botões */
+        .btn-primary {
+            background-color: var(--color-accent-blue);
+            color: white;
+            transition: all 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #0c6a8f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(17, 138, 178, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: var(--color-primary-dark);
+            color: var(--color-secondary-gold);
+            border: 1px solid var(--color-secondary-gold);
+            transition: all 0.3s;
+        }
+        .btn-secondary:hover {
+            background-color: var(--color-secondary-gold);
+            color: var(--color-primary-dark);
+        }
+
+        .btn-danger {
+            background-color: #ef4444;
+            color: white;
+            transition: all 0.3s;
+        }
+        .btn-danger:hover { background-color: #dc2626; }
+
+        /* Inputs do Admin */
+        .admin-input {
+            background-color: #f9fafb;
+            border: 1px solid #d1d5db;
+            color: #111827;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .admin-input:focus {
+            outline: none;
+            border-color: var(--color-accent-blue);
+            box-shadow: 0 0 0 3px rgba(17, 138, 178, 0.1);
+        }
+
+        /* Header Fixo */
+        header {
+            background-color: var(--color-primary-dark);
+        }
+    </style>
 </head>
 
-<body class="bg-gray-100">
-    <div class="max-w-5xl mx-auto px-4 py-8">
-        <h1 class="text-2xl font-bold mb-6">Produtos Afiliados</h1>
+<body class="bg-gray-50">
 
-        <!-- ALERTA: token -->
-        <div class="mb-4 text-sm text-gray-600">
-            <b>Atenção:</b> defina o <code>ADMIN_TOKEN</code> corretamente no script abaixo
-            (o mesmo que está no ambiente do servidor).
+    <!-- === HEADER (Idêntico à Index para consistência) === -->
+    <header class="sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="/index.html" class="text-2xl sm:text-3xl font-title font-extrabold uppercase flex items-center whitespace-nowrap no-underline">
+                <i data-lucide="zap" class="w-7 h-7 sm:w-8 sm:h-8 text-yellow-400 mr-1"></i>
+                <span class="text-white">ALPHA</span><span class="logo-text-gold">TECH</span>
+            </a>
+
+            <!-- Texto do Painel -->
+            <div class="hidden md:block text-white font-subtitle opacity-80">
+                <i class="fas fa-tools mr-2"></i> Painel Administrativo
+            </div>
+
+            <!-- Botão Voltar -->
+            <div>
+                <a href="/index.html" class="text-sm font-bold text-white hover:text-yellow-400 transition font-subtitle flex items-center gap-2">
+                    <i class="fas fa-arrow-left"></i> <span class="hidden sm:inline">Voltar ao Site</span>
+                </a>
+            </div>
         </div>
+    </header>
 
-        <!-- Formulário -->
-        <form id="productForm" class="bg-white rounded-xl shadow p-4 mb-8 space-y-3">
-            <input type="hidden" name="id" id="productId" />
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div>
-                    <label class="block text-sm font-semibold mb-1">Nome *</label>
-                    <input name="name" class="w-full border rounded-lg px-3 py-2" required />
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold mb-1">Preço (texto livre)</label>
-                    <input name="price_display" class="w-full border rounded-lg px-3 py-2"
-                        placeholder="Ex: R$ 199,90 ou A partir de R$ 99" />
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-sm font-semibold mb-1">Descrição</label>
-                <textarea name="description" rows="2" class="w-full border rounded-lg px-3 py-2"></textarea>
-            </div>
-
-            <div>
-                <label class="block text-sm font-semibold mb-1">URL da imagem (opcional)</label>
-                <input name="image_url" class="w-full border rounded-lg px-3 py-2" placeholder="https://..." />
-            </div>
-
-            <div>
-                <label class="block text-sm font-semibold mb-1">Link de afiliado (Mercado Livre) *</label>
-                <input name="affiliate_url" class="w-full border rounded-lg px-3 py-2"
-                    placeholder="https://mercadolivre.com.br/..." required />
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <div>
-                    <label class="block text-sm font-semibold mb-1">Ordem</label>
-                    <input name="sort_order" type="number" value="0" class="w-full border rounded-lg px-3 py-2" />
-                </div>
-                <div class="flex items-center gap-2 mt-4 md:mt-7">
-                    <input id="active" name="active" type="checkbox" class="h-4 w-4" checked />
-                    <label for="active" class="text-sm font-semibold">Ativo</label>
+    <!-- === CONTEÚDO PRINCIPAL === -->
+    <main class="flex-grow py-10 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto">
+            
+            <!-- Cabeçalho da Página -->
+            <div class="mb-8 text-center md:text-left border-b border-gray-200 pb-6">
+                <h1 class="text-3xl md:text-4xl font-title font-bold text-gray-800 uppercase">
+                    Gestão de <span style="color: var(--color-accent-blue);">Produtos Parceiros</span>
+                </h1>
+                <p class="mt-2 text-gray-600 font-subtitle">
+                    Cadastre e gerencie os produtos exibidos na seção "Loja Parceira" do site principal.
+                </p>
+                
+                <!-- ALERTA DE SEGURANÇA VISUAL -->
+                <div class="mt-4 inline-flex items-center px-4 py-2 rounded-lg bg-yellow-50 border border-yellow-200 text-yellow-800 text-sm">
+                    <i class="fas fa-lock mr-2"></i>
+                    <span><b>Acesso Restrito:</b> Certifique-se de que o <code>ADMIN_TOKEN</code> está configurado.</span>
                 </div>
             </div>
 
-            <div class="flex items-center justify-between pt-2">
-                <p id="formFb" class="text-sm"></p>
-                <button type="submit"
-                    class="px-4 py-2 rounded-lg text-white text-sm font-semibold bg-blue-600 hover:bg-blue-700">
-                    Salvar produto
-                </button>
-            </div>
-        </form>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- === COLUNA 1: FORMULÁRIO DE CADASTRO/EDIÇÃO === -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-2xl shadow-xl overflow-hidden sticky top-24 border border-gray-100">
+                        <div class="p-4 bg-gray-800 text-white font-subtitle font-bold flex justify-between items-center">
+                            <span><i class="fas fa-edit mr-2"></i> Dados do Produto</span>
+                            <button id="resetBtn" type="button" class="text-xs bg-gray-600 hover:bg-gray-500 px-2 py-1 rounded text-white transition">
+                                Novo
+                            </button>
+                        </div>
+                        
+                        <form id="productForm" class="p-6 space-y-4">
+                            <input type="hidden" name="id" id="productId" />
 
-        <!-- Lista -->
-        <div class="bg-white rounded-xl shadow p-4">
-            <div class="flex items-center justify-between mb-3">
-                <h2 class="text-lg font-semibold">Produtos cadastrados</h2>
-                <button id="reloadBtn" class="text-sm px-3 py-1 rounded-lg bg-gray-100 hover:bg-gray-200">
-                    Recarregar
-                </button>
+                            <!-- Nome -->
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Nome do Produto *</label>
+                                <input name="name" class="admin-input w-full rounded-lg px-3 py-2.5 text-sm" placeholder="Ex: Câmera WiFi HD" required />
+                            </div>
+
+                            <!-- Preço -->
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Preço (Display)</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-2.5 text-gray-400"><i class="fas fa-tag"></i></span>
+                                    <input name="price_display" class="admin-input w-full rounded-lg pl-9 pr-3 py-2.5 text-sm"
+                                        placeholder="Ex: R$ 199,90" />
+                                </div>
+                            </div>
+
+                            <!-- Descrição -->
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Descrição Curta</label>
+                                <textarea name="description" rows="3" class="admin-input w-full rounded-lg px-3 py-2.5 text-sm" placeholder="Breve descrição para o card..."></textarea>
+                            </div>
+
+                            <!-- Imagem URL -->
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">URL da Imagem</label>
+                                <input name="image_url" class="admin-input w-full rounded-lg px-3 py-2.5 text-sm" placeholder="https://..." />
+                                <p class="text-xs text-gray-500 mt-1">Use URLs de imagens públicas.</p>
+                            </div>
+
+                            <!-- Link Afiliado -->
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Link de Afiliado (ML) *</label>
+                                <input name="affiliate_url" class="admin-input w-full rounded-lg px-3 py-2.5 text-sm"
+                                    placeholder="https://mercadolivre..." required />
+                            </div>
+
+                            <!-- Ordem e Ativo -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-700 mb-1">Ordem</label>
+                                    <input name="sort_order" type="number" value="0" class="admin-input w-full rounded-lg px-3 py-2.5 text-sm" />
+                                </div>
+                                <div class="flex items-center pt-6">
+                                    <label class="inline-flex items-center cursor-pointer">
+                                        <input id="active" name="active" type="checkbox" class="sr-only peer" checked>
+                                        <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                        <span class="ms-3 text-sm font-medium text-gray-900">Ativo</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Feedback e Botão -->
+                            <div class="pt-2">
+                                <p id="formFb" class="text-sm mb-3 min-h-[20px] font-semibold text-center"></p>
+                                <button type="submit" id="submitBtn"
+                                    class="w-full btn-primary py-3 rounded-xl font-bold uppercase text-sm tracking-wide shadow-lg">
+                                    <i class="fas fa-save mr-2"></i> Salvar Produto
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- === COLUNA 2: LISTA DE PRODUTOS === -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+                        <div class="p-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+                            <h2 class="font-subtitle font-bold text-gray-800 text-lg">
+                                <i class="fas fa-list mr-2 text-blue-600"></i> Catálogo Atual
+                            </h2>
+                            <button id="reloadBtn" class="text-sm text-blue-600 hover:text-blue-800 font-bold flex items-center">
+                                <i class="fas fa-sync-alt mr-1"></i> Atualizar Lista
+                            </button>
+                        </div>
+
+                        <div id="listContent" class="p-0">
+                            <div id="listFb" class="p-8 text-center text-gray-500">Carregando produtos...</div>
+                            
+                            <!-- Tabela Responsiva -->
+                            <div class="overflow-x-auto">
+                                <table id="productsTable" class="w-full text-left border-collapse hidden">
+                                    <thead class="bg-gray-100 text-gray-600 uppercase text-xs font-bold">
+                                        <tr>
+                                            <th class="px-4 py-3 text-center w-16">Img</th>
+                                            <th class="px-4 py-3">Produto</th>
+                                            <th class="px-4 py-3 text-center">Status</th>
+                                            <th class="px-4 py-3 text-center">Ordem</th>
+                                            <th class="px-4 py-3 text-right">Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="productsTbody" class="divide-y divide-gray-100">
+                                        <!-- Linhas geradas via JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-            <div id="listFb" class="text-sm text-gray-500 mb-2">Carregando...</div>
-            <table class="w-full text-sm border-collapse hidden" id="productsTable">
-                <thead>
-                    <tr class="bg-gray-50">
-                        <th class="border px-2 py-1 text-left">ID</th>
-                        <th class="border px-2 py-1 text-left">Nome</th>
-                        <th class="border px-2 py-1 text-left">Preço</th>
-                        <th class="border px-2 py-1 text-left">Ativo</th>
-                        <th class="border px-2 py-1 text-left">Ordem</th>
-                        <th class="border px-2 py-1 text-left">Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="productsTbody"></tbody>
-            </table>
         </div>
-    </div>
+    </main>
 
+    <!-- === FOOTER (Simplificado) === -->
+    <footer class="py-6 mt-auto" style="background-color: var(--color-primary-dark);">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-sm text-white opacity-60 font-opensans">
+                © 2025 AlphaTech - Painel de Parceiros. Acesso restrito a administradores.
+            </p>
+        </div>
+    </footer>
+
+    <!-- === LÓGICA JAVASCRIPT === -->
     <script>
-        // ⚠️ Preencha com o mesmo token que está em process.env.ADMIN_TOKEN
+        lucide.createIcons();
+
+        // ⚠️ TOKEN DE ADMINISTRAÇÃO
+        // Em produção real, isso não deve ficar no front-end sem autenticação prévia.
         const ADMIN_TOKEN = 'tiagimanda';
 
+        // Referências DOM
         const form = document.getElementById('productForm');
         const formFb = document.getElementById('formFb');
         const listFb = document.getElementById('listFb');
         const tbody = document.getElementById('productsTbody');
         const table = document.getElementById('productsTable');
         const reloadBtn = document.getElementById('reloadBtn');
+        const resetBtn = document.getElementById('resetBtn');
         const idInput = document.getElementById('productId');
-        const submitBtn = form.querySelector('button[type="submit"]');
+        const submitBtn = document.getElementById('submitBtn');
 
         let editingId = null;
 
+        // Reseta o formulário para o estado de "Novo Produto"
         function resetFormMode() {
             editingId = null;
             idInput.value = '';
-            submitBtn.textContent = 'Salvar produto';
+            form.reset();
+            form.active.checked = true; // Padrão ativo
+            submitBtn.innerHTML = '<i class="fas fa-save mr-2"></i> Salvar Produto';
+            submitBtn.classList.remove('bg-yellow-500', 'hover:bg-yellow-600');
+            submitBtn.classList.add('btn-primary');
+            formFb.textContent = '';
         }
 
+        // Carrega produtos da API
         async function loadProducts() {
-            listFb.textContent = 'Carregando...';
+            listFb.textContent = 'Carregando catálogo...';
+            listFb.classList.remove('hidden');
             table.classList.add('hidden');
             tbody.innerHTML = '';
 
@@ -126,66 +314,73 @@
                     headers: { 'x-admin-token': ADMIN_TOKEN }
                 });
                 const js = await res.json();
-                if (!res.ok) throw new Error(js?.error || 'Falha ao carregar');
+                
+                if (!res.ok) throw new Error(js?.error || 'Falha de conexão com a API.');
 
                 const products = js?.products || [];
+                
                 if (!products.length) {
-                    listFb.textContent = 'Nenhum produto cadastrado ainda.';
+                    listFb.textContent = 'Nenhum produto cadastrado. Utilize o formulário ao lado.';
                     return;
                 }
 
-                listFb.textContent = '';
+                listFb.classList.add('hidden');
                 table.classList.remove('hidden');
 
                 products.forEach(p => {
                     const tr = document.createElement('tr');
-                    tr.className = 'hover:bg-gray-50';
+                    tr.className = 'hover:bg-blue-50 transition duration-150';
+
+                    // Renderiza miniatura ou ícone
+                    const imgHtml = p.image_url 
+                        ? `<img src="${p.image_url}" class="w-10 h-10 object-cover rounded-md border border-gray-200 mx-auto" alt="img">`
+                        : `<div class="w-10 h-10 bg-gray-200 rounded-md flex items-center justify-center mx-auto text-gray-400"><i class="fas fa-image"></i></div>`;
+
+                    // Badge de status
+                    const statusHtml = p.active 
+                        ? `<span class="px-2 py-1 rounded-full text-xs font-bold bg-green-100 text-green-800 border border-green-200">Ativo</span>`
+                        : `<span class="px-2 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-500 border border-gray-200">Inativo</span>`;
 
                     tr.innerHTML = `
-          <td class="border px-2 py-1">${p.id}</td>
-          <td class="border px-2 py-1">${p.name}</td>
-          <td class="border px-2 py-1">${p.price_display || '-'}</td>
-          <td class="border px-2 py-1">${p.active ? 'Sim' : 'Não'}</td>
-          <td class="border px-2 py-1">${p.sort_order ?? 0}</td>
-          <td class="border px-2 py-1">
-            <button
-              type="button"
-              class="text-xs px-2 py-1 rounded bg-yellow-100 hover:bg-yellow-200 mr-2 btn-edit"
-              data-id="${p.id}">
-              Editar
-            </button>
-            <button
-              type="button"
-              class="text-xs px-2 py-1 rounded bg-red-100 hover:bg-red-200 text-red-700 btn-delete"
-              data-id="${p.id}">
-              Excluir
-            </button>
-          </td>
-        `;
+                        <td class="px-4 py-3 align-middle">${imgHtml}</td>
+                        <td class="px-4 py-3 align-middle">
+                            <div class="font-bold text-gray-800 text-sm">${p.name}</div>
+                            <div class="text-xs text-gray-500 font-mono mt-0.5">${p.price_display || 'Sem preço definido'}</div>
+                        </td>
+                        <td class="px-4 py-3 text-center align-middle">${statusHtml}</td>
+                        <td class="px-4 py-3 text-center align-middle text-sm font-semibold text-gray-600">#${p.sort_order ?? 0}</td>
+                        <td class="px-4 py-3 text-right align-middle">
+                            <div class="flex justify-end gap-2">
+                                <button type="button" class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200 flex items-center justify-center transition btn-edit" title="Editar" data-id="${p.id}">
+                                    <i class="fas fa-pencil-alt text-xs"></i>
+                                </button>
+                                <button type="button" class="w-8 h-8 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 flex items-center justify-center transition btn-delete" title="Excluir" data-id="${p.id}">
+                                    <i class="fas fa-trash-alt text-xs"></i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
 
-                    // Anexa o produto como dado no elemento para facilitar edição
+                    // Anexa dados para fácil acesso na edição
                     tr.dataset.product = JSON.stringify(p);
                     tbody.appendChild(tr);
                 });
 
-                // Delegação dos botões
-                tbody.querySelectorAll('.btn-edit').forEach(btn => {
-                    btn.addEventListener('click', onEditClick);
-                });
-
-                tbody.querySelectorAll('.btn-delete').forEach(btn => {
-                    btn.addEventListener('click', onDeleteClick);
-                });
+                // Attach Listeners
+                document.querySelectorAll('.btn-edit').forEach(btn => btn.addEventListener('click', onEditClick));
+                document.querySelectorAll('.btn-delete').forEach(btn => btn.addEventListener('click', onDeleteClick));
 
             } catch (err) {
                 console.error(err);
                 listFb.textContent = err.message || 'Erro ao carregar produtos.';
+                listFb.classList.add('text-red-500');
             }
         }
 
+        // Ação de Editar
         function onEditClick(e) {
-            const id = e.currentTarget.dataset.id;
-            const tr = e.currentTarget.closest('tr');
+            const btn = e.currentTarget;
+            const tr = btn.closest('tr');
             if (!tr || !tr.dataset.product) return;
 
             const p = JSON.parse(tr.dataset.product);
@@ -193,6 +388,7 @@
             editingId = p.id;
             idInput.value = p.id;
 
+            // Preenche campos
             form.name.value = p.name || '';
             form.description.value = p.description || '';
             form.price_display.value = p.price_display || '';
@@ -201,16 +397,27 @@
             form.sort_order.value = p.sort_order ?? 0;
             form.active.checked = !!p.active;
 
-            submitBtn.textContent = 'Atualizar produto';
-            formFb.textContent = `Editando ID ${p.id}`;
-            formFb.className = 'text-sm text-blue-700';
+            // Feedback visual de modo edição
+            submitBtn.innerHTML = '<i class="fas fa-sync-alt mr-2"></i> Atualizar Produto';
+            // Muda cor do botão para indicar alteração
+            submitBtn.classList.remove('btn-primary');
+            submitBtn.classList.add('bg-yellow-500', 'hover:bg-yellow-600', 'text-white');
+            
+            formFb.textContent = `Editando: ${p.name} (ID: ${p.id})`;
+            formFb.className = 'text-sm mb-3 min-h-[20px] font-semibold text-center text-blue-600';
+
+            // Scroll suave até o form em mobile
+            if (window.innerWidth < 1024) {
+                form.scrollIntoView({ behavior: 'smooth' });
+            }
         }
 
+        // Ação de Excluir
         async function onDeleteClick(e) {
             const id = e.currentTarget.dataset.id;
             if (!id) return;
 
-            const ok = confirm(`Tem certeza que deseja excluir o produto ID ${id}?`);
+            const ok = confirm('⚠️ Tem certeza que deseja excluir este produto?\nEsta ação não pode ser desfeita.');
             if (!ok) return;
 
             try {
@@ -226,22 +433,24 @@
                 const js = await res.json();
                 if (!res.ok) throw new Error(js?.error || 'Falha ao excluir');
 
-                await loadProducts();
+                // Se excluiu o que estava sendo editado, reseta
+                if (editingId == id) resetFormMode();
+                
+                loadProducts();
             } catch (err) {
-                console.error(err);
-                alert(err.message || 'Erro ao excluir produto.');
+                alert('Erro: ' + (err.message || 'Não foi possível excluir.'));
             }
         }
 
-        reloadBtn.addEventListener('click', () => {
-            resetFormMode();
-            loadProducts();
-        });
-
+        // Salvar (Create/Update)
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            // Estado de loading no botão
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> Processando...';
             formFb.textContent = '';
-            formFb.className = 'text-sm';
 
             const fd = new FormData(form);
             const body = {
@@ -272,25 +481,40 @@
                 });
 
                 const js = await res.json();
-                if (!res.ok) throw new Error(js?.error || 'Falha ao salvar');
+                if (!res.ok) throw new Error(js?.error || 'Erro ao processar solicitação.');
 
-                formFb.textContent = isEdit
-                    ? 'Produto atualizado com sucesso.'
-                    : 'Produto cadastrado com sucesso.';
-                formFb.classList.add('text-green-700');
+                // Sucesso
+                formFb.textContent = isEdit ? 'Produto atualizado com sucesso!' : 'Produto criado com sucesso!';
+                formFb.className = 'text-sm mb-3 min-h-[20px] font-bold text-center text-green-600';
 
-                form.reset();
-                resetFormMode();
+                if (!isEdit) {
+                    form.reset(); // Limpa se foi criação
+                    form.active.checked = true;
+                } else {
+                    resetFormMode(); // Sai do modo edição
+                }
+
                 loadProducts();
             } catch (err) {
                 console.error(err);
-                formFb.textContent = err.message || 'Erro ao salvar produto.';
-                formFb.classList.add('text-red-600');
+                formFb.textContent = err.message || 'Erro desconhecido.';
+                formFb.className = 'text-sm mb-3 min-h-[20px] font-bold text-center text-red-600';
+            } finally {
+                submitBtn.disabled = false;
+                if (!isEdit) submitBtn.innerHTML = originalBtnText; // Restaura texto se não resetou modo
             }
         });
 
+        // Listeners gerais
+        reloadBtn.addEventListener('click', () => {
+            resetFormMode();
+            loadProducts();
+        });
+
+        resetBtn.addEventListener('click', resetFormMode);
+
+        // Inicialização
         document.addEventListener('DOMContentLoaded', loadProducts);
     </script>
 </body>
-
 </html>
