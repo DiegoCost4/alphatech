@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Loja AlphaTech | Seleção Premium de Elétrica e Automação</title>
-    <meta name="description" content="Compre produtos de elétrica e automação recomendados pela AlphaTech. Segurança e garantia do Mercado Livre.">
+    <title>Vitrine AlphaTech | Parceiro Oficial Mercado Livre</title>
+    <meta name="description" content="Confira os equipamentos recomendados pela AlphaTech. Você escolhe aqui e compra com segurança no Mercado Livre.">
 
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='80'>⚡</text></svg>">
@@ -57,40 +57,24 @@
             background-color: #0e7490;
             filter: brightness(1.1);
         }
-
-        .discount-badge {
-            background: linear-gradient(135deg, #FFD166 0%, #F4A261 100%);
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .ml-brand-color { color: #2D3277; } /* Azul escuro ML */
     </style>
 </head>
 
 <body class="flex flex-col min-h-screen">
 
-    <!-- === HEADER TIPO AMAZON/MERCADO LIVRE === -->
-    <header class="sticky top-0 z-50 shadow-lg" style="background-color: var(--color-primary-dark);">
-        
-        <!-- Top Bar (Desktop) -->
-        <div class="hidden md:block border-b border-gray-700/50">
-            <div class="max-w-7xl mx-auto px-4 py-1 flex justify-between text-xs text-gray-300">
-                <div class="flex gap-4">
-                    <span><i class="fas fa-shield-alt text-green-400 mr-1"></i> Compra Garantida</span>
-                    <span><i class="fas fa-truck text-blue-400 mr-1"></i> Envio para todo o Brasil</span>
-                </div>
-                <div class="flex gap-4">
-                    <a href="/index.html#contato" class="hover:text-white transition">Atendimento</a>
-                    <a href="#" class="hover:text-white transition">Rastrear Pedido</a>
-                </div>
-            </div>
-        </div>
+    <!-- === TOP BAR DE AVISO === -->
+    <div class="bg-yellow-400 text-[#0B132B] text-xs font-bold py-2 px-4 text-center shadow-sm relative z-50">
+        <i class="fas fa-info-circle mr-1"></i> 
+        TRANSPARÊNCIA: Somos parceiros afiliados. A venda e entrega são realizadas 100% pelo <span class="underline">Mercado Livre</span>.
+    </div>
 
+    <!-- === HEADER === -->
+    <header class="sticky top-0 z-40 shadow-lg" style="background-color: var(--color-primary-dark);">
+        
         <!-- Main Header -->
-        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center gap-4 md:gap-8">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center gap-4 md:gap-8 justify-between">
             
             <!-- Logo -->
             <a href="/index.html" class="flex-shrink-0 flex items-center group">
@@ -99,49 +83,41 @@
                 </div>
                 <div class="ml-2 hidden sm:block">
                     <div class="text-xl font-title font-extrabold uppercase text-white leading-none">
-                        ALPHA<span class="text-gold">STORE</span>
+                        ALPHA<span class="text-gold">VITRINE</span>
                     </div>
-                    <div class="text-[10px] text-gray-400 uppercase tracking-widest">Loja Oficial Parceira</div>
+                    <div class="text-[10px] text-gray-400 uppercase tracking-widest">Seleção Oficial Parceira</div>
                 </div>
             </a>
 
             <!-- Barra de Busca (Funcional via JS) -->
-            <div class="flex-1 max-w-3xl relative">
+            <div class="flex-1 max-w-2xl relative mx-4">
                 <div class="flex h-10 md:h-11">
                     <div class="relative w-full">
                         <input type="text" id="searchInput" 
                             class="w-full h-full pl-4 pr-10 rounded-l-lg border-0 focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder-gray-500 font-opensans text-sm md:text-base" 
-                            placeholder="Buscar produtos, marcas e muito mais...">
+                            placeholder="O que você procura hoje?">
                         <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
                             <i class="fas fa-search"></i>
                         </div>
                     </div>
-                    <button id="searchBtn" class="bg-yellow-500 hover:bg-yellow-400 text-gray-900 px-6 rounded-r-lg font-bold transition hidden sm:block">
+                    <button id="searchBtn" class="bg-yellow-500 hover:bg-yellow-400 text-gray-900 px-4 md:px-6 rounded-r-lg font-bold transition">
                         Buscar
                     </button>
                 </div>
             </div>
 
-            <!-- Ações -->
+            <!-- Ações (Sem carrinho, pois não vendemos) -->
             <div class="flex items-center gap-4 text-white">
-                <a href="/index.html" class="hidden md:flex flex-col items-center text-xs hover:text-yellow-400 transition">
+                <a href="/index.html" class="flex flex-col items-center text-xs hover:text-yellow-400 transition">
                     <i class="fas fa-home text-lg mb-0.5"></i>
-                    <span>Site Principal</span>
+                    <span class="hidden md:inline">Site Oficial</span>
                 </a>
                 
-                <div class="relative group cursor-pointer">
-                    <div class="flex flex-col items-center text-xs group-hover:text-yellow-400 transition">
-                        <div class="relative">
-                            <i class="fas fa-shopping-cart text-xl mb-0.5"></i>
-                            <span class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-[#0B132B]">0</span>
-                        </div>
-                        <span class="hidden sm:inline">Carrinho</span>
-                    </div>
-                    <!-- Tooltip Carrinho -->
-                    <div class="absolute right-0 top-full mt-2 w-64 bg-white text-gray-800 rounded-lg shadow-xl p-4 hidden group-hover:block border border-gray-200 z-50">
-                        <p class="text-sm text-center text-gray-500">Seu carrinho no Mercado Livre é gerenciado diretamente na plataforma deles.</p>
-                    </div>
-                </div>
+                <!-- Link para ML (Ajuda) -->
+                <a href="https://myaccount.mercadolivre.com.br/my_purchases/list#nav-header" target="_blank" class="flex flex-col items-center text-xs hover:text-yellow-400 transition opacity-80 hover:opacity-100">
+                    <img src="https://http2.mlstatic.com/frontend-assets/ml-web-navigation/ui-navigation/6.6.73/mercadolibre/logo__small.png" alt="ML" class="h-5 mb-0.5 brightness-0 invert">
+                    <span class="hidden md:inline">Minhas Compras</span>
+                </a>
             </div>
         </div>
 
@@ -149,86 +125,50 @@
         <div class="bg-[#1A243F] border-t border-gray-700">
             <div class="max-w-7xl mx-auto px-4 overflow-x-auto scrollbar-hide">
                 <div class="flex space-x-6 py-2 text-sm font-medium text-gray-300 whitespace-nowrap">
-                    <a href="#" class="text-yellow-400 hover:text-white flex items-center gap-1"><i class="fas fa-tags"></i> Ofertas do Dia</a>
+                    <a href="#" class="text-yellow-400 hover:text-white flex items-center gap-1"><i class="fas fa-star"></i> Destaques</a>
                     <a href="#" class="hover:text-white transition" onclick="filterCategory('all')">Todos</a>
                     <a href="#" class="hover:text-white transition" onclick="filterCategory('Automação')">Casa Inteligente</a>
-                    <a href="#" class="hover:text-white transition" onclick="filterCategory('Segurança')">Segurança & CFTV</a>
-                    <a href="#" class="hover:text-white transition" onclick="filterCategory('Elétrica')">Materiais Elétricos</a>
-                    <a href="#" class="hover:text-white transition" onclick="filterCategory('Iluminação')">Iluminação LED</a>
+                    <a href="#" class="hover:text-white transition" onclick="filterCategory('Segurança')">Segurança</a>
+                    <a href="#" class="hover:text-white transition" onclick="filterCategory('Elétrica')">Elétrica</a>
+                    <a href="#" class="hover:text-white transition" onclick="filterCategory('Iluminação')">Iluminação</a>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- === HERO BANNER (PROMOÇÃO) === -->
-    <section class="relative bg-gray-900 text-white overflow-hidden h-[200px] md:h-[320px]">
-        <!-- Background Abstract -->
-        <div class="absolute inset-0 bg-gradient-to-r from-[#0B132B] to-[#118AB2]"></div>
-        <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+    <!-- === HERO BANNER (Explicação do Modelo) === -->
+    <section class="relative bg-gray-900 text-white overflow-hidden h-auto md:h-[300px] py-8 md:py-0">
+        <!-- Background -->
+        <div class="absolute inset-0 bg-gradient-to-r from-[#0B132B] to-[#1A243F]"></div>
+        <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
         
-        <div class="max-w-7xl mx-auto px-4 h-full flex items-center relative z-10">
-            <div class="max-w-2xl animate-fade-in-up">
-                <span class="inline-block py-1 px-3 rounded bg-yellow-500 text-[#0B132B] text-xs font-bold uppercase tracking-wider mb-2 shadow-lg">
-                    Parceria Oficial
-                </span>
-                <h1 class="text-3xl md:text-5xl font-title font-extrabold mb-4 leading-tight">
-                    Tecnologia Premium <br>para sua <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">Casa Conectada</span>
+        <div class="max-w-7xl mx-auto px-4 h-full flex flex-col md:flex-row items-center relative z-10">
+            <div class="md:w-2/3 animate-fade-in-up text-center md:text-left">
+                <h1 class="text-2xl md:text-4xl font-title font-extrabold mb-3 text-white">
+                    Nós indicamos a tecnologia,<br>
+                    <span class="text-yellow-400">você compra com segurança.</span>
                 </h1>
-                <p class="text-gray-200 text-sm md:text-lg mb-6 max-w-lg font-opensans">
-                    Selecionamos os melhores equipamentos do mercado. Compre com a segurança e logística do Mercado Livre.
+                <p class="text-gray-300 text-sm md:text-lg mb-6 max-w-xl mx-auto md:mx-0 font-opensans leading-relaxed">
+                    A <strong>AlphaTech</strong> selecionou os melhores equipamentos para seus projetos.
+                    Ao clicar nos produtos, você será direcionado para o <strong>Mercado Livre</strong>, garantindo o melhor preço e entrega rápida.
                 </p>
-                <a href="#vitrine" class="inline-flex items-center bg-white text-[#0B132B] hover:bg-gray-100 font-bold py-2.5 px-6 rounded-full transition shadow-lg group">
-                    Ver Ofertas
-                    <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-                </a>
+                <div class="flex flex-col sm:flex-row gap-3 justify-center md:justify-start text-xs md:text-sm font-bold text-gray-400">
+                    <span class="flex items-center bg-gray-800/50 px-3 py-1 rounded-full border border-gray-700"><i class="fas fa-check text-green-400 mr-2"></i> Sem intermediários</span>
+                    <span class="flex items-center bg-gray-800/50 px-3 py-1 rounded-full border border-gray-700"><i class="fas fa-check text-green-400 mr-2"></i> Preço oficial do vendedor</span>
+                </div>
             </div>
             
-            <!-- Imagem Ilustrativa (Direita) -->
-            <div class="hidden md:block absolute right-4 bottom-0 h-[90%]">
-                <img src="https://placehold.co/500x400/transparent/FFFFFF?text=Smart+Home+Device&font=Montserrat" alt="Smart Home" class="h-full object-contain drop-shadow-2xl opacity-90">
-            </div>
-        </div>
-    </section>
-
-    <!-- === FAIXA DE BENEFÍCIOS === -->
-    <section class="bg-white border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 py-6">
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-center sm:text-left">
-                <div class="flex items-center justify-center sm:justify-start gap-3 group">
-                    <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition">
-                        <i class="fas fa-shield-alt text-lg"></i>
+            <!-- Card Exemplo -->
+            <div class="md:w-1/3 mt-6 md:mt-0 flex justify-center md:justify-end">
+                <div class="bg-white text-gray-800 p-4 rounded-lg shadow-2xl max-w-xs rotate-3 hover:rotate-0 transition duration-500 border-4 border-yellow-400">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600"><i class="fas fa-shield-alt"></i></div>
+                        <div>
+                            <p class="font-bold text-sm">Garantia Mercado Livre</p>
+                            <p class="text-xs text-gray-500">Compra Protegida</p>
+                        </div>
                     </div>
-                    <div>
-                        <h4 class="font-bold text-sm text-gray-800">Pagamento Seguro</h4>
-                        <p class="text-xs text-gray-500">Via Mercado Pago</p>
-                    </div>
-                </div>
-                <div class="flex items-center justify-center sm:justify-start gap-3 group">
-                    <div class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition">
-                        <i class="fas fa-truck-fast text-lg"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-sm text-gray-800">Envio Rápido</h4>
-                        <p class="text-xs text-gray-500">Logística Full/Express</p>
-                    </div>
-                </div>
-                <div class="flex items-center justify-center sm:justify-start gap-3 group">
-                    <div class="w-10 h-10 rounded-full bg-yellow-50 flex items-center justify-center text-yellow-600 group-hover:bg-yellow-500 group-hover:text-white transition">
-                        <i class="fas fa-thumbs-up text-lg"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-sm text-gray-800">Curadoria Alpha</h4>
-                        <p class="text-xs text-gray-500">Produtos testados</p>
-                    </div>
-                </div>
-                <div class="flex items-center justify-center sm:justify-start gap-3 group">
-                    <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 group-hover:bg-gray-800 group-hover:text-white transition">
-                        <i class="fas fa-headset text-lg"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-sm text-gray-800">Suporte Técnico</h4>
-                        <p class="text-xs text-gray-500">Dúvidas sobre instalação</p>
-                    </div>
+                    <p class="text-xs text-gray-600 italic">"Sua compra é processada diretamente na plataforma do Mercado Livre. 100% Seguro."</p>
                 </div>
             </div>
         </div>
@@ -237,108 +177,74 @@
     <!-- === ÁREA DE PRODUTOS === -->
     <main id="vitrine" class="flex-grow py-8 md:py-12 max-w-7xl mx-auto px-4 w-full">
         
-        <!-- Barra de Ferramentas (Contador e Ordenação) -->
+        <!-- Barra de Ferramentas -->
         <div class="flex flex-col md:flex-row justify-between items-center mb-8 pb-4 border-b border-gray-200 gap-4">
-            <h2 class="text-2xl font-subtitle font-bold text-gray-800">
-                Destaques <span class="text-blue-600">Recomendados</span>
-            </h2>
+            <div>
+                <h2 class="text-2xl font-subtitle font-bold text-gray-800">
+                    Produtos <span class="text-blue-600">Selecionados</span>
+                </h2>
+                <p class="text-sm text-gray-500">Nossa curadoria dos melhores itens para sua casa.</p>
+            </div>
             
             <div class="flex items-center gap-4 w-full md:w-auto">
-                <span id="productCount" class="text-sm text-gray-500 whitespace-nowrap">Carregando produtos...</span>
-                
+                <span id="productCount" class="text-sm text-gray-500 whitespace-nowrap">Carregando...</span>
                 <div class="relative w-full md:w-48">
-                    <select id="sortSelect" class="w-full appearance-none bg-white border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded-lg leading-tight focus:outline-none focus:border-blue-500 text-sm font-semibold cursor-pointer">
+                    <select id="sortSelect" class="w-full appearance-none bg-white border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded-lg focus:outline-none focus:border-blue-500 text-sm cursor-pointer shadow-sm">
                         <option value="default">Relevância</option>
                         <option value="price-asc">Menor Preço</option>
                         <option value="price-desc">Maior Preço</option>
                     </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                        <i class="fas fa-chevron-down text-xs"></i>
-                    </div>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"><i class="fas fa-chevron-down text-xs"></i></div>
                 </div>
             </div>
         </div>
 
         <!-- Grid de Produtos -->
         <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <!-- Loader Skeleton -->
-            <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm h-96 animate-pulse">
-                <div class="bg-gray-200 h-48 w-full rounded-lg mb-4"></div>
-                <div class="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                <div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
-                <div class="h-8 bg-gray-200 rounded w-1/3 mt-auto"></div>
-            </div>
-            <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm h-96 animate-pulse hidden sm:block">
-                <div class="bg-gray-200 h-48 w-full rounded-lg mb-4"></div>
-                <div class="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                <div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
-                <div class="h-8 bg-gray-200 rounded w-1/3 mt-auto"></div>
-            </div>
-            <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm h-96 animate-pulse hidden lg:block">
-                <div class="bg-gray-200 h-48 w-full rounded-lg mb-4"></div>
-                <div class="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                <div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
-                <div class="h-8 bg-gray-200 rounded w-1/3 mt-auto"></div>
-            </div>
-            <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm h-96 animate-pulse hidden xl:block">
-                <div class="bg-gray-200 h-48 w-full rounded-lg mb-4"></div>
-                <div class="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                <div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
-                <div class="h-8 bg-gray-200 rounded w-1/3 mt-auto"></div>
-            </div>
+            <!-- Skeletons de carregamento -->
+            <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm h-96 animate-pulse"><div class="bg-gray-200 h-48 w-full rounded-lg mb-4"></div><div class="h-4 bg-gray-200 rounded w-3/4 mb-2"></div><div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div><div class="h-10 bg-gray-200 rounded mt-auto"></div></div>
+            <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm h-96 animate-pulse hidden sm:block"><div class="bg-gray-200 h-48 w-full rounded-lg mb-4"></div><div class="h-4 bg-gray-200 rounded w-3/4 mb-2"></div><div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div><div class="h-10 bg-gray-200 rounded mt-auto"></div></div>
+            <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm h-96 animate-pulse hidden lg:block"><div class="bg-gray-200 h-48 w-full rounded-lg mb-4"></div><div class="h-4 bg-gray-200 rounded w-3/4 mb-2"></div><div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div><div class="h-10 bg-gray-200 rounded mt-auto"></div></div>
         </div>
 
         <!-- Empty State -->
         <div id="products-empty" class="hidden flex flex-col items-center justify-center py-20 text-center">
-            <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center text-gray-400 mb-4">
-                <i class="fas fa-search text-4xl"></i>
-            </div>
-            <h3 class="text-xl font-bold text-gray-800 mb-2">Nenhum produto encontrado</h3>
-            <p class="text-gray-500 max-w-md">Não encontramos produtos com os termos pesquisados. Tente buscar por palavras mais genéricas como "Câmera" ou "Lâmpada".</p>
-            <button onclick="resetSearch()" class="mt-6 text-blue-600 font-bold hover:underline">Limpar filtros</button>
+            <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center text-gray-400 mb-4"><i class="fas fa-search text-3xl"></i></div>
+            <h3 class="text-xl font-bold text-gray-800">Nenhum produto encontrado</h3>
+            <button onclick="resetSearch()" class="mt-4 text-blue-600 font-bold hover:underline">Ver todos os produtos</button>
         </div>
-
     </main>
 
     <!-- === FOOTER === -->
-    <footer class="bg-[#0B132B] text-gray-400 pt-12 pb-8 border-t-4 border-[#FFD166]">
-        <div class="max-w-7xl mx-auto px-4">
+    <footer class="bg-[#0B132B] text-gray-400 pt-10 pb-6 border-t-4 border-[#FFD166]">
+        <div class="max-w-7xl mx-auto px-4 text-center md:text-left">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
                 <div>
-                    <div class="text-2xl font-title font-extrabold uppercase text-white mb-4">
-                        ALPHA<span class="text-gold">STORE</span>
+                    <div class="text-xl font-title font-extrabold uppercase text-white mb-3">
+                        ALPHA<span class="text-gold">VITRINE</span>
                     </div>
-                    <p class="text-sm mb-4">
-                        A sua loja de confiança para automação e elétrica. Todos os produtos são processados e entregues pelo Mercado Livre, garantindo a segurança da sua compra.
+                    <p class="text-xs leading-relaxed">
+                        Esta página é uma vitrine de produtos afiliados. A AlphaTech não é responsável pelo processamento do pagamento, envio ou garantia dos produtos aqui listados. Toda a transação é realizada diretamente no site do <strong>Mercado Livre</strong>.
                     </p>
-                    <div class="flex gap-4">
-                        <a href="#" class="w-10 h-10 rounded bg-gray-800 flex items-center justify-center hover:bg-blue-600 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="w-10 h-10 rounded bg-gray-800 flex items-center justify-center hover:bg-pink-600 hover:text-white transition"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="w-10 h-10 rounded bg-gray-800 flex items-center justify-center hover:bg-green-500 hover:text-white transition"><i class="fab fa-whatsapp"></i></a>
-                    </div>
                 </div>
                 <div>
-                    <h4 class="text-white font-bold text-lg mb-4">Links Rápidos</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="/index.html" class="hover:text-white transition">Voltar ao Site Institucional</a></li>
-                        <li><a href="#" class="hover:text-white transition">Política de Privacidade</a></li>
-                        <li><a href="#" class="hover:text-white transition">Termos de Uso</a></li>
-                        <li><a href="https://www.mercadolivre.com.br/ajuda" target="_blank" class="hover:text-white transition">Ajuda Mercado Livre</a></li>
+                    <h4 class="text-white font-bold text-sm mb-3 uppercase">Segurança</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li class="flex items-center justify-center md:justify-start gap-2"><i class="fas fa-lock text-green-500"></i> Site Seguro (SSL)</li>
+                        <li class="flex items-center justify-center md:justify-start gap-2"><i class="fas fa-shield-alt text-blue-500"></i> Vendedores Verificados</li>
+                        <li class="flex items-center justify-center md:justify-start gap-2"><i class="fab fa-cc-visa"></i> Pagamento via Mercado Pago</li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-white font-bold text-lg mb-4">Aviso Legal</h4>
-                    <p class="text-xs leading-relaxed">
-                        A AlphaTech participa do Programa de Associados do Mercado Livre, um programa de publicidade de afiliados projetado para fornecer um meio para sites ganharem taxas de publicidade anunciando e vinculando ao mercadolivre.com.br.
-                    </p>
-                    <div class="mt-4 flex items-center gap-2 opacity-70">
-                        <i class="fas fa-lock"></i>
-                        <span class="text-xs">Site Seguro com SSL</span>
-                    </div>
+                    <h4 class="text-white font-bold text-sm mb-3 uppercase">Navegação</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="/index.html" class="hover:text-white transition underline">Voltar para AlphaTech Serviços</a></li>
+                        <li><a href="https://www.mercadolivre.com.br/ajuda" target="_blank" class="hover:text-white transition">Central de Ajuda Mercado Livre</a></li>
+                    </ul>
                 </div>
             </div>
-            <div class="border-t border-gray-800 pt-8 text-center text-xs">
-                <p>© 2025 AlphaTech. Todos os direitos reservados.</p>
+            <div class="border-t border-gray-800 pt-6 text-[10px] opacity-60">
+                <p>© 2025 AlphaTech. Programa de Associados.</p>
             </div>
         </div>
     </footer>
@@ -354,100 +260,68 @@
         const searchInput = document.getElementById('searchInput');
         const sortSelect = document.getElementById('sortSelect');
 
-        // Função para formatar moeda
-        const formatCurrency = (val) => {
-            if(!val) return '';
-            return val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        };
+        const formatCurrency = (val) => val ? val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '';
+        const parsePrice = (str) => str ? parseFloat(str.replace(/[^0-9,-]+/g,"").replace(",",".")) : 0;
 
-        // Função para extrair valor numérico de strings como "R$ 199,90"
-        const parsePrice = (priceStr) => {
-            if (!priceStr) return 0;
-            // Remove R$, espaços, troca , por .
-            return parseFloat(priceStr.replace(/[^0-9,-]+/g,"").replace(",","."));
-        };
-
-        // Renderiza os cards
         function renderProducts(products) {
             grid.innerHTML = '';
             
             if (products.length === 0) {
                 grid.classList.add('hidden');
                 emptyState.classList.remove('hidden');
-                countLabel.textContent = '0 produtos';
+                countLabel.textContent = '0 encontrados';
                 return;
             }
 
             grid.classList.remove('hidden');
             emptyState.classList.add('hidden');
-            countLabel.textContent = `${products.length} produtos encontrados`;
+            countLabel.textContent = `${products.length} itens`;
 
             products.forEach((p, index) => {
-                // Simula parcelamento (preço / 10 ou 12)
                 const priceNum = parsePrice(p.price_display);
-                const installmentVal = priceNum > 0 ? (priceNum / 12) : 0;
-                const installmentStr = installmentVal > 0 ? formatCurrency(installmentVal) : null;
-
-                // Badge lógica (mock)
-                let badgeHtml = '';
-                if (index === 0) badgeHtml = '<span class="absolute top-3 left-3 bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded shadow">MAIS VENDIDO</span>';
-                else if (p.price_display && priceNum > 500) badgeHtml = '<span class="absolute top-3 left-3 bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow">FRETE GRÁTIS</span>';
-
-                const card = document.createElement('div');
-                card.className = 'product-card bg-white rounded-xl overflow-hidden flex flex-col relative group h-full';
+                const installmentVal = priceNum > 0 ? (priceNum / 10) : 0; // Simulação 10x
                 
-                // Imagem com fallback
                 const imgSrc = p.image_url || 'https://placehold.co/300x300/f3f4f6/9ca3af?text=Sem+Imagem';
 
+                const card = document.createElement('div');
+                card.className = 'product-card bg-white rounded-xl overflow-hidden flex flex-col h-full relative group';
+                
+                // Tag Destaque (simulada no primeiro item)
+                const badge = index === 0 ? '<span class="absolute top-3 right-3 bg-yellow-400 text-[#0B132B] text-[10px] font-bold px-2 py-1 rounded shadow z-10">INDICADO</span>' : '';
+
                 card.innerHTML = `
-                    <a href="${p.affiliate_url}" target="_blank" rel="noopener" class="relative block overflow-hidden bg-white h-56 p-4 flex items-center justify-center">
-                        ${badgeHtml}
-                        <img src="${imgSrc}" alt="${p.name}" class="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-110">
-                        <!-- Botão "Espiar" no hover -->
-                        <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                             <span class="bg-white text-gray-800 px-4 py-2 rounded-full text-xs font-bold shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">Ver no Mercado Livre</span>
-                        </div>
+                    ${badge}
+                    <a href="${p.affiliate_url}" target="_blank" rel="noopener" class="block relative h-52 p-4 bg-white flex items-center justify-center overflow-hidden">
+                        <img src="${imgSrc}" alt="${p.name}" class="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-105">
                     </a>
                     
-                    <div class="p-4 flex-1 flex flex-col border-t border-gray-100">
+                    <div class="p-4 flex-1 flex flex-col border-t border-gray-50">
                         <div class="flex-1">
-                            <p class="text-xs text-gray-500 mb-1 uppercase tracking-wide font-bold">AlphaTech Indica</p>
-                            <a href="${p.affiliate_url}" target="_blank" class="block">
-                                <h3 class="font-opensans text-sm md:text-base text-gray-800 font-semibold leading-snug line-clamp-2 hover:text-blue-600 transition mb-2" title="${p.name}">
+                            <div class="flex items-center gap-1 mb-1">
+                                <img src="https://http2.mlstatic.com/frontend-assets/ui-navigation/5.18.9/mercadolibre/favicon.svg" class="w-3 h-3 opacity-70">
+                                <span class="text-[10px] text-gray-500 uppercase font-bold">Mercado Livre</span>
+                            </div>
+                            
+                            <a href="${p.affiliate_url}" target="_blank" class="block group-hover:text-blue-600 transition">
+                                <h3 class="font-opensans text-sm text-gray-800 font-semibold leading-snug line-clamp-2 mb-2" title="${p.name}">
                                     ${p.name}
                                 </h3>
                             </a>
-                            
-                            <!-- Estrelas (Fake Rating) -->
-                            <div class="flex items-center mb-2">
-                                <div class="flex text-yellow-400 text-xs">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-                                </div>
-                                <span class="text-xs text-gray-400 ml-1">(4.8)</span>
-                            </div>
                         </div>
 
-                        <div class="mt-3">
+                        <div class="mt-2">
                             ${p.price_display ? `
-                                <div class="flex items-baseline gap-2">
-                                    <span class="text-2xl font-bold text-gray-900">${p.price_display}</span>
-                                </div>
-                                ${installmentStr ? `
-                                    <p class="text-xs text-green-600 font-medium">
-                                        em <span class="font-bold">12x ${installmentStr}</span>
-                                    </p>
-                                ` : ''}
-                            ` : '<p class="text-sm text-gray-500 italic">Ver preço no site</p>'}
+                                <div class="text-xl font-bold text-gray-900">${p.price_display}</div>
+                                ${installmentVal > 0 ? `<p class="text-[11px] text-green-600">até 10x de ${formatCurrency(installmentVal)}</p>` : ''}
+                            ` : '<p class="text-sm text-gray-400 italic">Ver preço no site</p>'}
                         </div>
 
-                        <div class="mt-4 pt-3 border-t border-dashed border-gray-200">
+                        <div class="mt-4">
                             <a href="${p.affiliate_url}" target="_blank" rel="noopener" 
-                               class="btn-shop w-full flex items-center justify-center gap-2 text-white font-bold py-2.5 px-4 rounded-lg shadow-md text-sm uppercase tracking-wide">
-                                <i class="fas fa-shopping-bag"></i> Comprar Agora
+                               class="btn-shop w-full flex items-center justify-center gap-2 text-white font-bold py-2.5 px-4 rounded-lg shadow hover:shadow-lg text-sm transition-all transform group-hover:-translate-y-1">
+                                <span>Ir para Mercado Livre</span>
+                                <i class="fas fa-external-link-alt text-xs"></i>
                             </a>
-                            <p class="text-[10px] text-center text-gray-400 mt-2">
-                                <i class="fas fa-lock text-green-500 mr-1"></i> Compra segura via ML
-                            </p>
                         </div>
                     </div>
                 `;
@@ -455,69 +329,48 @@
             });
         }
 
-        // Carrega dados
         async function loadData() {
             try {
                 const res = await fetch('/api/affiliate-products');
                 const json = await res.json();
                 allProducts = json.products || [];
-                
-                // Ordenação padrão
                 renderProducts(allProducts);
             } catch (e) {
-                console.error("Erro ao buscar produtos", e);
-                grid.innerHTML = '<div class="col-span-full text-center py-10 text-red-500">Erro ao carregar catálogo. Tente novamente.</div>';
+                grid.innerHTML = '<div class="col-span-full text-center py-10 text-red-500 text-sm">Não foi possível carregar a vitrine no momento.</div>';
             }
         }
 
-        // Filtragem e Busca
         function applyFilters() {
             const term = searchInput.value.toLowerCase();
             const sortType = sortSelect.value;
 
-            // 1. Filtro por texto
             let filtered = allProducts.filter(p => 
                 p.name.toLowerCase().includes(term) || 
                 (p.description && p.description.toLowerCase().includes(term))
             );
 
-            // 2. Ordenação
-            if (sortType === 'price-asc') {
-                filtered.sort((a, b) => parsePrice(a.price_display) - parsePrice(b.price_display));
-            } else if (sortType === 'price-desc') {
-                filtered.sort((a, b) => parsePrice(b.price_display) - parsePrice(a.price_display));
-            }
-            // 'default' usa a ordem da API (banco de dados)
+            if (sortType === 'price-asc') filtered.sort((a, b) => parsePrice(a.price_display) - parsePrice(b.price_display));
+            else if (sortType === 'price-desc') filtered.sort((a, b) => parsePrice(b.price_display) - parsePrice(a.price_display));
 
             renderProducts(filtered);
         }
 
-        // Event Listeners
         searchInput.addEventListener('input', applyFilters);
         document.getElementById('searchBtn').addEventListener('click', applyFilters);
         sortSelect.addEventListener('change', applyFilters);
 
-        // Filtro rápido de categoria (simulado via texto por enquanto)
         window.filterCategory = (cat) => {
-            if(cat === 'all') {
-                searchInput.value = '';
-            } else {
-                searchInput.value = cat;
-            }
+            searchInput.value = cat === 'all' ? '' : cat;
             applyFilters();
-            
-            // Scroll suave até a vitrine
             document.getElementById('vitrine').scrollIntoView({behavior: 'smooth'});
         };
 
         window.resetSearch = () => {
             searchInput.value = '';
-            sortSelect.value = 'default';
             applyFilters();
         };
 
         document.addEventListener('DOMContentLoaded', loadData);
-
     </script>
 </body>
 </html>
